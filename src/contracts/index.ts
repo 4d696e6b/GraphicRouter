@@ -5,3 +5,5 @@ export * from "./canvas";
 export * from "./design-review";
 
 export * from "./document";
+
+export * from "./requirements";

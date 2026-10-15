@@ -98,3 +98,11 @@ engine/service/UI/briefing integration. Preserve legacy tools and stored version
 Current connected account owns the original private Site; Test Site access now
 returns project_not_found. Work from the original Site's opened current source and
 preserve both identities/secrets. No replacement Site or audience change is allowed.
+
+## User-directed long-context optimization — 2026-10-15
+
+This owning chat implements additive requirement storage, chapter-scoped retrieval,
+compact document MCP responses and stress tests across service/engine/UI contracts.
+Current account exposes owner-private GraphicRouter Test; original Site lookup now
+returns project_not_found. Publish only the accessible Test Site after opening its
+current source; preserve original identity/secrets and do not imply original release.

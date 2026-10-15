@@ -22,7 +22,11 @@ storytelling and format/brand adaptation. They share a quality-review workflow.
 ChatGPT selects and loads guidance through plan_design/get_design_skill rather
 than embedding the entire library in every call. Native flexible documents support
 up to 40 pages with storyboards and notes. See [design skills](docs/DESIGN-SKILLS.md)
-for tools, reference studies, bounds and packaging details.
+for tools, reference studies, bounds and packaging details. Detailed briefs can be
+preserved in ordered source chunks with a requirement checklist, chapter-sized
+context reads and compact resume checkpoints, instead of resending a whole deck.
+Final export blocks unresolved registered mandatory checks; model/human review
+still determines extraction completeness, meaning and factual accuracy.
 
 ## Run locally
 

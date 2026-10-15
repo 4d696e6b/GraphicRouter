@@ -127,6 +127,13 @@ describe("adaptive GraphicRouter briefing", () => {
     expect(reviewHtml).toContain("Ready to compose your design?");
     expect(reviewHtml).toContain("1200 × 1800");
   });
+  it("retains detailed briefs and long answers exactly through the completed handoff and rejects excess instead of clipping", () => {
+    const context="  "+"x".repeat(39970)+"FINAL ORIGINAL REQUIREMENT\n",answer=" "+"y".repeat(15977)+"LAST ANSWER DETAIL\n";
+    const data=payload(buildBriefingMessage({context,answers:{...ready,mustInclude:answer}}));
+    expect(data.context).toBe(context);expect(data.answers).toContainEqual(expect.objectContaining({id:"mustInclude",answer}));
+    expect(briefingSchema.safeParse({context:"x".repeat(40001),answers:ready}).success).toBe(false);
+    expect(briefingSchema.safeParse({context:"",answers:{...ready,mustInclude:"x".repeat(16001)}}).success).toBe(false);
+  });
   it("preserves all supplied hidden answers and rejects unknown fields", () => {
     const answers = Object.fromEntries(questions.map(q => [q.id, `Supplied ${q.id} — ภาษาไทย <script>example</script>`])) as Answers;
     Object.assign(answers, { ...ready, format: "Infographic — square" });

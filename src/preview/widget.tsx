@@ -36,10 +36,10 @@ function render(result: { _meta?: Record<string, unknown>; isError?: boolean; st
   const document = result._meta?.document as DocumentData | undefined;
   if (document) {
     current = undefined; currentCanvas = undefined; currentDocument = document;
-    root.render(<Document data={document} invoke={async name => {
+    root.render(<Document data={document} invoke={async (name,pageIds) => {
       if (!currentDocument) return;
       const b = currentDocument.result.blueprint;
-      const next = await app.callServerTool({ name, arguments: { deckId: b.deckId, version: b.version } });
+      const next = await app.callServerTool({ name, arguments: { deckId: b.deckId, version: b.version,...(name==="get_document"?{pageIds}: {}) } });
       if (next.isError) throw new Error(toolErrorMessage(next));
       render(next);
     }} />); return;
