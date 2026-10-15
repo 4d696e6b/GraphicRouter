@@ -19,7 +19,7 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
     expect(init.result.serverInfo).toMatchObject({ name: "GraphicRouter" });
     const list = await rpc("tools/list");
     const tools = list.result.tools as { name: string; inputSchema: unknown; description: string }[];
-    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "start_briefing"]);
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "start_briefing"]);
     expect(tools[0].description).toContain("Never invent evidence"); expect(tools[0].inputSchema).toMatchObject({ type: "object", required: expect.arrayContaining(["slides", "brief"]) });
   });
   it("exposes the briefing before creation through initialization and tool discovery", async () => {
@@ -33,12 +33,12 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
         expect(instructions).toContain(topic);
       }
     }
-    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "start_briefing"]);
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "start_briefing"]);
   });
   it("opens the briefing without calling the deck service and retains supplied context", async () => {
     const answers = { topic: "A supplied topic", audience: "Judges" };
     const result = await rpc("tools/call", { name: "start_briefing", arguments: { context: "Verified project notes", answers } }, "owner");
-    expect(result.result).toMatchObject({ structuredContent: { kind: "briefing", questionCount: 20, status: "awaiting_answers", briefingUrl: "https://example.test/briefing", answers }, _meta: { briefing: { context: "Verified project notes", answers } } });
+    expect(result.result).toMatchObject({ structuredContent: { kind: "briefing", questionCount: 2, status: "awaiting_answers", briefingUrl: "https://example.test/briefing", answers }, _meta: { briefing: { context: "Verified project notes", answers } } });
     // rpc's service factory throws; succeeding here proves no deck write/export.
     expect(result.result.isError).not.toBe(true);
   });

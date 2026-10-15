@@ -9,6 +9,7 @@ import { R2FileStore } from "./files";
 import { CanvasService } from "./canvas-service";
 import { canvasEngine } from "../engine/canvas";
 import type { CanvasBlueprint } from "../contracts";
+import { renderInspectionPng } from "../engine/raster";
 
 export function database() {
   if (!env.DB) fail("NOT_IMPLEMENTED", "D1 binding DB is unavailable. Configure storage before using decks.");
@@ -37,5 +38,5 @@ export function canvasService() {
   if (!env.SITE_ORIGIN || !env.BUCKET) fail("NOT_IMPLEMENTED", "Canvas storage/origin configuration is unavailable.");
   const db = database();
   return new CanvasService({ store: new D1DeckStore<CanvasBlueprint>(db), files: new R2FileStore(env.BUCKET), engine: canvasEngine, assets,
-    origin: new URL(env.SITE_ORIGIN).origin, canva: canvaClient(db) ?? disconnected });
+    origin: new URL(env.SITE_ORIGIN).origin, canva: canvaClient(db) ?? disconnected, raster: renderInspectionPng });
 }

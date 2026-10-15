@@ -47,3 +47,8 @@ export interface CanvasEngine {
 export const CANVAS_TOOL_NAMES = ["create_canvas", "edit_canvas", "get_canvas", "export_canvas", "send_canvas_to_canva"] as const;
 export type CanvasToolName = (typeof CANVAS_TOOL_NAMES)[number];
 export { deckVersionSchema as canvasVersionSchema };
+export const inspectCanvasSchema = deckVersionSchema.extend({
+  region: z.object({ x: z.number().int().nonnegative(), y: z.number().int().nonnegative(), width: z.number().int().min(64).max(4000), height: z.number().int().min(64).max(4000) }).strict().optional(),
+});
+export interface InspectionRaster { bytes: Uint8Array; width: number; height: number; fontNote: string }
+export type CanvasRasterizer = (svg: string, canvas: { width: number; height: number }) => Promise<InspectionRaster>;

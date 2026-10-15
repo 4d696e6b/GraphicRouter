@@ -22,6 +22,7 @@
     "@hookform/resolvers": "^5.7.1",
     "@modelcontextprotocol/ext-apps": "^1.0.1",
     "@modelcontextprotocol/sdk": "^1.20.2",
+    "@resvg/resvg-wasm": "2.6.2",
     "@shadcn/react": "^0.3.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
