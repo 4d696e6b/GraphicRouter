@@ -42,8 +42,9 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
     // rpc's service factory throws; succeeding here proves no deck write/export.
     expect(result.result.isError).not.toBe(true);
     // Current call results retain the hard requirement even if host discovery is cached.
-    expect(result.result.content[0].text).toContain("Every visible heading, number, label");
-    expect(result.result.content[0].text).toContain("review_canva_design");
+    const callGuidance = (result.result.content as { text: string }[])[0].text;
+    expect(callGuidance).toContain("Every visible heading, number, label");
+    expect(callGuidance).toContain("review_canva_design");
   });
   it("advertises direct new-Canva creation consistently and does not add template questions to that route", async () => {
     const init = await rpc("initialize", { protocolVersion: "2025-03-26", capabilities: {}, clientInfo: { name: "test", version: "1" } });
