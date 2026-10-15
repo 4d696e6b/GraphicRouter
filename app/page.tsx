@@ -8,7 +8,7 @@ export default async function Home() {
       <p style={{ color: "#7C3AED", fontWeight: 700, letterSpacing: ".12em", fontSize: 12 }}>GRAPHICROUTER / CANVAS WORKSPACE</p>
       <h1 style={{ fontSize: "clamp(32px, 6vw, 60px)", lineHeight: 1.1, letterSpacing: "-.04em", margin: "24px 0" }}>Plan with purpose.<br />Create in Canva.</h1>
       <p style={{ maxWidth: 620, color: "#62606B", lineHeight: 1.8 }}>Turn your brief into an infographic composed from individual editable objects. ChatGPT plans the canvas, adds structure and content, then refines the result for Canva.</p>
-      <p style={{ background: "#EDE9F5", padding: 20, borderRadius: 12, lineHeight: 1.7 }}>Choose your project complexity, then let Canva create a new design, adapt your existing Canva template/design, or compose objects in GraphicRouter. New Canva designs need no Brand Template. Known answers are reused.</p>
+      <p style={{ background: "#EDE9F5", padding: 20, borderRadius: 12, lineHeight: 1.7 }}>Choose your project complexity, then compose native objects or adapt an editable Canva source. Every heading, number and label must be separate from the background. Canva-generated designs stay drafts until their text layers and images have been checked. Known answers are reused.</p>
       <a href="/briefing" style={{ color: "#6D28D9", fontWeight: 700 }}>Open the design brief →</a>
       <section style={{ margin: "40px 0", lineHeight: 1.8 }} aria-label="How to use GraphicRouter">
         <h2 style={{ fontSize: 24 }}>Your facts. Your composition.</h2>
@@ -16,7 +16,7 @@ export default async function Home() {
           <li>Select GraphicRouter in ChatGPT and describe the graphic you want.</li>
           <li>Choose a quick, balanced or detailed brief, then pick your starting point.</li>
           <li>Compose editable objects or adapt an accessible Canva copy; inspect the result before delivery.</li>
-          <li>Open the editable Canva design, or keep the native PowerPoint fallback.</li>
+          <li>Review the checked Canva preview before saving, or keep the native PowerPoint fallback.</li>
         </ol>
         <p>Each Canva import creates a separate design. Canva edits do not sync back. Manual PowerPoint upload remains the fallback once export is available.</p>
       </section>

@@ -119,3 +119,30 @@ feature acceptance criteria, and the sample fixture is explicitly a draft.
 - [PptxGenJS text API](https://gitbrent.github.io/PptxGenJS/docs/api-text/)
 
 Check current official documentation while implementing API integrations.
+
+## Native text is a delivery requirement — 2026-10-15
+
+The user clarified that designs must not be a single-layer image: all headings,
+values, labels, captions and source copy must be independent native text objects.
+Backgrounds and illustrations must be text-free. A hybrid with baked lettering
+and editable overlays fails, even if Canva marks the image itself editable.
+
+The brief recommends native blank-canvas composition first and explains its
+primitive/asset limits. Existing source and generation routes remain selectable,
+but generated designs are drafts until real text/fill and visual checks pass.
+This supersedes the earlier unconditional recommendation of Canva generation.
+No selected route is silently switched and no failed draft is regenerated at
+additional cost automatically.
+
+Review the actual Canva richtexts and fills, exact required copy per target,
+number/unit spelling, collision/clipping and verified source URLs. Inspect the
+latest full-page preview and relevant close-ups after the last edit. Suspicious
+image layers require a text-free/background-only diagnostic in an isolated audit
+transaction; cancel that audit without touching another draft. Unknown image
+lettering prevents readiness. Do not cover baked copy with replacement text.
+Replace/rebuild the affected section using clean assets and native text.
+
+review_canva_design is an advisory snapshot checkpoint, not OCR, a direct Canva
+API verifier, independent fact checking or an external commit lock. Ready means
+ready for the user's review; saving still follows Canva's tool approval rules.
+Import success is explicitly labelled separately from editability verification.

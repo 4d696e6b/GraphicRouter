@@ -11,6 +11,9 @@ import { briefingSchema, getQuestions } from "../briefing/questions";
 import { CANVAS_TOOL_NAMES, createCanvasSchema, editCanvasSchema, canvasVersionSchema, inspectCanvasSchema } from "../contracts";
 import type { CanvasService } from "../server/canvas-service";
 import { canvasData } from "../preview/data";
+import { reviewCanvaDesignSchema } from "../contracts/design-review";
+import { reviewCanvaDesign } from "../engine/editability-review";
+import { editabilityPolicy } from "../briefing/editability-policy";
 
 const uri = "ui://graphicrouter/presentation.html";
 const descriptions = {
@@ -23,7 +26,7 @@ Create exactly five slides from the completed brief using supplied facts only. S
   send_to_canva: "Import this deck version's binary PowerPoint into Canva. Requires Canva authorization. Reuses an existing job for this version. Each version creates a new Canva design; edits made there never sync back. Pending import must not block presenting the saved deck.",
 };
 export function createMcpServer(owner: string | null, getService: () => DeckService, origin = "", getCanvasService?: () => CanvasService) {
-  const server = new McpServer({ name: "GraphicRouter", version: "0.6.0" }, { instructions: plannerInstructions });
+  const server = new McpServer({ name: "GraphicRouter", version: "0.7.0" }, { instructions: plannerInstructions });
   registerAppResource(server, "Presentation", uri, {}, async () => ({ contents: [{ uri, mimeType: RESOURCE_MIME_TYPE,
     text: `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><div id="root" role="status">Waiting for a saved presentation…</div><script>${widgetJs.replace(/<\/script/gi, "<\\/script")}</script></body></html>`,
     _meta: { ui: { prefersBorder: true, csp: { connectDomains: [], resourceDomains: [] } } },
@@ -98,9 +101,22 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
       return { content: [{ type: "image" as const, mimeType: "image/png", data: btoa(chunks.join("")) }, { type: "text" as const, text: JSON.stringify(report) }], structuredContent: report };
     } catch (error) { const detail = safeError(error); return { isError: true, content: [{ type: "text" as const, text: JSON.stringify(detail) }], structuredContent: { error: detail } }; }
   });
+  server.registerTool("review_canva_design", {
+    description: "Review a CURRENT supplied Canva page snapshot before calling it complete or fully editable. Obtain native richtexts/boxes and image fills through Canva tools; do not invent IDs or geometry. Supply exact required copy and verified links. Inspect image-only backgrounds separately: editable=true on an image does not make lettering editable. Text baked into images blocks delivery; not_checked images or missing close-up review require further inspection. Detect duplicate/colliding text, bounds, missing whole-word copy and mismatched URLs. This read-only tool does not fetch Canva, perform OCR, verify facts independently, or enforce an external commit lock. Repeat per page and after edits. Show the checked preview and obey Canva's explicit approval before saving. Never commit a diagnostic text-removal transaction.",
+    inputSchema: reviewCanvaDesignSchema,
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+  }, async (args: unknown) => {
+    try {
+      if (!owner) fail("UNAUTHORIZED", "Sign in with ChatGPT to review a design.");
+      const parsed = reviewCanvaDesignSchema.safeParse(args);
+      if (!parsed.success) fail("VALIDATION_FAILED", "Supply bounded actual page objects, exact required copy, verified HTTPS links and honest image/visual inspection status.");
+      const report = reviewCanvaDesign(parsed.data);
+      return { content: [{ type: "text" as const, text: JSON.stringify(report) }], structuredContent: report };
+    } catch (error) { const detail = safeError(error); return { isError: true, content: [{ type: "text" as const, text: JSON.stringify(detail) }], structuredContent: { error: detail } }; }
+  });
   server.registerTool("start_briefing", {
     title: "GraphicRouter design brief",
-    description: "Start an adaptive design brief with complexity first, then three starting points: Let Canva create a design (recommended for new work), Use my Canva template/design, or Start from a blank canvas. Call immediately instead of a prose questionnaire. Ask roughly6/9/14 relevant questions; only existing-source work adds a source/fallback question. Reuse known answers. Optional prompts must use supported keys such as topic/audience/outcome/evidence/mustInclude/visuals, never content. Wait for submission and do not reopen intake. A completed new-Canva brief goes directly to connected Canva create-design without a Brand Template search or another route confirmation. Existing-source work adapts a copy and can explicitly allow a new Canva design if no source fits. Honour strict source requirements and legacy choices; never silently switch routes. Native Canva is the source of truth in those modes; this backend does not search the public Canva catalogue. GraphicRouter blank-canvas work uses create_canvas→edit_canvas→inspect_canvas→Canva. Rich briefs and narrow edits can skip intake. If no app is visible, offer briefingUrl or ask one question at a time.",
+    description: "Start an adaptive design brief with complexity first, then native blank-canvas objects (recommended for editable text), an existing Canva source, or a new Canva-generated draft. Every heading/number/label must be a native text object separate from images; generated drafts need review_canva_design and background-only inspection, not a promise of editability. Call immediately instead of prose questions. Ask roughly6/9/14 relevant questions; existing-source work alone adds a source/fallback question. Reuse known answers. Optional prompts use supported keys such as topic/audience/outcome/evidence/mustInclude/visuals, never content. Wait for submission; do not restart intake. New Canva creation needs no Brand Template search. Respect strict sources/explicit fallback and legacy choices. Native Canva is its mode's source of truth; no public-catalogue backend search or two-way sync exists. Blank-canvas work uses create_canvas→edit_canvas→inspect_canvas→Canva. Rich briefs/narrow edits can skip intake. If the app cannot show, offer briefingUrl or one question per message.",
     inputSchema: briefingSchema,
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     _meta: { ui: { resourceUri: uri }, "openai/outputTemplate": uri },
@@ -112,7 +128,7 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
       const data = parsed.data;
       const briefingId = crypto.randomUUID();
       return {
-        content: [{ type: "text" as const, text: "GraphicRouter's adaptive design dialog is open. Ask complexity first, then choose new Canva design, an existing Canva source, or GraphicRouter blank canvas. Wait for submission and continue its selected route with the completed brief, without another interview. New Canva design creation needs no Brand Template search. Respect an existing source requirement and any explicit fallback permission; visually review before delivery. If no dialog is visible, offer briefingUrl." }],
+        content: [{ type: "text" as const, text: `GraphicRouter's adaptive design dialog is open. Ask complexity first, then choose native blank-canvas objects, an inspected existing Canva source, or a Canva-generated draft. Native composition is recommended for separate editable text. Wait for submission and continue the selected route without another interview. New Canva generation needs no Brand Template search. Respect strict sources and explicit fallback permission. If no dialog is visible, offer briefingUrl.\n\n${editabilityPolicy}` }],
         structuredContent: { kind: "briefing", briefingId, status: "awaiting_answers", questionCount: getQuestions(data.answers).length, briefingUrl: `${origin}/briefing`, ...data },
         _meta: { briefing: data, briefingId },
       };

@@ -31,6 +31,13 @@ function expectIssue(run: () => unknown, code: string) {
 }
 
 describe("editable canvas engine", () => {
+  it("rejects an obsolete duplicate text overlay without changing the previous version", () => {
+    const b = populated(), before = structuredClone(b);
+    expectIssue(() => edit(b, [{ type: "add_element", element: text({id:"obsolete-copy", zIndex:6}) }]), "DUPLICATE_TEXT_LAYER");
+    expect(b).toEqual(before);
+    const next = edit(b, [{ type: "add_element", element: text({id:"separate-caption", y:900, zIndex:6}) }]);
+    expect(next.elements).toHaveLength(b.elements.length + 1);
+  });
   it("starts with an actual blank portrait canvas and renders zero objects", async () => {
     const b = blank();
     expect(b).toMatchObject({ schemaVersion: 2, kind: "canvas", deckId, version: 1, canvas: { width: 1080, height: 1920 }, elements: [], changes: [], validationIssues: [] });

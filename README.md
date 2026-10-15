@@ -1,14 +1,24 @@
 # GraphicRouter
 
-Plan the story. Compose the slides. Direct the changes.
+ChatGPT plans a graphic from its brief, composes individual objects, and prepares
+an editable Canva handoff. The adaptive brief asks complexity and starting point
+first, then approximately 6/9/14 relevant questions. Known answers are reused.
+Legacy five-slide presentations and speaker notes remain supported.
 
-A ChatGPT presentation plugin planned for a two-person, 24-hour hackathon. ChatGPT organizes supplied facts into a five-slide story; a deterministic engine builds separate editable elements and exports a PowerPoint for Canva.
+Every heading, number, label and source must be its own native editable text
+object, separate from backgrounds and illustrations. A movable full-page image
+with text overlays does not meet this requirement. Native GraphicRouter objects
+are recommended for reliable structure. Existing Canva sources and generated
+Canva drafts require actual layer and visual inspection before final delivery.
 
-**Status: initialized, not implemented.** This repository contains a runnable framework shell, shared TypeScript/Zod contracts, a draft input fixture, contract checks, and two independent work streams. The slide engine, MCP handlers, persistence, previews, and Canva connection are tasks, not working features yet. A private Sites project is registered; no deployment has been made.
+The native engine supports English Arial text, shapes, straight lines and bundled
+PNG/JPEG assets. It does not provide arbitrary fonts, custom uploads or Canva's
+full illustration library. ChatGPT supplies content and design choices; there is
+no additional model service. Facts come from supplied or verified evidence.
 
-## Start locally
+## Run locally
 
-Use Node.js 24 and npm. Run from this repository root:
+Use Node.js 24 (minimum 22.13), then:
 
 ```sh
 npm ci
@@ -16,56 +26,41 @@ npm run check
 npm run dev
 ```
 
-Open the local URL printed by the server. The page identifies itself as a project starter. `npm run build` validates the deployable framework shell without publishing it.
+`npm run build` builds the Sites Worker without publishing. See
+[server setup](src/server/SETUP.md) for local D1/R2 initialization and Canva OAuth.
+Keep credentials in ignored local environment files or Sites runtime secrets.
+Never paste them into code, a briefing, or Git.
 
-For optional future Canva credentials, copy `.env.example` to `.env.local`; initialization requires no credentials. Never commit real values. If an existing npm cache has permissions problems, use `npm ci --cache .sites-runtime/npm-cache`.
+## Working features and verification limits
 
-## Two builders, two branches
+- Versioned owner-scoped canvases and decks, immutable revisions, safe stale-write
+  errors, SVG construction previews, PNG inspection, native PPTX and notes export.
+- Canva OAuth and asynchronous binary import adapters with saved-job polling,
+  duplicate-import protection, uncertain-outcome handling and manual PPTX fallback.
+- Optional host orchestration through connected Canva tools for accessible existing
+  designs or new drafts. This requires that chat's Canva connection; it is separate
+  from the application's OAuth import connection. No public template catalogue
+  search or two-way synchronization is implemented.
+- `review_canva_design` checks a bounded supplied page snapshot for native copy,
+  duplicate/colliding text, clipping, exact source links and caller-reported image
+  inspection. It does not fetch Canva, run OCR or enforce another tool's save lock.
+  Unchecked images and visual problems prevent readiness. A pass still needs the
+  latest preview and Canva's required user approval before saving edits.
 
-Each person should use a **separate clone** and a separate Codex chat. Open the clone as the Codex project; do not run both agents in one shared working directory.
+Successful export/import or a schema check does not prove visual quality, factual
+accuracy or Canva editability. Every imported Canva result needs its own review.
+See [current acceptance evidence](docs/tasks/builder-a-slide-engine.md) for actual
+checks and remaining account-dependent limitations; historical counts are dated.
 
-**Builder A: slide engine — [GitHub task #1](https://github.com/4d696e6b/GraphicRouter/issues/1)**
+## Collaboration and deployment
 
-```sh
-git clone https://github.com/4d696e6b/GraphicRouter.git graphicrouter-engine
-cd graphicrouter-engine
-git switch feat/slide-engine
-npm ci
-```
+Use separate clones and chats for the two builders. A works on
+`feat/slide-engine`; B works on `feat/chatgpt-canva`. See
+[coordination](docs/COORDINATION.md), [product](docs/PRODUCT.md),
+[contracts](docs/CONTRACTS.md) and the [A](docs/tasks/builder-a-slide-engine.md) /
+[B](docs/tasks/builder-b-chatgpt-canva.md) task files.
 
-Paste the prompt from [Builder A's task](docs/tasks/builder-a-slide-engine.md) into Codex. Owns composition, validation, revisions, native PowerPoint export, and the final pitch fixture.
-
-**Builder B: ChatGPT and Canva — [GitHub task #2](https://github.com/4d696e6b/GraphicRouter/issues/2)**
-
-```sh
-git clone https://github.com/4d696e6b/GraphicRouter.git graphicrouter-integrations
-cd graphicrouter-integrations
-git switch feat/chatgpt-canva
-npm ci
-```
-
-Paste the prompt from [Builder B's task](docs/tasks/builder-b-chatgpt-canva.md) into Codex. Owns tools, service, preview UI, storage, Canva integration, and deployment.
-
-## Agree once, then work independently
-
-- [Product and acceptance criteria](docs/PRODUCT.md)
-- [Shared interface specification](docs/CONTRACTS.md)
-- [Branch workflow, ownership, and checkpoints](docs/COORDINATION.md)
-- [Codex project guidance](AGENTS.md)
-
-The common handoff is `SlideEngine` in `src/contracts/engine.ts`. Builder A will export `engine: SlideEngine` from `src/engine/index.ts`. Builder B develops against an injected implementation and may use an explicitly labelled test double until the engine is merged. The service must never report a mock as a real export or Canva success.
-
-## Commands
-
-- `npm run dev`: local framework development.
-- `npm run typecheck`: strict TypeScript checks.
-- `npm test`: contract checks now; implementation tests are added by their owners.
-- `npm run check`: typecheck and tests.
-- `npm run build`: build the Sites Worker locally.
-- `npm run db:generate`: generate migrations after Builder B defines storage.
-
-## Hosting
-
-`.openai/hosting.json` retains the existing private Sites identity. Database/file bindings remain disabled until Builder B implements their use. GitHub is the collaboration remote. Do not create a second Site for this project. Builder B handles Sites source synchronization and publishing after integration; GitHub pushes alone do not deploy this scaffold.
-
-The site owner's production access is separate from access to this GitHub repository. A second builder may need the owner's help with Sites configuration and Canva authorization. No hosting or Canva credentials are included.
+`.openai/hosting.json` is the checkout's deployment identity. GitHub pushes alone
+do not publish Sites. Preserve that identity, audience and server-side credentials.
+The private GraphicRouter Test Site is a separate owner-authorized test copy;
+its identity and secrets must never replace the original Site's configuration.

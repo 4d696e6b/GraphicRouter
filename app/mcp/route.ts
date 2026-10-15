@@ -3,6 +3,7 @@ import { handleMcp } from "@/src/mcp/server";
 import { service, canvasService } from "@/src/server/runtime";
 import { errorResponse, privateHeaders } from "@/src/server/http";
 import { fail } from "@/src/server/errors";
+import { readJsonBody } from "@/src/server/json-body";
 
 export async function POST(request: Request) {
   try {
@@ -10,11 +11,11 @@ export async function POST(request: Request) {
     const user = await getChatGPTUser();
     const origin = request.headers.get("origin");
     if (origin && origin !== new URL(request.url).origin) fail("UNAUTHORIZED", "Cross-origin MCP requests are not allowed.");
-    let body: { method?: unknown } | null;
-    try { body = await request.clone().json() as { method?: unknown } | null; }
-    catch { fail("VALIDATION_FAILED", "MCP requests must contain valid JSON."); }
+    const { text, value } = await readJsonBody(request, 1_000_000);
+    const body = value as { method?: unknown } | null;
     if (body?.method === "tools/call" && !user) fail("UNAUTHORIZED", "Sign in with ChatGPT to use presentation tools.");
-    const response = await handleMcp(request, user?.userId ?? null, service, canvasService);
+    const boundedRequest = new Request(request.url, { method: request.method, headers: request.headers, body: text, signal: request.signal });
+    const response = await handleMcp(boundedRequest, user?.userId ?? null, service, canvasService);
     Object.entries(privateHeaders).forEach(([key, value]) => response.headers.set(key, value));
     return response;
   } catch (error) { return errorResponse(error); }

@@ -17,7 +17,7 @@ describe("presentation failure states using labelled fixtures", () => {
   it("shows the actual Canva editor link as the finished deliverable", () => {
     const blueprint = testEngine.createBlueprint(sampleDeck, { deckId: crypto.randomUUID(), version: 1 });
     const html = renderToStaticMarkup(<Presentation invoke={async () => {}} data={{ result: { blueprint, previewUrl: "https://example.test/preview", canva: { status: "succeeded", jobId: "test-job", designId: "test-design", editUrl: "https://www.canva.com/design/test/edit" } }, previews: null }} />);
-    expect(html).toContain("Your editable Canva presentation is ready");
+    expect(html).toContain("Canva import complete. Check its text layers before presenting.");
     expect(html).toContain('href="https://www.canva.com/design/test/edit"');
     expect(html).not.toContain("Create editable Canva deck");
   });

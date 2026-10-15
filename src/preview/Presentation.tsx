@@ -21,7 +21,7 @@ export function Presentation({ data, invoke }: { data: PresentationData; invoke?
     <h1 style={{ fontSize: "clamp(24px, 5vw, 40px)", margin: "12px 0" }}>{b.input.title}</h1>
     <p>{b.slides.length} slides · {b.input.durationSeconds / 60}-minute pitch</p>
     <section aria-label="Canva delivery" style={{ background: "#EDE9F5", borderRadius: 12, padding: "16px 20px", margin: "20px 0", lineHeight: 1.6 }}>
-      <strong>{result.canva.status === "succeeded" ? "Your editable Canva presentation is ready." : result.canva.status === "pending" ? "Creating your editable Canva presentation…" : result.canva.status === "connection_required" ? "Connect Canva to finish your presentation." : "Finish your presentation in Canva."}</strong>
+      <strong>{result.canva.status === "succeeded" ? "Canva import complete. Check its text layers before presenting." : result.canva.status === "pending" ? "Importing your native slides into Canva…" : result.canva.status === "connection_required" ? "Connect Canva to finish your presentation." : "Finish your presentation in Canva."}</strong>
       {result.canva.status === "succeeded" ? <p><a href={result.canva.editUrl} target="_blank" rel="noreferrer">Open and edit in Canva →</a></p>
         : <p style={{ marginBottom: 0 }}>{result.canva.status === "connection_required" ? "A Canva design link has not been confirmed yet. Your slides and PowerPoint fallback are saved." : "The preview is your editable slide plan. Canva is the final design destination; PowerPoint is also available as a portable fallback."}</p>}
     </section>

@@ -75,6 +75,8 @@ function validate(blueprint: CanvasBlueprint): ValidationIssue[] {
   }
   const texts = ordered.filter((element) => element.type === "text");
   for (let i = 0; i < texts.length; i++) for (let j = i + 1; j < texts.length; j++) {
+    const a = texts[i], b = texts[j];
+    if (a.text.replace(/\s+/g, " ").trim() === b.text.replace(/\s+/g, " ").trim() && (["x", "y", "width", "height"] as const).every(key => Math.abs(a[key] - b[key]) < 1)) issue("DUPLICATE_TEXT_LAYER", a.id, `Duplicate text overlays ${b.id}. Remove the obsolete copy before saving or exporting.`);
     if (intersects(texts[i], texts[j])) issue("TEXT_OVERLAP", texts[i].id, `This text box overlaps ${texts[j].id}. Check that the overlap is intentional.`, "warning");
   }
   return issues;
