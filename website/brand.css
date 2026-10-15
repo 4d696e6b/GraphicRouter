@@ -484,7 +484,7 @@ html { background: #faf8ff; }
 .ambientPointer { position: absolute; left: -520px; top: -520px; width: 1040px; height: 1040px; will-change: transform; }
 .ambientField {
   width: 100%; height: 100%;
-  background: radial-gradient(520px circle at center,rgb(124 58 237 / 10.37%),transparent 72%);
+  background: radial-gradient(520px circle at center,rgb(124 58 237 / 10.89%),transparent 72%);
 }
 .graphicIntro {
   position: fixed; z-index: 40; left: 24px; bottom: 24px; width: 270px;

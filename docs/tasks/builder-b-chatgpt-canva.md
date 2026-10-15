@@ -651,3 +651,6 @@ not count as verification of the new standalone static delivery.
   Radius, fade stop, tracking and spring response unchanged.
 - TypeScript and 129 tests pass; refreshed browser confirms updated gradient.
   Screenshot: outputs/static-website/pointer-glow-intensity.jpg.
+
+- Increased pointer glow intensity another 5% relative: 10.37% to 10.89% alpha.
+  Radius and spring motion unchanged. Static consistency check passes.
