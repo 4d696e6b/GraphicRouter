@@ -1,5 +1,6 @@
 import { mountScene } from "./scene.js";
 import { nextTab, copyText } from "./interactions.js";
+import { mountHeroProximity } from "./hero-proximity.js";
 
 function mountPage() {
   const root = document.getElementById("static-site");
@@ -63,6 +64,7 @@ function mountPage() {
   reduced.addEventListener("change", () => { sync(); window.dispatchEvent(new Event("graphicrouter:motion")); }, { signal });
   window.addEventListener("graphicrouter:motion", sync, { signal }); document.addEventListener("visibilitychange", sync, { signal }); sync();
   document.querySelectorAll("[data-scene]").forEach(element => dispose.push(mountScene(element, isReduced)));
+  dispose.push(mountHeroProximity(root.querySelector(".hero"), isReduced));
   return () => { listeners.abort(); dispose.forEach(cleanup => cleanup()); animations.forEach((_, animation) => animation.cancel()); animations.clear(); };
 }
 let cleanup = mountPage();
