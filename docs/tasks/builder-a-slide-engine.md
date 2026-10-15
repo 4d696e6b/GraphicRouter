@@ -640,11 +640,22 @@ selection require separate real-use verification. No generation credits consumed
 - [x] Model-result JSON7496 bytes versus303555 bytes (97.53% smaller). This is
   synthetic response size, not token/latency/transport/visual quality benchmarking.
 - [x] Main npm run build passes; Test checkout also passes233 tests.
-- [ ] Private Test deployment evidence recorded below once
-  complete. This account can access Test again (opened source1664127 before edits);
+- [x] Private Test release succeeded: version5, source269e9808ad05e8ee241615eaf224b80b9c2f38d9,
+  deployment appgdep_6ad0e4b687348191bf764ffa969bdc7d; MCP enabled, unchanged secret
+  revision2. https://graphicrouter-test.pacharapol-pim.chatgpt.site. Test build passes. This account can access Test again (opened source1664127 before edits);
   original GraphicRouter now returns project_not_found and must remain untouched.
 
 No dependency request or package change is needed. The Test rollout includes the
 previously merged design-skills/documents work because its live source was older.
 Real ChatGPT long-deck orchestration and current Canva import/layer fidelity remain
 separate real-use checks. No Canva import or generation was started by these tests.
+
+- [x] Connected Test start_briefing returned get_document_context,
+  append_document_requirements, review_document_requirements and new native bounds.
+  This is a routing smoke check only; no document/generation/import was created.
+  The current chat still exposes the older tool catalog, so new-tool orchestration
+  must be tried in a fresh chat after rediscovery. Exact MCP discovery and operations
+  are covered by the local integration tests, not claimed as a live full-deck run.
+- [x] PR: https://github.com/4d696e6b/GraphicRouter/pull/16. Implementation committed
+  in contract/feature/evidence increments; original Site checkout remains clean at
+  484047c0703a59dcac02d7fcbf4920e736e9b5bc and was not republished.
