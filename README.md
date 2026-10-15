@@ -80,3 +80,6 @@ Use separate clones and chats for the two builders. A works on
 do not publish Sites. Preserve that identity, audience and server-side credentials.
 The private GraphicRouter Test Site is a separate owner-authorized test copy;
 its identity and secrets must never replace the original Site's configuration.
+
+The latest [release quality checkpoint](docs/RELEASE-QUALITY.md) records browser
+verification, compatible dependency patches and remaining public-release gates.
