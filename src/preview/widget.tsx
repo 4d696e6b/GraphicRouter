@@ -10,7 +10,7 @@ import { briefingSchema } from "../briefing/questions";
 import { sendBriefingToChat } from "./briefing-handoff";
 import { Canvas, type CanvasData } from "./Canvas";
 
-const app = new App({ name: "GraphicRouter canvas", version: "0.4.0" }, {});
+const app = new App({ name: "GraphicRouter canvas", version: "0.10.1" }, {});
 const root = createRoot(document.getElementById("root")!);
 let current: PresentationData | undefined;
 let currentDocument: DocumentData | undefined;

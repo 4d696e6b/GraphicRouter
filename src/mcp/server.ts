@@ -32,7 +32,7 @@ Create exactly five slides from the completed brief using supplied facts only. S
   send_to_canva: "Import this deck version's binary PowerPoint into Canva. Requires Canva authorization. Reuses an existing job for this version. Each version creates a new Canva design; edits made there never sync back. Pending import must not block presenting the saved deck.",
 };
 export function createMcpServer(owner: string | null, getService: () => DeckService, origin = "", getCanvasService?: () => CanvasService, getDocumentService?: () => DocumentService) {
-  const server = new McpServer({ name: "GraphicRouter", version: "0.10.0" }, { instructions: plannerInstructions });
+  const server = new McpServer({ name: "GraphicRouter", version: "0.10.1" }, { instructions: plannerInstructions });
   registerAppResource(server, "Presentation", uri, {}, async () => ({ contents: [{ uri, mimeType: RESOURCE_MIME_TYPE,
     text: `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><div id="root" role="status">Waiting for a saved presentation…</div><script>${widgetJs.replace(/<\/script/gi, "<\\/script")}</script></body></html>`,
     _meta: { ui: { prefersBorder: true, csp: { connectDomains: [], resourceDomains: [] } } },
