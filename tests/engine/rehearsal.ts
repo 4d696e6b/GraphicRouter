@@ -14,7 +14,11 @@ export function rehearsalProof(before: DeckBlueprint, after: DeckBlueprint, orig
   const changedElementIds = original.filter((element) => !same(element, revised.find((value) => value.id === element.id))).map((element) => element.id);
   const oldTarget = original.find((element) => element.id === "slide3.headline"), newTarget = revised.find((element) => element.id === "slide3.headline");
   const identicalAsideFromPaint = oldTarget?.type === "text" && newTarget?.type === "text" && same({ ...oldTarget, color: newTarget.color }, newTarget);
-  const validHeader = same({ ...before, version: after.version, changes: after.changes, validationIssues: after.validationIssues, slides: after.slides }, after);
+  const expectedSlides = structuredClone(before.slides);
+  const expectedTarget = expectedSlides.flatMap((slide) => slide.elements).find((element) => element.id === "slide3.headline");
+  if (expectedTarget?.type === "text" && newTarget?.type === "text") expectedTarget.color = structuredClone(newTarget.color);
+  // Compare complete slides, including metadata/notes on the target slide.
+  const validHeader = same({ ...before, version: after.version, changes: after.changes, validationIssues: after.validationIssues, slides: expectedSlides }, after);
   const originalZip = readPptx(originalPptx), revisedZip = readPptx(revisedPptx);
   const unchangedSlideIds = before.slides.filter((slide) => same(slide, after.slides.find((value) => value.id === slide.id))).map((slide) => slide.id);
   const unchangedPptxPages = [1, 2, 4, 5].filter((page) => {

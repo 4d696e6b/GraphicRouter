@@ -158,3 +158,14 @@ every PR; B handles platform/build integration.
   confirm the resulting deck before final presentation freeze. Generated artifacts
   here are direct engine outputs, not evidence of that service creation.
 - Remaining account blockers and browser-control testing are unchanged.
+
+## Builder B review correction
+
+- Reproduced B's `fa9bf40` finding: the offline proof incorrectly accepted changed
+  notes on slide 3 alongside the headline recolour. Added the exact negative case
+  and confirmed it failed before the fix.
+- The proof now compares complete slide objects after normalizing only the target
+  paint, so target-slide notes and other metadata cannot be overlooked.
+- `GRAPHICROUTER_ARTIFACTS=1 npm run check`: 39 tests pass; generated pitch/replay
+  artifacts refreshed. This fixes the test/handoff proof, not the production engine
+  revision path, whose preservation checks already pass. No B files changed.

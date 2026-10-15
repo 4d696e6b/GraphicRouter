@@ -44,6 +44,9 @@ it("generates a native two-slide import probe and a real five-slide engine hando
   const unrelatedChange = structuredClone(revised);
   unrelatedChange.slides[0].notes.core += " Unrelated change.";
   expect(() => rehearsalProof(blueprint, unrelatedChange, bytes, changed)).toThrow("exact-revision proof");
+  const changedSlideNotes = structuredClone(revised);
+  changedSlideNotes.slides[2].notes.core += " Unrelated note on the target slide.";
+  expect(() => rehearsalProof(blueprint, changedSlideNotes, bytes, changed)).toThrow("exact-revision proof");
   expect(() => rehearsalProof(blueprint, revised, bytes, bytes)).toThrow("expected named headline");
   const unsafeTitle = "</script><script>alert(1)</script>";
   const titledBefore = structuredClone(blueprint), titledAfter = structuredClone(revised);
