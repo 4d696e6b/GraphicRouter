@@ -1,0 +1,10 @@
+---
+description: Shared GraphicRouter ownership, contracts, and implementation boundaries
+alwaysApply: true
+---
+
+Read and follow the repository's `AGENTS.md`, `docs/CONTRACTS.md`,
+`docs/COORDINATION.md`, and your assigned file in `docs/tasks/`.
+Work on your assigned feature branch and respect file ownership.
+Use the existing shared contracts; preserve immutable deck versions.
+Never present scaffolding, fixtures, test doubles, or unverified imports as working features.
