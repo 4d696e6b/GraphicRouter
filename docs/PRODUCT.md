@@ -7,8 +7,9 @@ ChatGPT selects dimensions, palette, hierarchy, positions, sizes and individual
 objects; no fixed layout recipe is used by the canvas engine. The deterministic
 renderer validates and draws these object choices, without an extra model service.
 
-The question dialog accepts one-page infographics and collects up to 20 useful
-answers one at a time. Rich briefs and quick drafts can skip optional intake.
+The question dialog first asks complexity and template preference, then collects
+roughly6/9/14 relevant answers (plus an optional template source) one at a time.
+Known answers are reused; topic-specific question wording can be supplied by ChatGPT. Rich briefs and quick drafts can skip optional intake.
 Old five-slide presentation tools and stored decks remain available explicitly.
 The canvas engine supports bounded portrait/square/landscape/custom dimensions,
 Arial English text, rectangles, ellipses, lines and registered images. It does not
@@ -20,6 +21,26 @@ Every edit pass saves an immutable version and returns exact element previews.
 Canva receives native objects through PowerPoint import. Import success is
 separate from visual fidelity/editability verification. Stored canvas versions
 remain the source of truth; manual Canva edits do not sync back.
+
+
+## Adaptive brief and visual review update
+
+Quick/balanced/detailed work gets a shorter or richer brief. The template choice
+routes ChatGPT to connected Canva tools for accessible Brand Templates or user
+provided designs; it never claims to search the entire public catalogue. It copies
+or instantiates the source, inspects supported fields, adapts the copy, shows the
+preview, and follows Canva's required user approval before committing changes.
+The native Canva copy is the source of truth in this mode. The backend's existing
+OAuth/import adapter does not gain template editing by implication; the connected
+Canva tools must be available to the chat, and missing access is a visible blocker.
+
+Blank-canvas work now uses inspect_canvas to return an actual PNG to the model,
+not only private widget previews. The PNG is generated offline from authorized
+stored objects, supports bounded detail crops, and uses licensed Liberation Sans
+as an Arial-compatible inspection substitute. The final editable objects keep
+Arial. Advisory checks for phone-size text, dense copy, weak hierarchy and edge
+safety guide a bounded critique/revision loop without claiming an aesthetic score.
+Native Canva appearance needs its own connected preview inspection.
 
 ---
 

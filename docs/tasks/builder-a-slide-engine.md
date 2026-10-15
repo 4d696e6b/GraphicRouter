@@ -369,3 +369,56 @@ the earlier template-only five-slide restriction. The original deck path is reta
   no custom fonts, arbitrary asset ingestion, rotation, gradients or complex vector
   illustration. Composition freedom is not a promise of every graphic capability.
   Subjective quality still needs human review at actual reading size.
+
+## Adaptive briefing and image inspection — 2026-10-15
+
+The user requested complexity first, an early Canva-template choice, fewer relevant
+questions, and stronger infographic quality. This authorizes coordinated changes
+across briefing, MCP, engine, service, contracts and build dependencies in this chat.
+
+- [x] Replaced the fixed interview with Quick/Balanced/Detailed routes of 6/9/14
+  questions, plus one template-source question when applicable. Existing answers
+  are reused, hidden answers retained, optional questions skippable, and bounded
+  topic-specific wording supported. Complexity and template choices stay fixed.
+- [x] Template mode hands off to connected Canva tools for accessible Brand
+  Templates or a supplied design. It requires inspecting the source, working on a
+  copy, and user approval of native editing previews before committing. Blank mode
+  retains the GraphicRouter blueprint as truth; native mode uses the Canva copy.
+  Missing access cannot silently become a blank-canvas result or an image tool.
+- [x] Added authenticated read-only inspect_canvas, returning actual PNG image
+  content and a review report. It supports bounded detail crops, offline bundled
+  fonts/static WASM, at most two concurrent renders, and no external resource fetch.
+  Inspections never save versions, export files, or initiate Canva imports.
+- [x] Added advisory checks for phone-size text, dense copy, weak hierarchy and
+  edge spacing. Guidance requires visual inspection and useful targeted revisions,
+  rather than declaring quality from metadata or cosmetic stage updates.
+- [x] npm run check: TypeScript and 165 tests in 26 files pass. npm run build passes.
+  Tests cover adaptive routing/context/compatibility, actual visible glyph PNGs,
+  renderer limits/retry, owner isolation, safe failures, crops, MCP image blocks,
+  unchanged stored versions, and native export after a targeted quality revision.
+  A release review caught safety filters treating visible copy as attributes;
+  inspection now accepts "Online = 45%"/"URL (optional)" while rejecting onload.
+- [x] Actual local production Worker returned a 1080×1600 overview PNG (104791
+  bytes) and 900×300 crop through MCP. The short route returned six questions and
+  the original blank version remained unchanged. This used explicit local test
+  identity and isolated storage, without real Canva credentials or a live import.
+- [x] Inspected portrait/landscape output and a concrete phone-readable revision.
+  Reproduce: GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/quality-revision.test.ts.
+  Outputs: artifacts/inspection/phone-{before,refined}.png, phone-refined.pptx and
+  phone-refined-blueprint.json. Unrelated shapes and the prior version are unchanged;
+  the refined example has no native validation or advisory review issues.
+- [ ] New hosted dialog click-through/model continuation and actual native Canva
+  template editing remain account-dependent checks. The connected account returned
+  no accessible Brand Templates during discovery; no template edit was fabricated.
+  Browser preview security verification prevented UI click-through; it was not
+  bypassed. Successful local HTTP/SSR tests are not a live browser acceptance claim.
+- Limits: inspection uses OFL Liberation Sans as an Arial-compatible substitute;
+  verify the imported Canva typography separately. Existing English/Arial/simple
+  native object limitations remain. Inspection enables visual feedback; it does not
+  guarantee subjective beauty or prove Canva editability from a source PNG/PPTX.
+- Publication blocker in this Codex session: both get_site and fresh source write
+  credential requests return NOT_FOUND/project_not_found for the exact existing
+  manifest ID. The earlier credential expired. Site identity/audience and runtime
+  secrets are preserved; no replacement Site or permission bypass was attempted.
+  Source/build can be reviewed on GitHub, but this update is not live until the
+  original Site is accessible from the connected account/workspace again.

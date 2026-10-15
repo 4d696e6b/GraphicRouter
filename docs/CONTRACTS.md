@@ -47,11 +47,11 @@ read-only MCP entry point registered outside DeckService/TOOL_NAMES. Its schema 
 `src/briefing/questions.ts` accepts optional context (4000 characters) and a bounded
 record of known question keys (1500 characters per answer). It authorizes the owner,
 returns `kind: briefing`, a transient briefingId, `status: awaiting_answers`,
-questionCount 20, briefingUrl, and supplied context/answers; `_meta.briefing` feeds
+a dynamic questionCount, briefingUrl, and supplied context/answers; `_meta.briefing` feeds
 the existing MCP App resource. It creates no database record, file, deck or import.
 
 The view collects one answer at a time, blocks unsupported formats, and requires
-format/topic/audience/outcome before submission. Optional answers can be skipped.
+complexity/template/topic/audience/outcome before submission (portrait is the optional format default). Optional answers can be skipped.
 The user's submit click sends the full brief in one host user message requesting
 the five existing deck tools. It does not itself create slides. Host rejection or
 loss of connection retains answers and exposes a manual copy-back message; no
@@ -110,3 +110,30 @@ rectangles, ellipses, straight lines and registered PNG/JPEG assets. Unsupported
 fonts/glyphs/assets fail visibly. Intentional shape overlap is allowed; text fit,
 bounds, IDs, layers and colours are validated. No arbitrary code or raw SVG enters
 storage. Native import is asynchronous, owner-scoped and immutable per version.
+
+
+## Adaptive intake and model-visible inspection
+
+start_briefing now accepts optional bounded prompts keyed by existing answer IDs
+(title140chars/help500chars), so ChatGPT can tailor wording to the actual topic.
+Complexity and template questions cannot be overridden. Existing answer keys and
+old complete handoffs remain compatible. New submissions require complexity and
+template preference before the core brief. getQuestions selects6/9/14questions,
+plus an optional templateSource. Hidden known answers survive branch changes.
+Handoff JSON includes explicit workflowMode: graphicrouter_canvas, canva_native,
+or choose. Native Canva mode is host orchestration, not backend connector access.
+
+inspect_canvas is a supplemental read-only MCP tool, outside CANVAS_TOOL_NAMES and
+CanvasService.call. It takes deckId/version plus optional integer region geometry.
+Ownership and schemaVersion2 are checked before rendering; invalid crops reject.
+The tool returns a real image/png content block visible to the model, plus report
+JSON with dimensions, fontNote, diagnostics and review guidance. No data URLs or
+provider secrets are exposed. It does not save a version, write files, import to
+Canva, or claim that the imported Canva design has been inspected.
+
+A CanvasRasterizer injection isolates service tests and keeps rendering failure
+explicit. Production uses offline resvg WASM with statically compiled module and
+bundled OFL regular/bold fonts. Long side<=1600 and pixelarea<=2million, SVG<=4MB,
+at most2 simultaneous renders; external/executable markup rejects. Blueprint
+geometry is unchanged. The crop uses a nested translated SVG and the same object
+renderer. New diagnostics are advisory only; stored validation history is untouched.

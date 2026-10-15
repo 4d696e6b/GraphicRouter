@@ -4,10 +4,11 @@ The MCP endpoint exposes a freeform infographic path plus the compatible legacy
 presentation tools. ChatGPT supplies design decisions and typed element arguments;
 there is no second model service or fixed canvas template.
 
-- start_briefing: a transient20question dialog with optional skips, context prefills,
+- start_briefing: an adaptive dialog: complexity first, template choice second, then6/9/14 questions plus an optional source. It supports skips, context prefills,
   portrait/square/landscape/custom size, reading medium, density and visual direction.
 - create_canvas: create a genuinely empty board with dimensions, theme and brief.
 - edit_canvas: add/replace/remove objects in ordered structure/content/polish passes.
+- inspect_canvas: real model-visible PNG overview/detail crop and advisory review.
 - get_canvas: read an immutable version and refresh only its existing import job.
 - export_canvas: native single-page PowerPoint and design notes.
 - send_canvas_to_canva: owner-authorized binary import with stored job deduplication.
@@ -40,3 +41,20 @@ returns an editor link. Inspect editable text/shapes/lines/images and imported
 portrait/square dimensions. Review composition quality at actual reading size.
 Existing narrow edits must avoid restarting intake. Model compliance and live
 host UI behavior cannot be established by transport tests alone.
+
+
+## Native Canva template route
+
+The template branch is an instruction-driven orchestration using the chat's
+connected Canva tools, with separate source-of-truth semantics. It is not a new
+backend template API, public-catalogue scraper or two-way blueprint sync. Search
+accessible user Brand Templates, or inspect a provided design. Create from a Brand
+Template or copy a design, inspect editable fields, apply supported draft changes,
+show a preview and obtain the Canva tool's explicit approval before commit. Missing
+tools/access/source content must be surfaced and cannot trigger a silent fallback.
+
+The source PNG returned by inspect_canvas is visible to the model; SVGs in _meta
+remain user-widget data. Instructions require actual image critique, targeted edits
+and a bounded follow-up inspection before export. A source PNG is not a Canva
+screenshot. The renderer bundles Liberation Sans regular/bold for inspection only;
+Blueprint/PPTX remain Arial. Never imply a warning-free canvas is beautiful.
