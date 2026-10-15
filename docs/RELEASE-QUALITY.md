@@ -1,9 +1,10 @@
 # Release quality checkpoint — 2026-10-15 (0.10.1)
 
-Status: candidate for continued owner-private testing. This is not a claim that the
-product is fully verified for broad public or marketplace publication. Keep the
-existing private Site audience. Final build/deployment evidence is recorded in the
-Builder A checklist after completion.
+Historical 0.10.1 checkpoint: candidate for continued owner-private testing, with
+unresolved upstream dependency and provider verification gates listed below.
+The later customer-website request explicitly authorized public-by-link Site
+access. That distribution change does not resolve these quality gates or claim
+marketplace review. Current publication evidence follows at the end.
 
 ## Redesigned briefing
 
@@ -118,3 +119,30 @@ picture guidance preserved. Cached host resource/catalog rendering is a separate
 fresh-chat check; no design, import, upload or Canva editing transaction was started.
 Original Site lookup still returns project_not_found and its checkout is unchanged.
 This successful private deployment does not close the public-release gates above.
+
+## Customer website / public-by-link update — 2026-10-15
+
+After this checkpoint, the owner explicitly selected “Everyone with the link”
+for the existing original Site. Builder B PR10 and integration PR19 are merged.
+The original Site now serves the completed static product website and `/install`
+setup help, with all four primary CTAs pointing to the owner's exact ChatGPT
+plugin Copy link. There is no ZIP installer or automatic installation.
+
+Original Site version7 succeeded, source
+`0e2bc9925a0b3e36e23248723fa5e506e4f25f83`, deployment
+`appgdep_6ad0f63476148191986da23a6afcac99`, MCP enabled and unchanged secret
+revision3. Access read-back is public, revision2; the existing project/App/plugin
+identity is retained. The unavailable Test Site was not changed.
+
+The exact hosted source passed TypeScript,287 tests/46 files, HTML/asset checks
+and the production build. Live unauthenticated requests receive200 for home,
+setup, script-free view and the real sample PowerPoint. Protected document tools
+return401 both with no identity and with fake caller-supplied identity headers.
+A connected read-only long-presentation planner smoke succeeds. Native Chrome
+checked desktop/375px presentation, exact CTA→plugin page and starter-prompt copy.
+The owner’s ChatGPT page offers Try in chat. This does not prove that a different
+customer has completed installation or performed a Canva action.
+
+The remaining dependency/provider limitations above are unchanged. Public Site
+access, ChatGPT account/plugin availability and marketplace listing are separate;
+no marketplace submission or blanket public-security clearance is claimed.
