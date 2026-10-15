@@ -4,10 +4,11 @@ Copy the following into Worker A's chat:
 
 ```text
 Continue as Builder A on feat/slide-engine. Builder B is adding a demo marketing
-and onboarding homepage on feat/chatgpt-canva, in integration PR #3.
+and onboarding homepage on feat/chatgpt-canva, in follow-up PR #10.
 
 The page explains GraphicRouter's value, five-slide scope, four-step workflow,
 getting started, example ChatGPT prompts, export/Canva handoff, and limitations.
+Main now includes your guided brief; B preserved /briefing and added an entry link.
 It includes an interactive, explicitly prepared product preview using your real
 engine and localWorkflowPitch. Visitors can select all five slides and three
 preview stages, show the prepared slide3.headline violet revision, and reset to v1.

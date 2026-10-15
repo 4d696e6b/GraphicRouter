@@ -358,3 +358,11 @@ substitutions, then complete the pitch/rehearsal/backup items above.
 - Existing Site again returns project_not_found (404), so this is a local demo,
   not a new publication or a claim of installed ChatGPT/app Canva verification.
   No replacement Site or payment plan was created.
+
+- Concurrent integration: PR #3 landed while the webpage was in progress. Opened
+  follow-up PR #10 and merged current main (including A's guided design brief) as
+  721d4dc. Resolved the homepage conflict by preserving the new /briefing entry and
+  linking it from quick start. No independent A-owned/shared edits were made.
+- Combined current-main check: 100 tests pass; production build passes. Browser
+  followed Open the design brief and confirmed question 1 of 20 renders. Desktop
+  screenshot refreshed after the merge. Hosted-access blockers are unchanged.
