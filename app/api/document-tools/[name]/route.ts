@@ -1,5 +1,5 @@
 import { getChatGPTUser } from "@/app/chatgpt-auth";
-import { DOCUMENT_TOOL_NAMES } from "@/src/contracts";
+import { DOCUMENT_TOOL_NAMES,documentReadSchema } from "@/src/contracts";
 import { documentService } from "@/src/server/runtime";
 import { fail } from "@/src/server/errors";
 import { errorResponse, privateHeaders } from "@/src/server/http";
@@ -15,7 +15,10 @@ export async function POST(request: Request, context: { params: Promise<{ name: 
     if (!tool) fail("NOT_FOUND", "Document tool not found.");
     if (!request.headers.get("content-type")?.startsWith("application/json")) fail("VALIDATION_FAILED", "Send JSON arguments.");
     const { value: args } = await readJsonBody(request);
-    const service = documentService(), result = await service.call(tool, args, user.userId);
-    return Response.json(await documentData(service, user.userId, result), { headers: privateHeaders });
+    const read=tool==="get_document"?documentReadSchema.safeParse(args):null;
+    if(read&&!read.success)fail("VALIDATION_FAILED","Use a saved document ID/version and up to5 preview page IDs.");
+    const input=read?.success?{deckId:read.data.deckId,version:read.data.version}:args;
+    const service = documentService(), result = await service.call(tool, input, user.userId);
+    return Response.json(await documentData(service, user.userId, result,read?.success?read.data.pageIds:undefined), { headers: privateHeaders });
   } catch (error) { return errorResponse(error); }
 }

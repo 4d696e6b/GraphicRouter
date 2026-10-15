@@ -1,3 +1,4 @@
+import {validateRequirements,auditRequirements} from "./requirements";
 import { createDocumentSchema, documentBlueprintSchema, editDocumentSchema, type Asset, type CanvasBlueprint, type DocumentBlueprint, type DocumentPage, type ValidationIssue } from "../contracts";
 import { canvasEngine, compileCanvasPages } from "./canvas";
 import { EngineError, assertNoErrors } from "./errors";
@@ -17,7 +18,9 @@ export function validateDocument(raw:DocumentBlueprint):ValidationIssue[] {
   for(const [path,value] of [["title",doc.title],["designIntent",doc.designIntent],...doc.pages.flatMap(p=>[[`${p.id}.message`,p.message],[`${p.id}.section`,p.section],[`${p.id}.notes`,p.notes]])])if(invalidXml.test(value))error(path,"Remove XML control characters before export.");
   if(doc.history.length!==doc.version||doc.history.some((v,i)=>v.version!==i+1))error("history","Preserve one ordered revision entry per version.");
   if(new Set(doc.pages.map(p=>p.id)).size!==doc.pages.length)error("pages","Page IDs must be unique.");
-  if(doc.pages.reduce((sum,p)=>sum+p.elements.length,0)>1000)error("pages","Use at most 1000 native objects per document.");
+  if(doc.pages.reduce((sum,p)=>sum+p.elements.length,0)>4000)error("pages","Use at most 4000 native objects per document.");
+  if(new TextEncoder().encode(JSON.stringify(doc)).byteLength>1800000)error("document","Document exceeds 1800000 UTF-8 bytes; split material without discarding it.");
+  issues.push(...validateRequirements(doc));
   for(const page of doc.pages)for(const issue of canvasEngine.validate(pageCanvas(doc,page)))issues.push({...issue,path:`${page.id}.${issue.path}`});
   return issues;
 }
@@ -42,7 +45,7 @@ export const documentEngine={
   edit(current:DocumentBlueprint,raw:unknown):DocumentBlueprint {
     assertNoErrors(validateDocument(current)); const input=editDocumentSchema.parse(raw);
     if(input.deckId!==current.deckId||input.baseVersion!==current.version)reject("Fetch the current document version before editing.");
-    if(current.version>=100)reject("Document has reached 100 revisions; create a new document to continue.");
+    if(current.version>=250)reject("Document has reached 250 revisions; create a new document to continue.");
     const next=structuredClone(current);next.version++;next.changes=[];
     for(const op of input.operations){
       if(op.type==="add_page"){
@@ -65,11 +68,20 @@ export const documentEngine={
         next.changes.push({target:op.pageId,description:op.type==="edit_elements"?`Applied ${op.operations.length} native element changes.`:op.type==="remove_page"?"Removed this page.":"Updated this page's story and notes."});
       }
     }
+    if(next.requirements){
+      const affected=new Set(input.operations.flatMap(op=>op.type==="reorder_pages"?next.pages.map(p=>p.id):op.type==="add_page"?[op.page.id]:[op.pageId]));
+      next.requirements.items.forEach(r=>{if(r.review==="satisfied"&&(r.scope==="global"||r.pageIds.some(id=>affected.has(id)))){r.review="pending";r.reviewNote="Relevant page content/order changed; review the binding and meaning again.";}});
+    }
     next.history.push({version:next.version,summary:input.summary});assertNoErrors(validateDocument(next));return next;
   },
   async compile(doc:DocumentBlueprint,assets:Asset[]){
     assertNoErrors(validateDocument(doc));
     if(doc.pages.some(p=>!p.elements.length))reject("Every page must contain native objects before export; remove unused blank pages.");
+    if(doc.requirements){
+      if(!doc.requirements.extractionComplete)reject("Complete the original-brief extraction review before final export. Saved drafts remain available.");
+      const blockers=auditRequirements(doc).filter(r=>r.priority==="must"&&r.status!=="covered");
+      if(blockers.length)reject(`Resolve ${blockers.length} mandatory requirement checks before final export: ${blockers.slice(0,5).map(r=>r.id).join(", ")}.`);
+    }
     return compileCanvasPages(doc.pages.map(p=>({blueprint:pageCanvas(doc,p),notes:`${p.title}\nMessage: ${p.message}\nSection: ${p.section}\n\n${p.notes}`})),assets);
   },
 };

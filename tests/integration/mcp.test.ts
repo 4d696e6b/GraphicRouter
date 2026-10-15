@@ -19,7 +19,7 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
     expect(init.result.serverInfo).toMatchObject({ name: "GraphicRouter" });
     const list = await rpc("tools/list");
     const tools = list.result.tools as { name: string; inputSchema: unknown; description: string }[];
-    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "start_briefing", "plan_design", "get_design_skill", "compose_component", ...DOCUMENT_TOOL_NAMES, "inspect_document"]);
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "start_briefing", "plan_design", "get_design_skill", "compose_component", ...DOCUMENT_TOOL_NAMES, "append_document_requirements", "get_document_context", "review_document_requirements", "inspect_document"]);
     expect(tools[0].description).toContain("Never invent evidence"); expect(tools[0].inputSchema).toMatchObject({ type: "object", required: expect.arrayContaining(["slides", "brief"]) });
   });
   it("exposes the briefing before creation through initialization and tool discovery", async () => {
@@ -33,7 +33,7 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
         expect(instructions).toContain(topic);
       }
     }
-    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "start_briefing", "plan_design", "get_design_skill", "compose_component", ...DOCUMENT_TOOL_NAMES, "inspect_document"]);
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "start_briefing", "plan_design", "get_design_skill", "compose_component", ...DOCUMENT_TOOL_NAMES, "append_document_requirements", "get_document_context", "review_document_requirements", "inspect_document"]);
   });
   it("opens the briefing without calling the deck service and retains supplied context", async () => {
     const answers = { topic: "A supplied topic", audience: "Judges" };
@@ -60,7 +60,7 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
   });
   it("protects briefing access and rejects unbounded or unknown answer fields", async () => {
     expect((await rpc("tools/call", { name: "start_briefing", arguments: {} })).result).toMatchObject({ isError: true, structuredContent: { error: { code: "UNAUTHORIZED" } } });
-    for (const answers of [{ topic: "x".repeat(1501) }, { password: "not-a-supported-field" }]) {
+    for (const answers of [{ topic: "x".repeat(16001) }, { password: "not-a-supported-field" }]) {
       expect((await rpc("tools/call", { name: "start_briefing", arguments: { answers } }, "owner")).result.isError).toBe(true);
     }
   });

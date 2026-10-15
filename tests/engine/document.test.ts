@@ -14,8 +14,8 @@ describe("bounded native documents",()=>{
  const blank=documentEngine.create(input,{deckId:crypto.randomUUID(),version:1});
  const doc=documentEngine.edit(blank,{deckId:blank.deckId,baseVersion:1,summary:"Compose forty pages.",operations:blank.pages.map(p=>({type:"edit_elements",pageId:p.id,operations:[{type:"add_element",element:nativeHeading(p.title)}]}))});
  const files=readPptx(await documentEngine.compile(doc,[]));expect([...files.keys()].filter(k=>/^ppt\/slides\/slide\d+\.xml$/.test(k))).toHaveLength(40);
- const excessive=structuredClone(doc);excessive.pages=excessive.pages.slice(0,6).map(p=>({...p,elements:Array.from({length:200},(_,i)=>({id:`shape${i}`,type:"shape" as const,shape:"rectangle" as const,x:10,y:10,width:20,height:20,zIndex:i,fill:{hex:"#EEEEEE"}}))}));
- expect(validateDocument(excessive)).toContainEqual(expect.objectContaining({message:"Use at most 1000 native objects per document."}));
+ const excessive=structuredClone(doc);excessive.pages=excessive.pages.slice(0,21).map(p=>({...p,elements:Array.from({length:200},(_,i)=>({id:`shape${i}`,type:"shape" as const,shape:"rectangle" as const,x:10,y:10,width:20,height:20,zIndex:i,fill:{hex:"#EEEEEE"}}))}));
+ expect(validateDocument(excessive)).toContainEqual(expect.objectContaining({message:"Use at most 4000 native objects per document."}));
  });
  it("adds and removes a blank page while preserving all surviving pages",()=>{
  const b=populatedDocument(),add=documentEngine.edit(b,{deckId:b.deckId,baseVersion:2,summary:"Add appendix.",operations:[{type:"add_page",page:{id:"appendix",title:"Appendix",message:"Supplied supporting detail",section:"Appendix",notes:"Draft notes"},afterPageId:"page8"}]});
