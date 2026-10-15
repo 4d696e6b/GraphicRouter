@@ -475,29 +475,16 @@ html { background: #faf8ff; }
 /* Ambient light lives below normal-flow content inside this isolated context. */
 .site { position: relative; isolation: isolate; }
 .homepageAmbient {
-  position: absolute; z-index: -1; inset: 0 0 auto; height: 1100px;
+  position: fixed; z-index: -1; inset: 0;
   overflow: clip; pointer-events: none; contain: paint;
-  mask-image: radial-gradient(ellipse 43% 35% at 50% 38%,transparent 28%,#000 92%);
+  opacity: 0; transition: opacity 380ms ease;
 }
+.homepageAmbient[data-tracking=true][data-playing=true] { opacity: 1; }
 .homepageAmbient * { pointer-events: none; }
-.ambientAnchor { position: absolute; width: 560px; height: 480px; transform: translate(-50%,-50%); }
-.ambientAnchor1 { left: 14%; top: 310px; }
-.ambientAnchor2 { left: 86%; top: 430px; width: 620px; height: 540px; }
-.ambientAnchor3 { left: 56%; top: 860px; width: 420px; height: 340px; }
-.ambientPointer, .ambientField { width: 100%; height: 100%; }
-.ambientPointer { will-change: transform; }
+.ambientPointer { position: absolute; left: -520px; top: -520px; width: 1040px; height: 1040px; will-change: transform; }
 .ambientField {
-  filter: blur(28px);
-  border-radius: 44% 56% 58% 42% / 52% 38% 62% 48%;
-  background: radial-gradient(ellipse at 40% 42%,#7c3aed17,transparent 72%);
-  animation: ambientFloat 9s ease-in-out infinite alternate; animation-play-state: paused;
-}
-.ambientAnchor2 .ambientField { background: radial-gradient(ellipse at 58% 38%,#9658e917,transparent 72%); animation-duration: 12s; animation-delay: -4s; }
-.ambientAnchor3 .ambientField { background: radial-gradient(ellipse at 38% 60%,#9670da14,transparent 72%); animation-duration: 7s; animation-delay: -2s; }
-.homepageAmbient[data-playing=true] .ambientField { animation-play-state: running; }
-@keyframes ambientFloat {
-  from { transform: translate3d(-6px,5px,0) scale(1,.985); }
-  to { transform: translate3d(8px,-9px,0) scale(1.025,1.01); }
+  width: 100%; height: 100%;
+  background: radial-gradient(520px circle at center,#7c3aed17,transparent 72%);
 }
 .graphicIntro {
   position: fixed; z-index: 40; left: 24px; bottom: 24px; width: 270px;
@@ -526,9 +513,6 @@ html { background: #faf8ff; }
 @media(max-width:600px) {
   .graphicIntro { left: 16px; bottom: 16px; width: 230px; }
   .introContent { padding: 14px 16px; }
-  .ambientAnchor1 { left: -28%; width: 420px; }
-  .ambientAnchor2 { left: 128%; width: 460px; }
-  .homepageAmbient { mask-image: radial-gradient(ellipse 58% 35% at 50% 36%,transparent 20%,#000 100%); }
 }
 @media(prefers-reduced-motion:reduce), (hover:none), (pointer:coarse) {
   .homepageAmbient .ambientField { animation: none; transform: none; }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { claimIntro, normalizedPointer, springStep } from "../../website/homepage-motion.js";
+import { claimIntro, glowPoint, springStep } from "../../website/homepage-motion.js";
 
 describe("homepage intro and ambient motion", () => {
   it("claims the intro once per session and skips reloads, history and anchors", () => {
@@ -16,11 +16,19 @@ describe("homepage intro and ambient motion", () => {
     expect(claimIntro(blocked)).toBe(true);
     expect(claimIntro(blocked, "navigate", false, true)).toBe(false);
   });
-  it("normalizes cached hero bounds and clamps pointer extremes", () => {
-    const bounds = { left: 100, top: 200, width: 800, height: 600 };
-    expect(normalizedPointer(500, 500, bounds)).toEqual({ x: 0, y: 0 });
-    expect(normalizedPointer(100, 200, bounds)).toEqual({ x: -1, y: -1 });
-    expect(normalizedPointer(2000, 3000, bounds)).toEqual({ x: 1, y: 1 });
+  it("maps viewport pointer coordinates directly instead of nudging fixed fields", () => {
+    const viewport = { width: 1440, height: 900 };
+    expect(glowPoint(120, 200, viewport)).toEqual({ x: 120, y: 200 });
+    expect(glowPoint(1300, 700, viewport)).toEqual({ x: 1300, y: 700 });
+    expect(glowPoint(-100, 2000, viewport)).toEqual({ x: 0, y: 900 });
+  });
+  it("uses the reference spring to follow and settle at the actual pointer", () => {
+    let state = { position: 100, velocity: 0 };
+    const first = springStep(state.position, state.velocity, 1200, 1 / 60, 170, 24);
+    expect(first.position).toBeGreaterThan(100);
+    expect(first.position).toBeLessThan(200);
+    for (let i = 0; i < 600; i++) state = springStep(state.position, state.velocity, 1200, 1 / 60, 170, 24);
+    expect(state).toEqual({ position: 1200, velocity: 0 });
   });
   it("follows gradually, settles exactly and returns without a large overshoot", () => {
     let state = { position: 0, velocity: 0 };

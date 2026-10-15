@@ -18,9 +18,8 @@ export function springStep(position, velocity, target, seconds, stiffness = 60, 
     : { position: nextPosition, velocity: nextVelocity };
 }
 
-export function normalizedPointer(x, y, bounds) {
-  const clamp = value => Math.max(-1, Math.min(1, value));
-  return { x: clamp((x - bounds.left) / Math.max(1, bounds.width) * 2 - 1), y: clamp((y - bounds.top) / Math.max(1, bounds.height) * 2 - 1) };
+export function glowPoint(x, y, viewport) {
+  return { x: Math.max(0, Math.min(viewport.width, x)), y: Math.max(0, Math.min(viewport.height, y)) };
 }
 
 export function mountHomepageMotion(root, isReduced) {
@@ -34,21 +33,16 @@ export function mountHomepageMotion(root, isReduced) {
   const enter = claimIntro(storage, navigation, !!location.hash, seenInDocument) && !isReduced() && !document.hidden;
   seenInDocument = true;
   let disposed = false, intro = null, timer = 0, frame = 0, previous = 0;
-  let visible = true, pointer = { x: 0, y: 0 }, bounds;
+  let viewport = { width: innerWidth, height: innerHeight };
+  let pointer = { x: innerWidth / 2, y: innerHeight / 2 };
   const animations = new Set();
   const ambient = document.createElement("div");
   ambient.className = "homepageAmbient"; ambient.setAttribute("aria-hidden", "true");
-  const fields = [
-    { strength: 64, stiffness: 66, damping: 19 },
-    { strength: -70, stiffness: 48, damping: 17 },
-    { strength: 46, stiffness: 38, damping: 15 },
-  ].map((settings, i) => {
-    const anchor = document.createElement("div"), move = document.createElement("div"), drift = document.createElement("div");
-    anchor.className = `ambientAnchor ambientAnchor${i + 1}`;
-    move.className = "ambientPointer"; drift.className = "ambientField";
-    move.append(drift); anchor.append(move); ambient.append(anchor);
-    return { ...settings, move, x: 0, y: 0, vx: 0, vy: 0 };
-  });
+  const move = document.createElement("div"), drift = document.createElement("div");
+  move.className = "ambientPointer"; drift.className = "ambientField";
+  move.append(drift); ambient.append(move);
+  const field = { x: pointer.x, y: pointer.y, vx: 0, vy: 0 };
+  move.style.transform = `translate3d(${field.x}px,${field.y}px,0)`;
   root.prepend(ambient);
 
   function animate(element, keyframes, options, hold = false) {
@@ -83,59 +77,53 @@ export function mountHomepageMotion(root, isReduced) {
     elements.forEach((element, i) => animate(element, [{ opacity: .3, transform: "translateY(8px)" }, { opacity: 1, transform: "translateY(0)" }], { duration: 560, delay: 230 + i * 90, easing: EASE, fill: "both" }));
   }
 
-  function cacheBounds() {
-    const rect = hero.getBoundingClientRect();
-    bounds = { left: rect.left + scrollX, top: rect.top + scrollY, width: rect.width, height: rect.height };
-  }
-  const active = () => !disposed && visible && !document.hidden && !isReduced() && fine.matches;
+  const active = () => !disposed && !document.hidden && !isReduced() && fine.matches;
   function tick(time) {
     frame = 0;
     if (!active()) { previous = 0; return; }
     const dt = previous ? (time - previous) / 1000 : 1 / 60; previous = time;
-    let unsettled = false;
-    for (const field of fields) {
-      const x = springStep(field.x, field.vx, pointer.x * field.strength, dt, field.stiffness, field.damping);
-      const y = springStep(field.y, field.vy, pointer.y * field.strength * .7, dt, field.stiffness, field.damping);
-      field.x = x.position; field.vx = x.velocity; field.y = y.position; field.vy = y.velocity;
-      field.move.style.transform = `translate3d(${field.x.toFixed(3)}px,${field.y.toFixed(3)}px,0)`;
-      if (field.vx || field.vy || field.x !== pointer.x * field.strength || field.y !== pointer.y * field.strength * .7) unsettled = true;
-    }
-    if (unsettled) frame = requestAnimationFrame(tick); else previous = 0;
+    // Match the reference's viewport-following spring, without repainting a gradient.
+    const x = springStep(field.x, field.vx, pointer.x, dt, 170, 24);
+    const y = springStep(field.y, field.vy, pointer.y, dt, 170, 24);
+    field.x = x.position; field.vx = x.velocity; field.y = y.position; field.vy = y.velocity;
+    move.style.transform = `translate3d(${field.x.toFixed(3)}px,${field.y.toFixed(3)}px,0)`;
+    if (field.vx || field.vy || field.x !== pointer.x || field.y !== pointer.y) frame = requestAnimationFrame(tick);
+    else previous = 0;
   }
   function queue() { if (!frame && active()) frame = requestAnimationFrame(tick); }
-  function release() { pointer = { x: 0, y: 0 }; queue(); }
+  function release() { ambient.dataset.tracking = "false"; }
+  function resizeViewport() {
+    viewport = { width: innerWidth, height: innerHeight };
+    pointer = glowPoint(pointer.x, pointer.y, viewport); queue();
+  }
   function sync() {
-    ambient.hidden = isReduced();
+    ambient.hidden = isReduced() || !fine.matches;
     ambient.dataset.playing = String(active());
     if (!active()) {
-      cancelAnimationFrame(frame); frame = 0; previous = 0;
-      pointer = { x: 0, y: 0 };
-      fields.forEach(field => { field.x = field.y = field.vx = field.vy = 0; field.move.style.transform = ""; });
+      release(); cancelAnimationFrame(frame); frame = 0; previous = 0;
+      field.vx = field.vy = 0;
     }
     if (isReduced() || document.hidden) skipIntro();
   }
-  hero.addEventListener("pointermove", event => {
+  window.addEventListener("pointermove", event => {
     if (!active() || event.pointerType === "touch") return;
-    pointer = normalizedPointer(event.pageX, event.pageY, bounds); queue();
+    pointer = glowPoint(event.clientX, event.clientY, viewport);
+    ambient.dataset.tracking = "true"; queue();
   }, { passive: true, signal });
-  hero.addEventListener("pointerleave", release, { signal });
-  hero.addEventListener("pointercancel", release, { signal });
+  document.documentElement.addEventListener("pointerleave", release, { signal });
+  window.addEventListener("pointercancel", release, { signal });
   window.addEventListener("blur", release, { signal });
-  window.addEventListener("resize", cacheBounds, { passive: true, signal });
+  window.addEventListener("resize", resizeViewport, { passive: true, signal });
   window.addEventListener("graphicrouter:motion", sync, { signal });
   document.addEventListener("visibilitychange", sync, { signal });
   fine.addEventListener("change", sync, { signal });
   document.addEventListener("keydown", event => { if (event.key === "Escape" && intro) skipIntro(); }, { signal });
   root.addEventListener("focusin", () => { if (intro) skipIntro(); }, { signal });
   root.addEventListener("pointerdown", () => { if (intro) skipIntro(); }, { passive: true, signal });
-  const resize = globalThis.ResizeObserver ? new ResizeObserver(cacheBounds) : null;
-  resize?.observe(hero);
-  const observer = globalThis.IntersectionObserver ? new IntersectionObserver(entries => { visible = entries.some(entry => entry.isIntersecting); sync(); }, { threshold: .02 }) : null;
-  observer?.observe(hero);
-  cacheBounds(); sync();
+  sync();
   try { showIntro(); } catch { skipIntro(); } // Initialization cannot hide the page.
   return { enter, cleanup() {
-    disposed = true; controller.abort(); resize?.disconnect(); observer?.disconnect();
+    disposed = true; controller.abort();
     cancelAnimationFrame(frame); skipIntro(); ambient.remove(); delete root.dataset.intro;
   } };
 }

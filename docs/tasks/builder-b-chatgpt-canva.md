@@ -624,3 +624,23 @@ not count as verification of the new standalone static delivery.
   Browser confirmed three live independent transforms at pointer extremes.
   Evidence: outputs/static-website/ambient-fixed-left.jpg and
   ambient-fixed-right.jpg. No hosted integration verification implied.
+
+### Reference-matched pointer glow
+
+- Re-read AmbientMotion in the supplied ZIP. It follows clientX/clientY across the
+  viewport; the previous implementation instead displaced three resting fields.
+  Replaced those fields with one viewport-following 520px radial glow, 9% violet,
+  fading to transparent at 72%, spring stiffness 170/damping 24 as in the reference.
+- Preserved GraphicRouter's behind-content isolation (z-index -1), no click/focus
+  interception, intro, typography, surfaces, scene and existing content. No Framer
+  dependency. Transform one pre-rendered gradient; settling RAF stops at rest.
+  Pointer exit/blur fades it away. Reduced motion/coarse pointers hide the effect;
+  hidden document cancels tracking. Full-page glow now remains available while
+  scrolling, superseding the earlier hero-only/offscreen-field behaviour.
+- TypeScript + 129 tests pass, including viewport targets and reference spring
+  settling. Static HTML/hash check and 18 served resource byte checks pass.
+  Browser verified live positions across the viewport, fixed positioning after
+  native anchor navigation, reduced-motion toggle and no horizontal overflow.
+- Evidence: outputs/static-website/pointer-follow-glow.jpg and
+  graphicrouter-pointer-glow.mp4 (5.5 seconds of actual browser captures).
+  OS reduced-motion/coarse pointer transitions were not physically emulated.
