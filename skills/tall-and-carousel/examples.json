@@ -1,0 +1,18 @@
+[
+  {
+    "request": "Turn six supplied study tips into a mobile carousel.",
+    "blueprint": {
+      "format": "carousel",
+      "readingPath": "purposeful opening → grouped practical tips → usable recap",
+      "nativeElements": [
+        "page heading",
+        "tip label",
+        "explanation",
+        "progress marker",
+        "source when needed"
+      ]
+    },
+    "reason": "Discrete pages need readable stopping points and consistent navigation.",
+    "avoid": "One tall bitmap sliced into pages or text too small for a phone."
+  }
+]

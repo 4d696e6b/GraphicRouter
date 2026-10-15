@@ -1,0 +1,12 @@
+[
+  {
+    "request": "Adapt an approved technical poster into a six-slide talk.",
+    "blueprint": {
+      "mapping": "Each source claim is assigned to a slide or companion notes",
+      "visualSystem": "Retain approved palette and terminology; rebuild for 16:9",
+      "sourcePreserved": true
+    },
+    "reason": "Talk pacing differs from self-guided poster reading.",
+    "avoid": "Stretching the poster across six images or claiming arbitrary import synchronization."
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "request": "The output shows the same value twice and a malformed source URL.",
+    "blueprint": {
+      "checks": [
+        "read actual native text IDs",
+        "inspect image-only layers in a cancelled audit",
+        "compare exact URL",
+        "remove/rebuild the obsolete copy",
+        "inspect latest full preview and detail crop"
+      ],
+      "delivery": "Retain draft status until verified; obtain required Canva save approval."
+    },
+    "reason": "Moving or covering one duplicate may leave baked lettering underneath.",
+    "avoid": "Claiming corrected or saved from an earlier preview."
+  }
+]

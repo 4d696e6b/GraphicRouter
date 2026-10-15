@@ -1,0 +1,20 @@
+[
+  {
+    "request": "Show the stages of an approval workflow.",
+    "blueprint": {
+      "assets": [
+        "native document icon",
+        "native person icon",
+        "native check icon"
+      ],
+      "textLayers": [
+        "stage names",
+        "stage descriptions",
+        "status labels"
+      ],
+      "meaning": "Icons support the process; connectors and text explain actual responsibility."
+    },
+    "reason": "Simple native components fit abstract workflow concepts.",
+    "avoid": "Claiming these icons can accurately demonstrate handwashing gestures."
+  }
+]
