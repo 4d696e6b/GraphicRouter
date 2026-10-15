@@ -1,27 +1,25 @@
-const repository = "https://github.com/4d696e6b/GraphicRouter";
+import { getChatGPTUser, chatGPTSignInPath, chatGPTSignOutPath } from "./chatgpt-auth";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+export default async function Home() {
+  const user = await getChatGPTUser();
   return (
-    <main style={{ maxWidth: 960, margin: "0 auto", padding: "80px 24px", color: "#191724" }}>
-      <p style={{ color: "#7C3AED", fontWeight: 700, letterSpacing: ".12em", fontSize: 12 }}>GRAPHICROUTER / PROJECT STARTER</p>
-      <h1 style={{ fontSize: "clamp(32px, 6vw, 56px)", lineHeight: 1.1, letterSpacing: "-.04em", maxWidth: 740, margin: "24px 0" }}>Plan the story.<br />Compose the slides.<br />Direct the changes.</h1>
-      <p style={{ maxWidth: 620, color: "#62606B", lineHeight: 1.8 }}>The shared starting point is ready. Slide generation, the ChatGPT tools, and Canva integration are assigned work; they are not implemented in this starter.</p>
-      <section aria-label="Builder assignments" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20, margin: "40px 0" }}>
-        {[
-          { name: "Builder A", title: "Slide engine", branch: "feat/slide-engine", task: "builder-a-slide-engine.md", description: "Composition, validation, precise revisions, and native PowerPoint export." },
-          { name: "Builder B", title: "ChatGPT + Canva", branch: "feat/chatgpt-canva", task: "builder-b-chatgpt-canva.md", description: "Tools, previews, storage, authorization, and Canva import." },
-        ].map((builder) => (
-          <article key={builder.name} style={{ border: "1px solid #E6E3ED", background: "#FFFFFF", borderRadius: 16, padding: 28 }}>
-            <p style={{ fontSize: 12, color: "#7C3AED", fontWeight: 700 }}>{builder.name.toUpperCase()}</p>
-            <h2 style={{ fontSize: 24, margin: "12px 0" }}>{builder.title}</h2>
-            <p style={{ color: "#62606B", lineHeight: 1.7, minHeight: 58 }}>{builder.description}</p>
-            <code style={{ display: "block", fontSize: 13, margin: "20px 0" }}>{builder.branch}</code>
-            <a href={`${repository}/blob/main/docs/tasks/${builder.task}`} style={{ color: "#6D28D9", fontWeight: 700 }}>Open Codex task →</a>
-          </article>
-        ))}
+    <main style={{ maxWidth: 880, margin: "0 auto", padding: "80px 24px", color: "#191724", fontFamily: "Arial, sans-serif" }}>
+      <p style={{ color: "#7C3AED", fontWeight: 700, letterSpacing: ".12em", fontSize: 12 }}>GRAPHICROUTER / INTEGRATION PREVIEW</p>
+      <h1 style={{ fontSize: "clamp(32px, 6vw, 60px)", lineHeight: 1.1, letterSpacing: "-.04em", margin: "24px 0" }}>Plan the story.<br />Direct the changes.</h1>
+      <p style={{ maxWidth: 620, color: "#62606B", lineHeight: 1.8 }}>Turn your supplied facts into a five-slide story in ChatGPT. Preview the composition, revise one element, and hand off a PowerPoint to Canva.</p>
+      <p role="status" style={{ background: "#EDE9F5", padding: 20, borderRadius: 12, lineHeight: 1.7 }}>The slide engine is integrated. Creation, previews, focused revisions, and PowerPoint export pass local checks. The hosted ChatGPT connection and application Canva authorization are still awaiting verification.</p>
+      <section style={{ margin: "40px 0", lineHeight: 1.8 }} aria-label="How to use GraphicRouter">
+        <h2 style={{ fontSize: 24 }}>Your facts. One clear presentation.</h2>
+        <ol style={{ paddingLeft: 24 }}>
+          <li>Connect GraphicRouter in ChatGPT once the private plugin is available.</li>
+          <li>Share your idea, audience, goal, and verified facts. Leave missing evidence as an open question.</li>
+          <li>Review five slides and both sets of speaker notes. Ask for precise changes.</li>
+          <li>Download the PowerPoint or connect Canva to import a new design version.</li>
+        </ol>
+        <p>Each Canva import creates a separate design. Canva edits do not sync back. Manual PowerPoint upload remains the fallback once export is available.</p>
       </section>
-      <p style={{ fontSize: 14, color: "#62606B", lineHeight: 1.8 }}>Use separate clones and Codex chats. Start with the shared contracts and your assigned task.</p>
-      <a href={repository} style={{ display: "inline-block", marginTop: 16, color: "#6D28D9", fontWeight: 700 }}>View repository →</a>
+      <a href={user ? chatGPTSignOutPath() : chatGPTSignInPath("/")} target="_top" style={{ color: "#6D28D9", fontWeight: 700 }}>{user ? "Sign out" : "Sign in with ChatGPT"} →</a>
     </main>
   );
 }
