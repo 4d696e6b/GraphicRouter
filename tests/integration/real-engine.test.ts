@@ -3,6 +3,7 @@ import { DeckService } from "../../src/server/service";
 import { D1DeckStore } from "../../src/server/store";
 import { engine, assets } from "../../src/server/engine-provider";
 import { finalPitch } from "../../src/fixtures/final-pitch";
+import { localWorkflowPitch } from "../../src/fixtures/local-workflow-pitch";
 import { testDatabase } from "./database";
 import { readPptx } from "../engine/read-pptx";
 
@@ -18,9 +19,10 @@ function setup() {
 const owner = "real-engine-test-owner";
 const violet = { type: "set_element_color" as const, elementId: "slide3.headline", color: "#7C3AED" };
 describe("real service → engine → SVG/PPTX integration", () => {
-  it("creates, previews, revises and exports while preserving unrelated elements and v1", async () => {
+  it.each([["engine-stage", finalPitch], ["local-workflow", localWorkflowPitch]] as const)("creates, previews, revises and exports the %s pitch while preserving unrelated elements and v1", async (_label, pitch) => {
     const { service, store } = setup();
-    const created = await service.call("create_deck", finalPitch, owner), original = structuredClone(created.blueprint);
+    const created = await service.call("create_deck", pitch, owner), original = structuredClone(created.blueprint);
+    expect(original.input).toEqual(pitch);
     const v1 = { deckId: original.deckId, version: 1 };
     for (const stage of ["layout", "content", "finished"] as const) {
       const preview = await service.preview(owner, original.deckId, 1, stage);
