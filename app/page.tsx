@@ -41,7 +41,7 @@ export default async function Home() {
       <section className={styles.workflow} id="how-it-works" aria-labelledby="workflow-title">
         <div className={styles.workflowIntro}><p className={styles.eyebrow}>FROM “WHAT IF” TO “HERE’S HOW”</p><h2 id="workflow-title">Your next pitch,<br />in four moves.</h2><p>Bring the facts. Use ChatGPT to shape the story. Stay in charge of the final result.</p><span className={styles.workflowTag}>5 slides · 16:9 · 3 or 5 minute notes</span></div>
         <ol className={styles.steps}>
-          <li><span>01</span><div><h3>Start with your brief</h3><p>Share your audience, goal, verified facts, and what you want people to do next. Keep missing evidence as an open question.</p></div></li>
+          <li><span>01</span><div><h3>Start with your brief</h3><p>Open the design brief for a guided conversation about your audience, story, evidence, and visual style. Optional details can be skipped; missing evidence stays an open question.</p></div></li>
           <li><span>02</span><div><h3>See the story take shape</h3><p>Review the layout, content, and finished composition. Read the speaker notes alongside each slide.</p></div></li>
           <li><span>03</span><div><h3>Tell it exactly what to change</h3><p>“Change only the headline on slide three to violet.” Review a new version while keeping the original.</p></div></li>
           <li><span>04</span><div><h3>Take it to your stage</h3><p>Download PowerPoint and notes. Once Canva is connected, import a separate design version. Keep presenting while it processes.</p></div></li>
@@ -49,6 +49,7 @@ export default async function Home() {
       </section>
       <section className={styles.quickStart} id="quick-start" aria-labelledby="start-title">
         <div className={styles.sectionHeading}><p className={styles.eyebrow}>A GOOD BRIEF IS A GREAT BEGINNING</p><h2 id="start-title">Start with a conversation.</h2><p>Use these prompts as a starting point once GraphicRouter is available in your ChatGPT account. Replace the brackets with your own facts.</p></div>
+        <p className={styles.briefLink}><a className={styles.primary} href="/briefing">Open the design brief <span aria-hidden="true">↗</span></a><span>Answer one question at a time. Skip optional details.</span></p>
         <PromptLibrary />
         <div className={styles.availability} id="availability"><span className={styles.statusDot} aria-hidden="true"/><div><h3>Where the demo stands</h3><p>The real engine, local previews, focused revisions, and PowerPoint exports are verified locally. Hosted ChatGPT tools/widget and application Canva OAuth/import are still awaiting account verification. This page’s guided preview uses prepared engine output, with no live tool calls.</p><p>When the private connection is available, enable GraphicRouter in ChatGPT, start a chat with it, and paste your brief. Connect Canva only when you’re ready to import.</p></div></div>
       </section>

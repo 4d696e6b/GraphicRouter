@@ -234,3 +234,37 @@ exact edit/version steps, what to show in Canva, and language for switching to a
 accurately labelled local demo or precomputed replay. Its 273-word core plan leaves
 30 seconds for the demo. Real presenter pace and the complete live path still need
 rehearsal before declaring presentation freeze.
+
+## Canva-first Studio design update
+
+The user's test in “Create GraphicRouter pitch deck” exposed two shortcomings:
+Canva was treated as an optional handoff after PowerPoint, and the classic recipes
+produced repetitive, text-heavy pages. New presentations should use artDirection
+starting with `GraphicRouter Studio` (the MCP planner now specifies this default).
+This selects an editorial system: ink-black hero/proof pages, warm ivory supporting
+pages, oversized hierarchy, native routing illustrations, and illustrated process
+stages. Other artDirection values retain the original recipes so saved decks do not
+acquire missing/orphan elements or change during validation/revision. This is an
+explicit supported visual preset, not an arbitrary natural-language style renderer.
+
+All five recipes still use the shared contracts and separate editable native objects.
+Studio keeps one stored blueprint for previews and PowerPoint, targeted immutable
+revisions, source-content validation, and exact native-part preservation. No model
+service, image generation, contract/schema change, or dependency was added.
+
+`src/fixtures/studio-pitch.ts` and `tests/engine/studio.test.ts` reproduce the
+redesigned deck, stages, original/violet PPTX and offline proof under artifacts/studio:
+`GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/studio.test.ts`.
+
+The prototype's main deliverable is the actual editable Canva design URL. The MCP
+planner/output guidance now continues to send_to_canva after creating the blueprint,
+and the preview emphasizes Create editable Canva deck. Pending/auth/import failure
+states do not claim delivery; PowerPoint is labelled a portable fallback. Sites still
+needs the application's Canva client ID/secret for its own OAuth import path.
+
+A separate manual connector import of the redesigned deck succeeded:
+https://www.canva.com/d/P_YCbT66Mmc10ti (design DAHYDU0fM4U, five editable pages,
+53 text objects and an editable image). A draft format_text operation changed only
+slide 3's selected headline colour successfully; the transaction was cancelled to
+preserve the original. This proves that selected text formatting operation through
+the Canva connector, not the application's OAuth import or full shape/font fidelity.

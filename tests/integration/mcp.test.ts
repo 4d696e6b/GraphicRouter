@@ -14,13 +14,39 @@ async function rpc(method: string, params: unknown = {}, owner: string | null = 
   return response.json() as Promise<{ result: Record<string, unknown> }>;
 }
 describe("local MCP transport; does not establish ChatGPT account connection", () => {
-  it("initializes and discovers exactly five shared tool names and schemas", async () => {
+  it("discovers the five stable deck tools plus the design briefing", async () => {
     const init = await rpc("initialize", { protocolVersion: "2025-03-26", capabilities: {}, clientInfo: { name: "test", version: "1" } });
     expect(init.result.serverInfo).toMatchObject({ name: "GraphicRouter" });
     const list = await rpc("tools/list");
     const tools = list.result.tools as { name: string; inputSchema: unknown; description: string }[];
-    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES]);
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, "start_briefing"]);
     expect(tools[0].description).toContain("Never invent evidence"); expect(tools[0].inputSchema).toMatchObject({ type: "object", required: expect.arrayContaining(["slides", "brief"]) });
+  });
+  it("exposes the briefing before creation through initialization and tool discovery", async () => {
+    const init = await rpc("initialize", { protocolVersion: "2025-03-26", capabilities: {}, clientInfo: { name: "test", version: "1" } });
+    const list = await rpc("tools/list");
+    const tools = list.result.tools as { name: string; description: string }[];
+    // Hosts may surface server instructions or rely on tool descriptions.
+    for (const instructions of [init.result.instructions, tools.find(t => t.name === "create_deck")?.description]) {
+      expect(instructions).toEqual(expect.any(String));
+      for (const topic of ["Before calling create_deck", "call start_briefing immediately", "one question per message", "Audience and outcome", "Story and evidence", "Presentation setting", "Visual direction", "Visual material", "never ask again", "quick draft", "brief.unknowns", "without another confirmation", "current Studio system", "do not restart the interview"]) {
+        expect(instructions).toContain(topic);
+      }
+    }
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, "start_briefing"]);
+  });
+  it("opens the briefing without calling the deck service and retains supplied context", async () => {
+    const answers = { topic: "A supplied topic", audience: "Judges" };
+    const result = await rpc("tools/call", { name: "start_briefing", arguments: { context: "Verified project notes", answers } }, "owner");
+    expect(result.result).toMatchObject({ structuredContent: { kind: "briefing", questionCount: 20, status: "awaiting_answers", briefingUrl: "https://example.test/briefing", answers }, _meta: { briefing: { context: "Verified project notes", answers } } });
+    // rpc's service factory throws; succeeding here proves no deck write/export.
+    expect(result.result.isError).not.toBe(true);
+  });
+  it("protects briefing access and rejects unbounded or unknown answer fields", async () => {
+    expect((await rpc("tools/call", { name: "start_briefing", arguments: {} })).result).toMatchObject({ isError: true, structuredContent: { error: { code: "UNAUTHORIZED" } } });
+    for (const answers of [{ topic: "x".repeat(1501) }, { password: "not-a-supported-field" }]) {
+      expect((await rpc("tools/call", { name: "start_briefing", arguments: { answers } }, "owner")).result.isError).toBe(true);
+    }
   });
   it("returns a structured, clearly labelled unavailable result", async () => {
     const call = await rpc("tools/call", { name: "get_deck", arguments: { deckId: crypto.randomUUID(), version: 1 } }, "owner");

@@ -256,3 +256,74 @@ every PR; B handles platform/build integration.
   30-second demo; actual speaking pace is not yet verified.
 - No Worker B files, contracts, dependencies, or account configuration changed.
   The live account/editor/rehearsal checks remain explicitly open.
+
+## User-directed Canva-first visual redesign
+
+- User clarified the product remains a ChatGPT plugin and the main result must be
+  a beautiful editable Canva presentation, rather than stopping at PowerPoint.
+- Inspected the actual test chat and confirmed successful signed-in creation/export.
+  Fixed the output guidance and preview handoff priorities under the user's expanded
+  authorization; no second builder/chat was messaged or contracts changed.
+- Added opt-in GraphicRouter Studio art direction with dark/ivory editorial contrast,
+  stronger hierarchy, native routing illustration and illustrated process stages.
+  Historical art directions keep exact original recipes; immutable revisions preserve
+  the chosen system. All source fields remain represented, with no shrinking/discard.
+- Added a factual five-slide Studio pitch. Rendered/inspected the five-slide contact
+  sheet and imported the native PPTX into Canva as DAHYDU0fM4U. Readback: five editable
+  pages, 53 text objects, editable logo. Targeted headline formatting returned success
+  in a draft; cancelled transaction 6353972201106751147 to preserve the final deck.
+- `npm run check`: 92 tests pass; production build passes. New cases cover Studio
+  composition/classic compatibility/native revision fidelity and Canva-delivery UI
+  completion states. No new production dependencies or arbitrary freeform placement.
+- Actual Canva result: https://www.canva.com/d/P_YCbT66Mmc10ti . This used the connected
+  Canva plugin's file import; the service's own Canva client ID/secret are still absent.
+  Remaining imported shape/line/font fidelity and full stage rehearsal are unverified.
+
+
+## User-directed presentation briefing — 2026-10-15
+
+- [x] Added an adaptive conversation before create_deck: audience/action,
+  message/verified evidence, setting/language/time, visual direction/brand/references
+  and useful visual material. Maximum three questions per message; reuse supplied
+  answers and honor explicit quick-draft/designer-choice requests.
+- [x] Added composition review guidance for hierarchy, contrast, spacing, concise
+  copy and narrative. Preserve current supported fonts/layouts/assets and never
+  promise arbitrary uploads or exact brand/reference reproduction.
+- [x] Exposed policy in both MCP initialize instructions and create_deck metadata;
+  preserved all five schemas, existing storage and narrow revision behavior.
+- [x] npm run check: TypeScript and 93 tests pass. npm run build passes. New transport
+  regression verifies both host discovery paths contain the pre-creation briefing.
+- [x] Documented six conversation checks in src/mcp/README.md.
+- [ ] Live model conversation checks remain unverified: metadata tests cannot prove
+  that ChatGPT asks the right follow-ups or certify subjective slide beauty.
+- Scope includes MCP instructions under the user's request to update this plugin;
+  no shared contracts, dependencies, credentials or builder service logic changed.
+
+
+## User-directed question dialog — 2026-10-15
+
+- Inspected “Design a beautiful presentation”: the initial assistant asked five
+  prose questions without a tool call; the user's one-page infographic request
+  then caused a switch to image generation. This was an unsupported-format escape,
+  not a failed Canva import.
+- [x] Added supplemental read-only start_briefing tool, retaining the five existing
+  deck-operation schemas and source-of-truth behavior. Documented the bounded
+  briefing contract in docs/CONTRACTS.md; no database migration or new dependency.
+- [x] Implemented an in-app dialog with 20 questions, one visible at a time, context
+  prefills, progress, optional skip, back, review and answer editing. Four essentials
+  gate submission. Unsupported one-page formats cannot be submitted as decks.
+- [x] User-triggered MCP Apps user-message handoff carries the entire brief and asks
+  for GraphicRouter creation/Canva delivery. Host rejection retains the answer view
+  and a copy-back fallback. No automatic send retry, storage write or image tool.
+- [x] Added standalone /briefing fallback; local HTTP returns 200. Unsent answers
+  are intentionally view-local; closing/reloading can lose them, disclosed in UI.
+- [x] npm run check: TypeScript and 100 tests pass. npm run build passes, including
+  /briefing. Tests cover discovery/access/bounds, required fields, unsupported format,
+  all-20-answer preservation, one-question markup, escaping and host handoff errors.
+- [ ] Actual host dialog display, user click-through, continuation by the model and
+  subjective Canva quality remain live checks. Browser inventory failed with an
+  app-server error; direct IAB preview then failed its security policy verification.
+  No browser-control fallback or policy bypass was attempted.
+- Updated scope was requested by the user after the prose-only interview proved
+  insufficient. The extra tool is an intake entry point; all original engine and
+  deck-tool interfaces remain compatible.

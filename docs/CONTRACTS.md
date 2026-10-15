@@ -40,6 +40,25 @@ otherwise return an actionable error. Never silently discard content.
 
 ## Service and tool handoff
 
+### Supplemental briefing tool (user-directed dialog extension)
+
+The five deck-operation contracts remain unchanged. `start_briefing` is a sixth,
+read-only MCP entry point registered outside DeckService/TOOL_NAMES. Its schema in
+`src/briefing/questions.ts` accepts optional context (4000 characters) and a bounded
+record of known question keys (1500 characters per answer). It authorizes the owner,
+returns `kind: briefing`, a transient briefingId, `status: awaiting_answers`,
+questionCount 20, briefingUrl, and supplied context/answers; `_meta.briefing` feeds
+the existing MCP App resource. It creates no database record, file, deck or import.
+
+The view collects one answer at a time, blocks unsupported formats, and requires
+format/topic/audience/outcome before submission. Optional answers can be skipped.
+The user's submit click sends the full brief in one host user message requesting
+the five existing deck tools. It does not itself create slides. Host rejection or
+loss of connection retains answers and exposes a manual copy-back message; no
+automatic send retry or duplicate import occurs. Unsent data is held only in the
+open view. `/briefing` is a standalone fallback with copy-back, not an autonomous
+model service. No persisted deck or engine contract changes are required.
+
 Builder B owns the five names in `TOOL_NAMES` and registers their schemas from
 `src/contracts`. All successful calls return `DeckResult`; export adds file URLs.
 The preview resource receives the same stored blueprint as the model response.

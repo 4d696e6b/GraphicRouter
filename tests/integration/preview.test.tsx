@@ -7,6 +7,20 @@ import { testEngine } from "./engine-double";
 import { sampleDeck } from "../../src/fixtures/sample-deck";
 
 describe("presentation failure states using labelled fixtures", () => {
+  it("makes Canva the primary destination without treating an exported plan as delivery", () => {
+    const blueprint = testEngine.createBlueprint(sampleDeck, { deckId: crypto.randomUUID(), version: 1 });
+    const html = renderToStaticMarkup(<Presentation invoke={async () => {}} data={{ result: { blueprint, previewUrl: "https://example.test/preview", canva: { status: "connection_required", connectUrl: "https://example.test/connect" } }, previews: null }} />);
+    expect(html).toContain("Create editable Canva deck");
+    expect(html).toContain("A Canva design link has not been confirmed yet");
+    expect(html).not.toContain("Your editable Canva presentation is ready");
+  });
+  it("shows the actual Canva editor link as the finished deliverable", () => {
+    const blueprint = testEngine.createBlueprint(sampleDeck, { deckId: crypto.randomUUID(), version: 1 });
+    const html = renderToStaticMarkup(<Presentation invoke={async () => {}} data={{ result: { blueprint, previewUrl: "https://example.test/preview", canva: { status: "succeeded", jobId: "test-job", designId: "test-design", editUrl: "https://www.canva.com/design/test/edit" } }, previews: null }} />);
+    expect(html).toContain("Your editable Canva presentation is ready");
+    expect(html).toContain('href="https://www.canva.com/design/test/edit"');
+    expect(html).not.toContain("Create editable Canva deck");
+  });
   it("keeps notes, slide selection and downloads when previews are unavailable", () => {
     const blueprint = testEngine.createBlueprint(sampleDeck, { deckId: crypto.randomUUID(), version: 1 });
     const html = renderToStaticMarkup(<Presentation data={{ result: { blueprint, previewUrl: "https://example.test/preview", canva: { status: "not_started" }, files: { pptxUrl: "https://example.test/pptx", notesUrl: "https://example.test/notes" } }, previews: null, previewError: "TEST: rendering unavailable" }} />);
