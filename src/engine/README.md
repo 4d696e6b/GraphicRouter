@@ -109,9 +109,9 @@ previews were visually inspected with no clipping. The fixture passes fit checks
 and the one-element revision proof. Actual speaking pace and browser controls still
 need rehearsal. This does not certify B's unmerged branch or hosted account behavior.
 
-Read the existing provider and service in draft PR #3 without merging that branch.
-Its expected exports exactly match this implementation. After this engine PR lands
-through main, Builder B can replace `src/server/engine-provider.ts` with:
+B's remote branch at `f23b071` already wires the provider to these exports.
+PR #3 remains draft and unmerged; A read its evidence without merging the branch.
+The provider exports are:
 
 ```ts
 export { engine } from "../engine";
@@ -119,10 +119,10 @@ export { assets } from "../engine/assets";
 ```
 
 There are no shared-contract or dependency changes to coordinate. Builder B should
-then exercise real create/revise/preview/export through `DeckService` and preserve
-`EngineError` messages/issues when mapping errors; its current generic compose catch
-otherwise hides the actionable text-fit/target diagnostics. This note does not change
-B's service code or claim that its installed-account checks have run.
+preserve the real create/revise/preview/export checks through `DeckService` and
+`EngineError` diagnostics; its latest evidence records these locally. This does not
+claim installed-account checks have run. The new pitch input still needs its own
+service creation and verification before presentation freeze.
 
 Builder B's unavailable Sites access and missing Canva app credentials still block
 its production path. The successful imports below used this chat's existing Canva
@@ -134,7 +134,7 @@ remain in the PPTX. PDF generation is not a method in the shared engine port.
 
 ## Verification recorded
 
-- `npm run check`: strict TypeScript plus 38 passing tests, including malformed
+- `npm run check`: strict TypeScript plus 39 passing tests, including malformed
   PNG/JPEG containers and recipe/source integrity regressions. Replay assertions
   also reject unrelated changes, incorrect revised files, and unsafe script text.
 - `npm run build`: framework shell builds; it does not imply completed integration.
