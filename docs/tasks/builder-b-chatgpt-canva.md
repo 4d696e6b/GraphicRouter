@@ -339,3 +339,22 @@ substitutions, then complete the pitch/rehearsal/backup items above.
   ChatGPT tools/widget, application OAuth/backend import, Canva editor shape/line/
   font fidelity, timed live rehearsal and recording. Earlier separate manual Canva
   text/image verification does not satisfy these application-account checks.
+
+### Mentor-requested product webpage demo
+
+- Replaced the integration-only homepage with a responsive GraphicRouter product
+  landing page: value proposition, four-step workflow, getting-started prompts,
+  product basics/FAQ, availability, and honest Canva handoff limits.
+- Interactive preview consumes A's existing engine and localWorkflowPitch unchanged.
+  Five slide selectors, three preview stages, a prepared violet revision and reset
+  work without live tool calls, storage writes or imports. Prepared status is visible.
+- Copy prompt buttons and keyboard activation work; FAQ expands/collapses. Desktop
+  and narrow mobile browser checks pass; no horizontal overflow or console errors.
+  Screenshots: ignored outputs/landing-desktop.png and outputs/landing-mobile.png.
+- TypeScript and all 89 existing tests pass; production build passes. No dependencies,
+  shared contracts, engine, fixture, recovery, auth or service routes changed.
+- Forwardable Worker A prompt: docs/tasks/builder-b-landing-handoff.md. A is asked
+  only to review wording/evidence and retain engine/presentation ownership.
+- Existing Site again returns project_not_found (404), so this is a local demo,
+  not a new publication or a claim of installed ChatGPT/app Canva verification.
+  No replacement Site or payment plan was created.
