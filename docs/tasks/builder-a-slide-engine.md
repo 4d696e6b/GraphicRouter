@@ -742,8 +742,18 @@ scope, use examples, repro commands and real-use checks.
 - [x] No native Canva read/edit/upload/import was performed without a real user
   target/image. Previous live layer/fidelity, private upload, same-file save and
   long-deck rehearsal gates remain. Original Site remains inaccessible/untouched.
-- [ ] Final patched checks/build in exact Test checkout, clean source/dependency
-  verification, private deployment and connected-tool smoke recorded below.
+- [x] Final exact Test checks/build pass. Compiled Worker HTTP200/new form,
+  version0.10.1,29-tool discovery/widget resource and HTTP401 anonymous rejection
+  pass. npm ls has no invalid/missing dependencies; final audit remains14 total
+  (8 high/4 moderate/2 low), production-only0, with documented scope limits.
+- [x] Private Test version7 succeeded: source a477be05a94d970279aa36b933e15084bb961985,
+  deployment appgdep_6ad0f076f0d08191a45e8b3a877ea125, MCP enabled, unchanged secret
+  revision2. Connected start_briefing returns6 quick questions and preserves the
+  same-file/picture guidance. No provider design/import/upload/edit was initiated.
+  https://graphicrouter-test.pacharapol-pim.chatgpt.site/briefing
+- [x] PR: https://github.com/4d696e6b/GraphicRouter/pull/18. Source changes committed
+  in UI, dependency and evidence increments. Owned QA servers are stopped; original
+  Site still returns project_not_found and remains clean at484047c.
 
 This checkpoint supports continued owner-private testing; public/marketplace
 publication remains conditional on the documented real-use and upstream dependency

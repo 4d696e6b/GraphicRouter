@@ -48,9 +48,12 @@ uncertain failures. Existing tests also cover native text/copy/image snapshot ch
 same-file edit planning, picture role/source handling,24-slide detailed source stress
 and actual native PPTX composition. No blanket factual/aesthetic/Canva guarantee.
 
-Tests before security patches:254 in43 files pass. Repeat after installing the
-patched lock and build both GitHub and exact Test source; record actual results in
-the task checklist. No separate formal security-review service was run.
+Final patched checks:254 tests in43 files and TypeScript pass in both GitHub and
+exact Test source. Both production builds pass. The compiled Test Worker serves
+the redesigned /briefing with HTTP200, exposes version0.10.1/all29 tools and its
+redesigned widget resource, and rejects anonymous tool calls with HTTP401. This
+is a local runtime smoke, not live ChatGPT/Canva orchestration. npm ls reports no
+invalid/missing dependencies. No separate formal security-review service was run.
 
 ## Dependency findings and response
 
@@ -102,3 +105,16 @@ blindly accepting npm's suggested major downgrades is not a safe release fix.
 Original GraphicRouter remains inaccessible from the current connected account and
 is not updated. Only the existing owner-private GraphicRouter Test is eligible for
 this release; no public audience or marketplace submission is authorized/claimed.
+
+## Private publication evidence
+
+GraphicRouter Test version7 deployed successfully from exact pushed source
+`a477be05a94d970279aa36b933e15084bb961985`, deployment
+`appgdep_6ad0f076f0d08191a45e8b3a877ea125`, MCP enabled, existing secret revision2.
+https://graphicrouter-test.pacharapol-pim.chatgpt.site/briefing
+
+Connected start_briefing returned the six-question quick route with same-file and
+picture guidance preserved. Cached host resource/catalog rendering is a separate
+fresh-chat check; no design, import, upload or Canva editing transaction was started.
+Original Site lookup still returns project_not_found and its checkout is unchanged.
+This successful private deployment does not close the public-release gates above.
