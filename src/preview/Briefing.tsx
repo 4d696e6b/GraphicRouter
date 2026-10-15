@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { buildBriefingMessage, briefingIssues, getQuestions, infographicDimensions, nextBriefingQuestion, questions, type Answers, type BriefingData, type BriefingQuestion } from "../briefing/questions";
+import { buildBriefingMessage, briefingIssues, getQuestions, infographicDimensions, nextBriefingQuestion, questions, startingPointHelp, workflowMode, type Answers, type BriefingData, type BriefingQuestion } from "../briefing/questions";
+import { canvaSourceFallbackOption } from "../briefing/canva-workflow";
 
 export function Briefing({ initial, submit }: { initial: BriefingData; submit?: (message: string) => Promise<void> }) {
   const [answers, setAnswers] = useState<Answers>({ ...initial.answers });
@@ -23,7 +24,8 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
   const customSize = value.match(/(\d+)\s*[x×]\s*(\d+)/);
   const dimensions = infographicDimensions(answers.format?.trim() || "Infographic — portrait");
   const isDeck = answers.format?.trim() === "Five-slide presentation";
-  const useTemplate = answers.template === "Use a Canva template", chooseTemplate = answers.template === "Help me choose";
+  const route = workflowMode(answers.template);
+  const useTemplate = route === "canva_native", createInCanva = route === "canva_create", chooseTemplate = route === "choose";
   const savedExtras = questions.filter(item => !activeQuestions.some(active => active.id === item.id) && answers[item.id]?.trim());
   const reviewQuestions = [...activeQuestions, ...savedExtras];
   const button = { padding: "12px 18px", borderRadius: 12, border: "1px solid #d5cfe2", background: "white", color: "#282235", cursor: "pointer", font: "inherit" };
@@ -54,10 +56,12 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
     catch { setError("The chat handoff was not confirmed. Your answers are still here. Check the chat before retrying, or copy the brief below into the same chat with GraphicRouter selected."); }
     finally { setBusy(false); }
   }
-  const reviewDescription = useTemplate
-    ? "Inspect a suitable Canva template or accessible design, then adapt a copy with connected Canva tools. The Canva copy will be the source of truth; this does not create a synchronized GraphicRouter blueprint."
+  const reviewDescription = createInCanva
+    ? "Create a new editable design directly in Canva from your completed brief. No Brand Template is required. We will inspect the result and refine it using supported Canva tools. The Canva design is the source of truth."
+    : useTemplate
+    ? `Inspect your accessible Canva template/design and adapt a copy. ${answers.templateSource?.trim() === canvaSourceFallbackOption ? "If no source fits, you have allowed a new Canva design using the same brief." : "If a required source is unavailable, we will ask before changing that requirement."} The Canva copy is the source of truth.`
     : chooseTemplate ? "First compare inspected, accessible Canva options with a blank-canvas direction. Choose once in the chat before we start the final design."
-      : isDeck ? "Five editable slides · Arial · 16:9 · Canva." : dimensions ? `One blank ${dimensions.width} × ${dimensions.height} canvas → structure → content → visual review → Canva.` : "Choose a supported canvas size or the five-slide presentation.";
+      : isDeck ? "Five editable slides · Arial · 16:9 · Canva." : dimensions ? `One blank ${dimensions.width} × ${dimensions.height} canvas → structure → content → visual review → Canva. This route uses GraphicRouter’s simpler text-and-shape toolkit; it does not use Canva’s full illustration or font library.` : "Choose a supported canvas size or the five-slide presentation.";
   return <main style={{ fontFamily: "Arial, sans-serif", color: "#211c2e", background: "#f5f2fb", padding: "clamp(12px,3vw,28px)", maxWidth: 820, margin: "auto" }}>
     <section role="dialog" aria-labelledby="briefing-title" style={{ background: "#fffefa", border: "1px solid #e2dcec", borderRadius: 24, padding: "clamp(20px,4vw,36px)", boxShadow: "0 12px 40px #33204c0d" }}>
       <p style={{ color: "#6d28d9", fontSize: 12, letterSpacing: ".12em", fontWeight: 700 }}>GRAPHICROUTER · DESIGN BRIEF</p>
@@ -71,12 +75,13 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
         <dl style={{ margin: "20px 0" }}>{reviewQuestions.map(item => <div key={item.id} style={{ padding: "12px 0", borderBottom: "1px solid #e8e3ed" }}><dt style={{ fontWeight: 700 }}>{initial.prompts?.[item.id]?.title ?? item.title}</dt><dd style={{ margin: "8px 0", whiteSpace: "pre-wrap", overflowWrap: "anywhere", color: "#62596e" }}>{answers[item.id]?.trim() || (item.id === "format" ? "Portrait infographic (default)" : "Choose for me / not supplied")}</dd><button type="button" disabled={busy} onClick={() => move(item.id, true)} style={button}>Edit {item.group.toLowerCase()} answer</button></div>)}</dl>
         {answers.duration && <p style={{ whiteSpace: "pre-wrap" }}>Previously supplied talk duration: {answers.duration}</p>}
         {issues.length > 0 && <p role="alert">{issues[0].message}</p>}
-        <button type="button" disabled={busy} onClick={finish} style={{ ...button, background: "#7C3AED", color: "white" }}>{busy ? "Sending your brief…" : submit ? chooseTemplate ? "Compare design directions in chat" : useTemplate ? "Adapt a Canva copy in chat" : "Create in Canva with GraphicRouter" : "Prepare brief for GraphicRouter"}</button>
+        <button type="button" disabled={busy} onClick={finish} style={{ ...button, background: "#7C3AED", color: "white" }}>{busy ? "Sending your brief…" : submit ? createInCanva ? "Create a new design in Canva" : chooseTemplate ? "Compare design directions in chat" : useTemplate ? "Adapt a Canva copy in chat" : "Create in Canva with GraphicRouter" : "Prepare brief for GraphicRouter"}</button>
       </> : <form onSubmit={e => { e.preventDefault(); next(); }}>
         <p id="question-help" style={{ color: "#62596e", lineHeight: 1.7 }}>{q.help}</p>
         {options.length > 0 && <div role="group" aria-label="Suggested answers" style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>{options.map(option => {
           const chosen = value === option || (option === "Infographic — custom size" && isCustomSize);
-          return <button type="button" key={option} aria-pressed={chosen} onClick={() => changeAnswer(q.id, option === "Infographic — custom size" ? "Infographic — custom 1080 × 1920" : option)} style={{ ...button, borderColor: chosen ? "#7C3AED" : "#d5cfe2", background: chosen ? "#ede9fe" : "white" }}>{option}</button>;
+          const routeHelp = q.id === "template" ? startingPointHelp[option as keyof typeof startingPointHelp] : undefined;
+          return <button type="button" key={option} aria-pressed={chosen} onClick={() => changeAnswer(q.id, option === "Infographic — custom size" ? "Infographic — custom 1080 × 1920" : option)} style={{ ...button, borderColor: chosen ? "#7C3AED" : "#d5cfe2", background: chosen ? "#ede9fe" : "white", ...(routeHelp ? { width: "100%", textAlign: "left" as const } : {}) }}>{option}{routeHelp && <span style={{ display: "block", fontSize: 13, lineHeight: 1.5, color: "#62596e", marginTop: 6 }}>{routeHelp}</span>}</button>;
         })}</div>}
         {isCustomSize && <fieldset style={{ border: "1px solid #d5cfe2", borderRadius: 12, margin: "16px 0", padding: 16 }}><legend>Custom canvas dimensions</legend><div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>{(["Width", "Height"] as const).map((label, dimensionIndex) => <label key={label} style={{ display: "grid", gap: 6 }}>{label} (pixels)<input type="number" min={320} max={4000} step={1} value={customSize?.[dimensionIndex + 1] ?? ""} onChange={e => {
           const nextSize = [customSize?.[1] ?? "1080", customSize?.[2] ?? "1920"];

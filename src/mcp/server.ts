@@ -23,7 +23,7 @@ Create exactly five slides from the completed brief using supplied facts only. S
   send_to_canva: "Import this deck version's binary PowerPoint into Canva. Requires Canva authorization. Reuses an existing job for this version. Each version creates a new Canva design; edits made there never sync back. Pending import must not block presenting the saved deck.",
 };
 export function createMcpServer(owner: string | null, getService: () => DeckService, origin = "", getCanvasService?: () => CanvasService) {
-  const server = new McpServer({ name: "GraphicRouter", version: "0.5.0" }, { instructions: plannerInstructions });
+  const server = new McpServer({ name: "GraphicRouter", version: "0.6.0" }, { instructions: plannerInstructions });
   registerAppResource(server, "Presentation", uri, {}, async () => ({ contents: [{ uri, mimeType: RESOURCE_MIME_TYPE,
     text: `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><div id="root" role="status">Waiting for a saved presentation…</div><script>${widgetJs.replace(/<\/script/gi, "<\\/script")}</script></body></html>`,
     _meta: { ui: { prefersBorder: true, csp: { connectDomains: [], resourceDomains: [] } } },
@@ -100,7 +100,7 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
   });
   server.registerTool("start_briefing", {
     title: "GraphicRouter design brief",
-    description: "Start an adaptive design brief for a new infographic or presentation with missing context. Call immediately instead of a prose questionnaire. First ask project complexity, then whether to use a Canva template. Simple/balanced/detailed work gets only relevant questions (roughly6/9/14, plus an optional template-source question). Prefill known facts and optionally tailor non-routing question prompts (title/help) to this topic without changing the first two questions. Wait for the user submission; do not reopen intake afterward. Template choice routes ChatGPT to inspect and adapt an accessible copy through the separately connected Canva tools; Canva is that mode's source of truth. It is not a template-search capability in this backend and does not cover the entire public Canva catalogue. Blank-canvas choice uses create_canvas→edit_canvas→inspect_canvas→Canva. Never silently switch the user's chosen mode. Rich briefs and narrow edits can skip intake. If no app is visible, offer briefingUrl or ask one question at a time.",
+    description: "Start an adaptive design brief with complexity first, then three starting points: Let Canva create a design (recommended for new work), Use my Canva template/design, or Start from a blank canvas. Call immediately instead of a prose questionnaire. Ask roughly6/9/14 relevant questions; only existing-source work adds a source/fallback question. Reuse known answers. Optional prompts must use supported keys such as topic/audience/outcome/evidence/mustInclude/visuals, never content. Wait for submission and do not reopen intake. A completed new-Canva brief goes directly to connected Canva create-design without a Brand Template search or another route confirmation. Existing-source work adapts a copy and can explicitly allow a new Canva design if no source fits. Honour strict source requirements and legacy choices; never silently switch routes. Native Canva is the source of truth in those modes; this backend does not search the public Canva catalogue. GraphicRouter blank-canvas work uses create_canvas→edit_canvas→inspect_canvas→Canva. Rich briefs and narrow edits can skip intake. If no app is visible, offer briefingUrl or ask one question at a time.",
     inputSchema: briefingSchema,
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     _meta: { ui: { resourceUri: uri }, "openai/outputTemplate": uri },
@@ -112,7 +112,7 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
       const data = parsed.data;
       const briefingId = crypto.randomUUID();
       return {
-        content: [{ type: "text" as const, text: "GraphicRouter's adaptive design dialog is open. Ask complexity first and template preference second; the remaining questions follow the chosen context. Wait for submission, preserve its template/blank choice, and visually review before delivery. If no dialog is visible, offer briefingUrl." }],
+        content: [{ type: "text" as const, text: "GraphicRouter's adaptive design dialog is open. Ask complexity first, then choose new Canva design, an existing Canva source, or GraphicRouter blank canvas. Wait for submission and continue its selected route with the completed brief, without another interview. New Canva design creation needs no Brand Template search. Respect an existing source requirement and any explicit fallback permission; visually review before delivery. If no dialog is visible, offer briefingUrl." }],
         structuredContent: { kind: "briefing", briefingId, status: "awaiting_answers", questionCount: getQuestions(data.answers).length, briefingUrl: `${origin}/briefing`, ...data },
         _meta: { briefing: data, briefingId },
       };

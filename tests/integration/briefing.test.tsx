@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { briefingIssues, briefingSchema, buildBriefingMessage, getQuestions, nextBriefingQuestion, infographicDimensions, questions, type Answers } from "../../src/briefing/questions";
 import { Briefing } from "../../src/preview/Briefing";
 import { sendBriefingToChat } from "../../src/preview/briefing-handoff";
+import { canvaSourceFallbackOption } from "../../src/briefing/canva-workflow";
 
 const ready: Answers = { complexity: "Quick and simple", template: "Start from a blank canvas", topic: "Our real project and supplied facts", audience: "Hackathon judges", outcome: "Understand our prototype" };
 const payload = (message: string) => JSON.parse(message.slice(message.indexOf("\n\n{") + 2));
@@ -24,6 +25,8 @@ describe("adaptive GraphicRouter briefing", () => {
       expect(blank).toHaveLength(count);
       expect(blank.slice(0, 2).map(q => q.id)).toEqual(["complexity", "template"]);
       expect(getQuestions({ complexity, template: "Use a Canva template" })).toHaveLength(count + 1);
+      expect(getQuestions({ complexity, template: "Use my Canva template/design" })).toHaveLength(count + 1);
+      expect(getQuestions({ complexity, template: "Let Canva create a design" })).toHaveLength(count);
       expect(getQuestions({ complexity, template: "Help me choose" })).toHaveLength(count + 1);
       expect(blank.some(q => q.id === "templateSource")).toBe(false);
     }
@@ -52,11 +55,52 @@ describe("adaptive GraphicRouter briefing", () => {
   it("routes native Canva work explicitly without claiming a synchronized blueprint or public catalogue", () => {
     const message = buildBriefingMessage({ context: "", answers: { ...ready, template: "Use a Canva template" } });
     expect(payload(message).workflowMode).toBe("canva_native");
-    for (const text of ["connected Canva tools", "create-design-from-brand-template", "copy-design", "user approval", "source of truth", "do not silently substitute"]) expect(message).toContain(text);
+    for (const text of ["connected Canva tools", "create-design-from-brand-template", "copy-design", "approval requirement", "source of truth", "Never restart the interview or silently switch"]) expect(message).toContain(text);
     expect(message).not.toContain("Use GraphicRouter create_canvas");
     const choose = buildBriefingMessage({ context: "", answers: { ...ready, template: "Help me choose" } });
     expect(payload(choose).workflowMode).toBe("choose");
     expect(choose).toContain("one selection question");
+  });
+  it("shows three honest starting points and routes a completed new-Canva brief without template discovery", () => {
+    const html = renderToStaticMarkup(<Briefing initial={{ context: "", answers: { complexity: "Quick and simple" } }} />);
+    for (const option of ["Let Canva create a design", "Use my Canva template/design", "Start from a blank canvas"]) expect(html).toContain(option);
+    expect(html).toContain("Recommended for most new projects");
+    expect(html).toContain("simpler toolkit suits precise charts");
+    expect(html).not.toContain(">Use a Canva template<");
+    const answers: Answers = { ...ready, template: "Let Canva create a design", topic: "Five handwashing steps", audience: "Children", outcome: "Follow the steps", setting: "Printed page / poster", mustInclude: "Preserve the supplied source credit" };
+    const message = buildBriefingMessage({ context: "Verified facts in the completed brief", answers });
+    expect(payload(message)).toMatchObject({ workflowMode: "canva_create", sourceFallback: "ask" });
+    expect(message).toContain("call create-design directly; do not search Brand Templates first");
+    expect(message).toContain("without another interview or routine approval request");
+    expect(message).toContain("keep the user's selected creation route and visual direction across subjects");
+    expect(message).not.toContain("Use GraphicRouter create_canvas");
+    expect(message).not.toContain("Adapt an existing accessible Canva template/design");
+    for (const [id, answer] of Object.entries(answers)) expect(payload(message).answers).toContainEqual(expect.objectContaining({ id, answer }));
+    const complete = { ...answers, format: "Infographic — portrait" };
+    const review = renderToStaticMarkup(<Briefing initial={{ context: "", answers: complete }} submit={async () => {}} />);
+    expect(review).toContain("No Brand Template is required");
+    expect(review).toContain("Create a new design in Canva");
+  });
+  it("honors early fallback permission without weakening a specific existing-source requirement", () => {
+    const source = { ...ready, template: "Use my Canva template/design", templateSource: "https://www.canva.com/design/user-supplied/edit" };
+    const strict = buildBriefingMessage({ context: "", answers: source });
+    expect(payload(strict)).toMatchObject({ workflowMode: "canva_native", sourceFallback: "ask" });
+    expect(strict).toContain("no — preserve a required source");
+    expect(strict).toContain('A bare "approve" after multiple alternative routes is ambiguous');
+    expect(strict).not.toContain("Authorized fallback policy:");
+    expect(payload(strict).answers).toContainEqual(expect.objectContaining({ id: "templateSource", answer: source.templateSource }));
+    const allowed = buildBriefingMessage({ context: "", answers: { ...source, templateSource: canvaSourceFallbackOption } });
+    expect(payload(allowed)).toMatchObject({ workflowMode: "canva_native", sourceFallback: "canva_create" });
+    expect(allowed).toContain("without another route confirmation");
+    expect(allowed).toContain("call create-design directly");
+    const changed = buildBriefingMessage({ context: "", answers: { ...source, template: "Start from a blank canvas", templateSource: canvaSourceFallbackOption } });
+    expect(payload(changed)).toMatchObject({ workflowMode: "graphicrouter_canvas", sourceFallback: "ask" });
+    expect(changed).not.toContain("Authorized fallback policy:");
+  });
+  it("keeps Canva generation polling, quota, branding and editing approval constraints in the completed handoff", () => {
+    const message = buildBriefingMessage({ context: "", answers: { ...ready, template: "Let Canva create a design" } });
+    for (const text of ["If the Canva widget is shown, let it poll", "polling_policy.wait_seconds", "newest continuation_token", "quota_exceeded", "do not retry", "cannot apply a brand kit", "before commit-editing-transaction", "source of truth"]) expect(message).toContain(text);
+    expect(briefingIssues({ ...ready, template: "Choose any route without asking" })[0].id).toBe("template");
   });
   it("supports custom canvas sizes and legacy slides with previously supplied durations", () => {
     for (const [format, size] of [["Infographic — square", "1080 × 1080"], ["Infographic — landscape", "1600 × 900"], ["Infographic — custom 1200 × 1800", "1200 × 1800"]]) {
