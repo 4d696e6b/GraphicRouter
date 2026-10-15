@@ -471,3 +471,70 @@ html { background: #faf8ff; }
   .hero .actions { grid-template-columns: minmax(0,1fr); width: 360px; gap: 12px; }
   .hero .actions > :is(a,button) { min-height: 56px; font-size: 16px; }
 }
+
+/* Ambient light lives below normal-flow content inside this isolated context. */
+.site { position: relative; isolation: isolate; }
+.homepageAmbient {
+  position: absolute; z-index: -1; inset: 0 0 auto; height: 1100px;
+  overflow: clip; pointer-events: none; contain: paint;
+  mask-image: radial-gradient(ellipse 43% 35% at 50% 38%,transparent 28%,#000 92%);
+}
+.homepageAmbient * { pointer-events: none; }
+.ambientAnchor { position: absolute; width: 560px; height: 480px; transform: translate(-50%,-50%); }
+.ambientAnchor1 { left: 2%; top: 280px; }
+.ambientAnchor2 { left: 98%; top: 410px; width: 620px; height: 540px; }
+.ambientAnchor3 { left: 56%; top: 860px; width: 420px; height: 340px; }
+.ambientPointer, .ambientField { width: 100%; height: 100%; }
+.ambientPointer { will-change: transform; }
+.ambientField {
+  border-radius: 44% 56% 58% 42% / 52% 38% 62% 48%;
+  background: radial-gradient(ellipse at 40% 42%,#7c3aed14,transparent 72%);
+  animation: ambientFloat 9s ease-in-out infinite alternate; animation-play-state: paused;
+}
+.ambientAnchor2 .ambientField { background: radial-gradient(ellipse at 58% 38%,#ad7dea14,transparent 72%); animation-duration: 12s; animation-delay: -4s; }
+.ambientAnchor3 .ambientField { background: radial-gradient(ellipse at 38% 60%,#9670da0e,transparent 72%); animation-duration: 7s; animation-delay: -2s; }
+.homepageAmbient[data-playing=true] .ambientField { animation-play-state: running; }
+@keyframes ambientFloat {
+  from { transform: translate3d(-6px,5px,0) scale(1,.985); }
+  to { transform: translate3d(8px,-9px,0) scale(1.025,1.01); }
+}
+.graphicIntro {
+  position: fixed; z-index: 40; left: 24px; bottom: 24px; width: 270px;
+  max-width: calc(100vw - 32px); pointer-events: none;
+}
+.graphicIntro * { pointer-events: none; }
+.introContent {
+  padding: 18px 20px 17px; background: #fefcff; border: 1px solid #e1d2f3;
+  border-radius: 18px; box-shadow: 0 12px 40px #42205f10,0 2px 8px #7c3aed05;
+}
+.introTop { display: flex; align-items: center; gap: 8px; }
+.introTop > img { width: 28px; height: 28px; border-radius: 8px; }
+.introTop > span { font-size: 13px; font-weight: 650; letter-spacing: -.04em; }
+.introTop > i { margin-left: auto; width: 5px; height: 5px; border-radius: 50%; background: #c7a8ee; }
+.introPath { display: block; width: 100%; height: 60px; margin: 12px 0 8px; stroke: #a179d0; stroke-width: 1; }
+.introConnection { stroke-dasharray: 144; stroke-dashoffset: 144; animation: introConnect 500ms cubic-bezier(.22,1,.36,1) 180ms forwards; }
+.introSlide { fill: #faf6ff; opacity: 0; transform: translateY(5px); animation: introSlideIn 350ms cubic-bezier(.22,1,.36,1) 220ms forwards; }
+.introSlide:nth-of-type(2) { animation-delay: 310ms; }
+.introSlide:nth-of-type(3) { animation-delay: 400ms; }
+.introSlide path { stroke: #b99ad9; }
+.introContent > p { font-size: 11px; color: #795b92; text-align: center; clip-path: inset(0 100% 0 0); animation: introPhrase 570ms steps(25,end) 180ms forwards; }
+.introRadial { mask-image: radial-gradient(ellipse at center,transparent var(--intro-reveal),#000 calc(var(--intro-reveal) + 22%)); }
+@keyframes introConnect { to { stroke-dashoffset: 0; } }
+@keyframes introSlideIn { to { opacity: 1; transform: translateY(0); } }
+@keyframes introPhrase { to { clip-path: inset(0); } }
+@media(max-width:600px) {
+  .graphicIntro { left: 16px; bottom: 16px; width: 230px; }
+  .introContent { padding: 14px 16px; }
+  .ambientAnchor1 { left: -28%; width: 420px; }
+  .ambientAnchor2 { left: 128%; width: 460px; }
+  .homepageAmbient { mask-image: radial-gradient(ellipse 58% 35% at 50% 36%,transparent 20%,#000 100%); }
+}
+@media(prefers-reduced-motion:reduce), (hover:none), (pointer:coarse) {
+  .homepageAmbient .ambientField { animation: none; transform: none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .graphicIntro, .homepageAmbient { display: none!important; }
+}
+@media(max-width:600px) and (max-height:700px) {
+  .graphicIntro { display: none; } /* Keep short mobile viewports clear of the CTAs. */
+}

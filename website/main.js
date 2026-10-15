@@ -1,5 +1,6 @@
 import { mountScene } from "./scene.js";
 import { nextTab, copyText } from "./interactions.js";
+import { mountHomepageMotion } from "./homepage-motion.js";
 
 function mountPage() {
   const root = document.getElementById("static-site");
@@ -56,7 +57,9 @@ function mountPage() {
     document.querySelectorAll("[data-loop]").forEach(element => loops.observe(element));
     dispose.push(() => { reveal.disconnect(); loops.disconnect(); });
   }
-  if (!location.hash) document.querySelectorAll("[data-title]").forEach((element, i) => play(element, true, 100 + i * 120));
+  const homepageMotion = mountHomepageMotion(root, isReduced);
+  dispose.push(homepageMotion.cleanup);
+  if (homepageMotion.enter) document.querySelectorAll("[data-title]").forEach((element, i) => play(element, true, 100 + i * 120));
   root.addEventListener("focusin", event => animations.forEach((element, animation) => { if (element.contains(event.target)) animation.cancel(); }), { signal });
   const preference = document.querySelector(".motionControl");
   preference?.addEventListener("click", () => { const paused = root.dataset.motionPreference !== "reduce"; root.dataset.motionPreference = paused ? "reduce" : "auto"; preference.setAttribute("aria-pressed", String(paused)); preference.textContent = paused ? "Resume page motion" : "Reduce page motion"; window.dispatchEvent(new Event("graphicrouter:motion")); }, { signal });
