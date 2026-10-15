@@ -7,8 +7,9 @@ the application's Canva OAuth/import path are not yet verified.
 
 ## Engine handoff
 
-PR #4 was reviewed, tested, and merged into main at `b8336d0`. This branch consumed
-that main commit and `engine-provider.ts` now exports:
+PR #4 was reviewed, tested, and merged into main at `b8336d0`. PR #5's proof correction,
+engine hardening, and local-workflow pitch followed through main at `f1fe81a`.
+This branch consumed both main commits and `engine-provider.ts` exports:
 
 ```ts
 export { engine } from "../engine";
@@ -22,6 +23,16 @@ prior versions, and unchanged XML for the other four slides. EngineError message
 and issue paths are preserved in the existing ToolError.message field, without
 changing shared contracts. The homepage accurately labels local verification and
 the outstanding hosted/app-authorization checks.
+
+The final suite has 86 passing tests. Both the original engine-stage input and A's
+localWorkflowPitch pass the complete real-service create/preview/revise/export test.
+The latter was also created over HTTP against the actual local Worker/D1/R2 with
+simulated local identity; actual-service files are separate from offline artifacts.
+
+The corrected offline rehearsal was checked separately in the browser (slide/stage
+selection, keyboard navigation, notes, prepared revision, timer). It remains a
+precomputed fallback; its controls and generated proof do not establish live tools,
+hosted identity, application OAuth, imported font fidelity, or speaking pace.
 
 ## Runtime and local checks
 

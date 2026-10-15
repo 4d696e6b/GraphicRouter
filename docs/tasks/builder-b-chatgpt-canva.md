@@ -68,7 +68,7 @@ Do not implement A's engine or claim account-level verification from mocks.
   get_deck. Never create duplicate imports while polling an existing job.
 - [x] Expose connection/import errors and authenticated download fallback routes; real PPTX/notes downloads verified locally.
 - [x] Label each new Canva design version and explain the lack of reverse sync.
-- [ ] Generate the real pitch through the integrated tools with A by hour 12.
+- [x] Create A's local-workflow pitch through the actual local service/MCP path; hosted account checks remain pending.
 - [ ] Freeze a verified complete flow and final deck by hour 16.
 
 ### B4 — hosting and submission support
@@ -100,7 +100,7 @@ secret values, and clear remaining limitations.
 - Installed dependencies with `npm install`. The first check attempt ran while
   installation was incomplete and failed to find `tsc`; after installation all seven
   original contract tests passed. Added esbuild only for bundling the local Apps UI.
-- `npm run check`: **79 tests pass**, including A's 26 engine tests and all seven
+- `npm run check`: **86 tests pass**, including A's 32 engine tests and all seven
   original contract tests. Adapter tests retain a clearly labelled engine double;
   separate real-engine service tests and production routes use A's implementation.
 - Tests cover owner isolation for decks/files/previews; HTTP 401/404 and no-store
@@ -229,13 +229,42 @@ secret values, and clear remaining limitations.
   valid revised deck: rehearsalProof succeeds and reports only slide3.headline.
   Compare all metadata on the changed slide (or normalize the expected blueprint's
   single paint change and compare the complete slides), and add that negative case.
-- PR #5 remains unmerged for A to fix. Temporary merge aborted after verification;
+- PR #5 was left unmerged at that review for A to fix (resolved in the follow-up below). Temporary merge aborted after verification;
   this branch's unchanged baseline still has **79 passing tests**. No A-owned files
   or shared contracts were edited. Offline rehearsal is a labelled fallback, never
   account-level/live integration proof.
 - Fresh get_site for the preserved project again returned project_not_found.
   See SETUP.md's access/configuration requirements; GitHub permissions do not grant
   access to the Site or configure a Canva developer app.
+
+### Corrected PR #5 and actual local-workflow pitch — 2026-10-15
+
+- A fixed the target-slide metadata comparison at `3af69b0` and added the exact
+  negative test for changed slide-three notes. Rebuilt B's original reproduction;
+  the proof now rejects it. Reviewed changes are scoped to A's owned source/tests,
+  fixture, and task notes, with no shared contract/dependency changes.
+- Temporary combined check passed 85 tests/build. Merged PR #5 through main at
+  `f1fe81a`, then merged main into this branch. Added a real-service test for the
+  exact new localWorkflowPitch; final suite: **86 passing tests**, production build
+  passed. The service stores A's exact input, preserving its qualified evidence.
+- Created A's localWorkflowPitch through actual local Worker/D1/R2 routes, not direct
+  engine-only generation. Deck `c3242528-9309-40b4-9a59-a2ca04ab708d`, v1/v2, passed
+  three-stage preview, concurrent exports, targeted violet headline revision,
+  unchanged unrelated elements/prior version, native PPTX/notes downloads, anonymous
+  401, actionable invalid-target 400, and a real local get_deck MCP call (200).
+- Actual-service backups: `outputs/real-service/c3242528-9309-40b4-9a59-a2ca04ab708d/`
+  contains exact create-deck.json, v1/v2 PPTX and notes, both blueprints, all 15 SVG
+  stages, presentation-v2.json, and a labelled verification.json. Local identity is
+  simulated; these records do not prove an installed ChatGPT account connection.
+- Separately checked the generated local-workflow offline replay in the browser:
+  stage switching, selected slide, ArrowRight navigation, expanded notes, prepared
+  v2 replay, and timer start/pause/reset-on-duration-change work. Timer counted down
+  from 03:00 to 02:54; duration change reset it to 05:00. Browser warnings/errors were
+  empty. The page prominently says precomputed/no live ChatGPT or Canva calls.
+  Screenshot: ignored `outputs/offline-fallback-qa.png`. No speaking pace or live
+  account verification is inferred from these control checks.
+- A fresh lookup of the preserved Site still returns project_not_found. Application
+  Canva credentials and Canva editor font/shape/line checks remain separate blockers.
 
 ### Current account requirements
 
