@@ -59,7 +59,7 @@ describe("freeform canvas preview", () => {
     expect(authHtml).not.toContain("Your editable Canva design is ready");
     data.result.canva = { status: "succeeded", jobId: "test-job", designId: "test-design", editUrl: "https://www.canva.com/design/test/edit" };
     const successHtml = renderToStaticMarkup(<Canvas data={data} invoke={async () => {}} />);
-    expect(successHtml).toContain("Your editable Canva design is ready");
+    expect(successHtml).toContain("Canva import complete. Check its text layers before delivery.");
     expect(successHtml).toContain('href="https://www.canva.com/design/test/edit"');
     expect(successHtml).not.toContain("Create editable Canva design");
     data.result.canva = { status: "failed", code: "CANVA_POLL_FAILED", jobId: "kept-job", message: "Refresh kept-job; it has not been restarted." };

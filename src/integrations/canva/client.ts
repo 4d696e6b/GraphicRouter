@@ -70,6 +70,7 @@ export class CanvaClient implements CanvaPort {
     if (response.status === 404 && jobId) return { status: "failed", jobId, code: "CANVA_IMPORT_FAILED", message: "Canva can no longer find this import job. Check your Canva designs or use the saved PowerPoint for manual upload. A new import will not start automatically." };
     if (!response.ok) fail("CANVA_IMPORT_FAILED", "Canva request failed. Download the saved PowerPoint for manual upload.");
     const { job } = jobSchema.parse(await response.json());
+    if (jobId && job.id !== jobId) fail("CANVA_IMPORT_FAILED", "Canva returned a different import job. The saved job is unchanged; retry its status check.");
     if (job.status === "in_progress") return { status: "pending", jobId: job.id };
     if (job.status === "failed") return { status: "failed", jobId: job.id, code: "CANVA_IMPORT_FAILED", message: "Canva could not convert this PowerPoint. Download it for manual upload; keep your prior design." };
     const design = job.result?.designs[0];

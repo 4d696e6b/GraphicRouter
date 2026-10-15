@@ -64,7 +64,7 @@ describe("adaptive GraphicRouter briefing", () => {
   it("shows three honest starting points and routes a completed new-Canva brief without template discovery", () => {
     const html = renderToStaticMarkup(<Briefing initial={{ context: "", answers: { complexity: "Quick and simple" } }} />);
     for (const option of ["Let Canva create a design", "Use my Canva template/design", "Start from a blank canvas"]) expect(html).toContain(option);
-    expect(html).toContain("Recommended for most new projects");
+    expect(html).toContain("Recommended for independently editable text");
     expect(html).toContain("simpler toolkit suits precise charts");
     expect(html).not.toContain(">Use a Canva template<");
     const answers: Answers = { ...ready, template: "Let Canva create a design", topic: "Five handwashing steps", audience: "Children", outcome: "Follow the steps", setting: "Printed page / poster", mustInclude: "Preserve the supplied source credit" };
@@ -73,6 +73,10 @@ describe("adaptive GraphicRouter briefing", () => {
     expect(message).toContain("call create-design directly; do not search Brand Templates first");
     expect(message).toContain("without another interview or routine approval request");
     expect(message).toContain("keep the user's selected creation route and visual direction across subjects");
+    expect(message).toContain("Every visible heading, number, label");
+    expect(message).toContain("review_canva_design");
+    expect(message).toContain("background-only preview");
+    expect(message).toContain("Never commit this diagnostic deletion");
     expect(message).not.toContain("Use GraphicRouter create_canvas");
     expect(message).not.toContain("Adapt an existing accessible Canva template/design");
     for (const [id, answer] of Object.entries(answers)) expect(payload(message).answers).toContainEqual(expect.objectContaining({ id, answer }));

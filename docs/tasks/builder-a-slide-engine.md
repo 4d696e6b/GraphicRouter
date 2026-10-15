@@ -463,3 +463,57 @@ not imply failed Canva connectivity or identify the user's plan.
 - Current work is authorized across the intake/MCP/UI directories. Apply the same
   source changes to GitHub without copying the private test Site identity or secrets;
   publish only GraphicRouter Test in this account.
+
+## Native layer requirement and stability review — 2026-10-15
+
+The user's project-wide hardening request and explicit separate-text clarification
+authorize this chat's coordinated cross-directory work; legacy owner boundaries
+are preserved for unrelated features. Shared review contract is additive and
+recorded in docs/CONTRACTS.md before shared integration.
+
+- [x] Require independent native text for every heading/value/label/source, with
+  text-free backgrounds/illustrations. Recommend native composition first; retain
+  explicit source/generation choices as inspected drafts, without silent switches.
+- [x] Add read-only owner-authenticated review_canva_design with strict resource
+  bounds: whole-word and per-ID copy, source URLs, bounds, duplicate/colliding text,
+  image-text and last-preview review. No model service, external fetch or writes.
+  Unknown image lettering cannot pass. Ready still needs Canva's native approval.
+- [x] Propagate the same policy through MCP discovery and every completed brief.
+  Require isolated cancelled background audits; forbid covering old baked copy,
+  committing diagnostic deletions, or claiming inaccessible previews inspected.
+- [x] Block identical native text overlays before saving/exporting while preserving
+  the prior version. Show source layer counts and separate import success from
+  a claim of verified Canva editability in previews.
+- [x] Stream bounded UTF-8 JSON at browser/MCP routes before service access; reject
+  mismatched Canva poll job IDs without replacing/restarting the saved job.
+- [x] Review source paths for owner isolation, immutable writes, write-once exports,
+  concurrent import claims, late polls and uncertain auth/transport outcomes. The
+  full suite exercises these safeguards; no production account success is inferred.
+- [x] npm run check: TypeScript and 184 tests across 29 files pass. The production
+  Sites build passes. Repeat after final documentation/preview changes before
+  publication. Tests include native PPTX object separation and preserved prior
+  blueprints, SDK rejection, image-text blockers and capped issue severity.
+- [x] npm audit --omit=dev: zero known production dependency vulnerabilities after
+  compatible patches (next/eslint-config-next 16.3.8 and transitive overrides).
+  Full audit still reports 30 build/development dependency findings (2 low,
+  8 moderate, 20 high), zero critical. This is not a clean full audit or proof of
+  runtime exploitability. Do not apply incompatible toolchain downgrades to hide it.
+- [x] Audited actual saved design DAHYEeILt2E from “Create a Canva design”: 33 native
+  richtexts and 36 image fills, including a page-level image. A movable image is
+  not proof of editable lettering. An isolated text-removal audit was cancelled;
+  the saved design and the other chat's pending draft were not committed/changed.
+  The diagnostic was shown, but could not be independently inspected through the
+  available image reader. Image text remains not_checked; no false visual pass.
+- [x] Ran the actual supplied object snapshot through the new check: blocked,
+  reporting unmatched/missing exact links, unchecked image text and incomplete
+  visual review. Local ignored evidence: artifacts/stability/canva-audit-input.json
+  and canva-audit-report.json. Copy checks are not verification of API price facts.
+- [ ] Publication and live tool-discovery evidence will be appended after release.
+
+Limitations: the host can bypass advisory review through separate Canva tools;
+this checkpoint cannot enforce their commit lock or independently authenticate a
+caller-supplied snapshot. It performs no OCR/factual audit. Native Canva structure
+and saved fidelity need real page-by-page inspection. Existing English/Arial,
+simple-geometry and registered-asset limits remain; no universal beauty guarantee.
+The user's existing faulty Canva draft has not been automatically repaired/saved,
+and no new generation credits were consumed during this review.

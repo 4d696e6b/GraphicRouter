@@ -13,6 +13,14 @@ function setup() {
   return { db, sql, fetcher, client };
 }
 describe("Canva OAuth/binary client against mocked HTTP, not a live integration", () => {
+  it("rejects a response belonging to a different import job instead of replacing the saved identifier", async () => {
+    const { client, fetcher } = setup(), start = await client.begin("owner");
+    await client.complete("owner", start.state, start.state, "code");
+    for (const status of ["in_progress", "success"]) {
+      fetcher.mockResolvedValueOnce(Response.json({ job: { id: "another-job", status } }));
+      await expect(client.poll("owner", "original-job")).rejects.toThrow("different import job");
+    }
+  });
   it("binds single-use state to owner and cookie; verifier encrypted and PKCE-correct", async () => {
     const { client, sql, fetcher } = setup();
     const start = await client.begin("owner");

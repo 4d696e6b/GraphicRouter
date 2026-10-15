@@ -57,7 +57,7 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
     finally { setBusy(false); }
   }
   const reviewDescription = createInCanva
-    ? "Create a new editable design directly in Canva from your completed brief. No Brand Template is required. We will inspect the result and refine it using supported Canva tools. The Canva design is the source of truth."
+    ? "Create a new draft directly in Canva from your completed brief. No Brand Template is required. It must pass native text-layer, background and visual checks before delivery. Text baked into an image is not accepted as editable. The Canva design is the source of truth."
     : useTemplate
     ? `Inspect your accessible Canva template/design and adapt a copy. ${answers.templateSource?.trim() === canvaSourceFallbackOption ? "If no source fits, you have allowed a new Canva design using the same brief." : "If a required source is unavailable, we will ask before changing that requirement."} The Canva copy is the source of truth.`
     : chooseTemplate ? "First compare inspected, accessible Canva options with a blank-canvas direction. Choose once in the chat before we start the final design."
