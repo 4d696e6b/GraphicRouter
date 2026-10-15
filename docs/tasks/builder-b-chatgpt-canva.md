@@ -420,3 +420,17 @@ not count as verification of the new standalone static delivery.
 - Evidence and exact remaining checks: builder-b-static-website-verification.md.
   Website configuration/upload instructions: ../../website/README.md.
 
+
+### Repository-only content pass
+
+- Expanded the static website using docs/PRODUCT.md, docs/CONTRACTS.md, briefing
+  questions and existing localWorkflowPitch only. Added a five-step How to use
+  section, v1 presentation basics, detailed project prompt, preview stages and
+  timed notes. FAQ exclusions now match the product brief.
+- Kept prepared examples, unavailable distribution and pending account checks
+  explicit; no external claims or application/engine changes.
+- Regenerated both static HTML views. TypeScript and all 124 tests pass; static
+  consistency/hash check passes. Desktop 1440x900 and mobile 390x844 browser
+  inspection shows the new section with no horizontal overflow.
+- Source mapping: website/README.md. Local screenshots:
+  outputs/static-website/project-content-desktop.png and project-content-mobile.png.

@@ -105,3 +105,23 @@ reference at `763b333ff8f7ab05ba5f0f70a61a91bcb2abd857`. Tablet PNGs are unchang
 The full notice is in `notices/RepoSetup-LICENSE.txt`; no reference logos or product
 claims are reused. GraphicRouter's application, contracts and private Site identity
 remain untouched. Deployment and release publication are outside this work.
+
+## Repository content sources
+
+The product copy uses only material contained in this project:
+
+- `docs/PRODUCT.md`: product goal, five roles/recipes, preview stages, 16:9/Arial
+  theme, 180/300-second notes, supported revisions and v1 exclusions.
+- `docs/CONTRACTS.md`: slide content limits, shared preview/export blueprint,
+  immutable versions, fit-safe layout changes and one-way Canva handoff.
+- `src/briefing/questions.ts`: topic, audience and outcome as briefing inputs.
+- `src/fixtures/local-workflow-pitch.ts` and the generated sample assets: actual
+  project story, controlled violet revision and local/account verification split.
+- `docs/tasks/builder-b-static-website-verification.md`: distribution availability
+  and checked local behavior. Historical initialization wording in the root README
+  is not treated as current implementation evidence.
+
+The How to use section describes the intended product workflow when available in
+an account; it is separate from installation instructions and the prepared demo.
+No external marketing facts, testimonials, pricing, usage numbers or unsupported
+integration promises were added.
