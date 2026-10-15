@@ -654,3 +654,6 @@ not count as verification of the new standalone static delivery.
 
 - Increased pointer glow intensity another 5% relative: 10.37% to 10.89% alpha.
   Radius and spring motion unchanged. Static consistency check passes.
+
+- Increased pointer glow intensity another 50% relative: 10.89% to 16.335% alpha.
+  Radius and spring motion unchanged. Static consistency check passes.
