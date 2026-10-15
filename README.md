@@ -16,6 +16,14 @@ PNG/JPEG assets. It does not provide arbitrary fonts, custom uploads or Canva's
 full illustration library. ChatGPT supplies content and design choices; there is
 no additional model service. Facts come from supplied or verified evidence.
 
+Eight specialist workflows now cover infographic frameworks, presentation stories,
+long decks, tall graphics/carousels, art direction, illustration/assets, data
+storytelling and format/brand adaptation. They share a quality-review workflow.
+ChatGPT selects and loads guidance through plan_design/get_design_skill rather
+than embedding the entire library in every call. Native flexible documents support
+up to 40 pages with storyboards and notes. See [design skills](docs/DESIGN-SKILLS.md)
+for tools, reference studies, bounds and packaging details.
+
 ## Run locally
 
 Use Node.js 24 (minimum 22.13), then:

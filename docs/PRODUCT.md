@@ -146,3 +146,29 @@ review_canva_design is an advisory snapshot checkpoint, not OCR, a direct Canva
 API verifier, independent fact checking or an external commit lock. Ready means
 ready for the user's review; saving still follows Canva's tool approval rules.
 Import success is explicitly labelled separately from editability verification.
+
+## Specialist workflows and flexible pages — 2026-10-15
+
+The eight workflows are infographic frameworks, presentation storytelling, long
+presentations, tall infographics/carousels, art direction, illustration/assets,
+data storytelling, and format/brand adaptation. All share quality-review. They
+are loaded on demand through plan_design/get_design_skill, including illustrative
+examples and optional native reference studies. Portable SKILL.md files and their
+examples are generated from src/design-skills/library.json by
+node scripts/sync-design-skills.mjs. This release does not claim an account plugin
+archive was edited: the existing MCP app serves these skills to the host directly.
+
+Native schema3 documents support 1–40 ordered same-sized pages, messages, sections,
+notes, 200 objects per page/1000 total, and immutable atomic revisions. The adaptive
+brief offers flexible presentations, square/portrait carousels and tall pages, with
+one optional length/time question. Legacy five-slide and single-canvas APIs remain.
+Every nonblank page exports as native PPTX objects with companion notes. The widget
+and authenticated page show a storyboard, selected page, notes and source layers.
+
+compose_component calculates bars from nonnegative values with a common zero
+baseline, and explicitly stepped line charts including signed data and labelled
+scales. Seven simple text-free geometric icons are available. All returned objects
+fit one 40-operation batch and still require normal composition/inspection. They
+are not detailed illustrations. Custom uploads, arbitrary fonts/glyphs and automatic
+lossless format conversion remain outside the native toolkit. Adaptation is a new
+composition based on inspected source material, preserving the original.

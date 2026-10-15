@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { handleMcp } from "../../src/mcp/server";
-import { TOOL_NAMES, CANVAS_TOOL_NAMES } from "../../src/contracts";
+import { TOOL_NAMES, CANVAS_TOOL_NAMES, DOCUMENT_TOOL_NAMES } from "../../src/contracts";
 import { ServiceError } from "../../src/server/errors";
 import { DeckService } from "../../src/server/service";
 import { D1DeckStore } from "../../src/server/store";
@@ -19,7 +19,7 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
     expect(init.result.serverInfo).toMatchObject({ name: "GraphicRouter" });
     const list = await rpc("tools/list");
     const tools = list.result.tools as { name: string; inputSchema: unknown; description: string }[];
-    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "start_briefing"]);
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "start_briefing", "plan_design", "get_design_skill", "compose_component", ...DOCUMENT_TOOL_NAMES, "inspect_document"]);
     expect(tools[0].description).toContain("Never invent evidence"); expect(tools[0].inputSchema).toMatchObject({ type: "object", required: expect.arrayContaining(["slides", "brief"]) });
   });
   it("exposes the briefing before creation through initialization and tool discovery", async () => {
@@ -33,7 +33,7 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
         expect(instructions).toContain(topic);
       }
     }
-    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "start_briefing"]);
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "start_briefing", "plan_design", "get_design_skill", "compose_component", ...DOCUMENT_TOOL_NAMES, "inspect_document"]);
   });
   it("opens the briefing without calling the deck service and retains supplied context", async () => {
     const answers = { topic: "A supplied topic", audience: "Judges" };
