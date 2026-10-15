@@ -582,7 +582,19 @@ is excluded. The contract was documented before implementation/integration.
   unavailable document storage/origin configuration. No document/import was created.
   Real SQL service tests and native compilation pass; do not call this a local
   Worker storage end-to-end success or bypass authorization to hide the blocker.
-- [ ] Hosted publication and connected-call evidence will follow release.
+- [x] Original owner-private GraphicRouter published as version 6, source
+  484047c0703a59dcac02d7fcbf4920e736e9b5bc, deployment
+  appgdep_6ad0d4eb43c08191bc1e0074e7750336, MCP enabled, existing secret revision 3.
+  https://graphicrouter.blue-hare-8389.chatgpt.site. Packaging recovered after
+  disk exhaustion by stopping owned previews and removing only task-owned
+  reproducible dependency debug maps/cache. No user data or secrets were removed.
+- [x] Connected start_briefing returned plan_design/get_design_skill, document
+  routing and the separate-text requirement. Current chat still has the old
+  catalog/schema: its wrapper dropped new complexity/template/length keys, so the
+  server correctly asked the two missing routing questions. New-chat/plugin
+  discovery is required; newly added tool invocation through this cached host
+  catalogue is unverified. RPC/schema/auth and all 22 server tool registrations
+  are tested locally. No hosted document, Canva generation or import was started.
 
 Current account can access original GraphicRouter (owner-private) again, but Test
 Site returns project_not_found. Opened original source at bbc4215420377ef0555f96b50fd2eee1ea8a1d25
