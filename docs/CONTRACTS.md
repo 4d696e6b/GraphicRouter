@@ -120,8 +120,15 @@ Complexity and template questions cannot be overridden. Existing answer keys and
 old complete handoffs remain compatible. New submissions require complexity and
 template preference before the core brief. getQuestions selects6/9/14questions,
 plus an optional templateSource. Hidden known answers survive branch changes.
-Handoff JSON includes explicit workflowMode: graphicrouter_canvas, canva_native,
-or choose. Native Canva mode is host orchestration, not backend connector access.
+Handoff JSON includes explicit workflowMode: graphicrouter_canvas, canva_create,
+canva_native (existing source), or legacy choose. sourceFallback is canva_create
+only for an existing-source route with explicit early permission; otherwise ask.
+The three new choices distinguish native generation from existing-source adaptation
+before completion. New native generation adds no source question. Legacy choice
+values remain valid; their source/selection requirement is not silently rewritten.
+Native Canva modes are host orchestration, not backend connector access. Shared
+src/briefing/canva-workflow.ts policy is included in discovery and completed handoff
+so a stale source-only instruction cannot override a new-Canva choice.
 
 inspect_canvas is a supplemental read-only MCP tool, outside CANVAS_TOOL_NAMES and
 CanvasService.call. It takes deckId/version plus optional integer region geometry.

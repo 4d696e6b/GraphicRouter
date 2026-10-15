@@ -7,7 +7,7 @@ ChatGPT selects dimensions, palette, hierarchy, positions, sizes and individual
 objects; no fixed layout recipe is used by the canvas engine. The deterministic
 renderer validates and draws these object choices, without an extra model service.
 
-The question dialog first asks complexity and template preference, then collects
+The question dialog first asks complexity and a starting point, then collects
 roughly6/9/14 relevant answers (plus an optional template source) one at a time.
 Known answers are reused; topic-specific question wording can be supplied by ChatGPT. Rich briefs and quick drafts can skip optional intake.
 Old five-slide presentation tools and stored decks remain available explicitly.
@@ -25,14 +25,28 @@ remain the source of truth; manual Canva edits do not sync back.
 
 ## Adaptive brief and visual review update
 
-Quick/balanced/detailed work gets a shorter or richer brief. The template choice
-routes ChatGPT to connected Canva tools for accessible Brand Templates or user
-provided designs; it never claims to search the entire public catalogue. It copies
+Quick/balanced/detailed work gets a shorter or richer brief. The second question
+offers three explicit routes: Let Canva create a design, Use my Canva template/design,
+or Start from a blank canvas. New Canva generation uses the completed brief directly,
+without a Brand Template search or another routine approval. Its native Canva tools
+must be connected; brand-aware requests follow the tool's brand-specific workflow.
+Existing-source work alone adds a source question, with an optional early permission
+to create a new Canva design if no source fits. A strict source requirement remains
+strict. Old Use a Canva template and Help me choose briefs remain compatible.
+Each starting point explains its visual capabilities. A generic approval after
+multiple alternative routes does not authorize the simpler blank-canvas engine.
+Content type alone must not change the selected creation path. Different tools
+and briefs can produce different aesthetics; no identical-quality guarantee is made.
+
+The existing-source choice uses accessible Brand Templates or user-provided/account
+designs; it never claims to search the entire public catalogue. It copies
 or instantiates the source, inspects supported fields, adapts the copy, shows the
 preview, and follows Canva's required user approval before committing changes.
 The native Canva copy is the source of truth in this mode. The backend's existing
 OAuth/import adapter does not gain template editing by implication; the connected
 Canva tools must be available to the chat, and missing access is a visible blocker.
+Shared host/handoff instructions distinguish new generation from source adaptation,
+reuse facts, respect generation polling/quotas, and inspect the actual Canva result.
 
 Blank-canvas work now uses inspect_canvas to return an actual PNG to the model,
 not only private widget previews. The PNG is generated offline from authorized

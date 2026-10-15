@@ -422,3 +422,44 @@ across briefing, MCP, engine, service, contracts and build dependencies in this 
   secrets are preserved; no replacement Site or permission bypass was attempted.
   Source/build can be reviewed on GitHub, but this update is not live until the
   original Site is accessible from the connected account/workspace again.
+
+## Clear Canva creation versus existing-source routing — 2026-10-15
+
+The user requested this fix after review of “Create handwashing infographic”. That
+chat searched Brand Templates twice, got no results, asked for a new route, and
+successfully created design DAHYENnOta4 with Canva create-design after approval.
+Current get-design verified the one-page design exists. Empty Brand Templates do
+not imply failed Canva connectivity or identify the user's plan.
+
+- [x] Added three explicit starting points, with new Canva design first. New-design
+  briefs avoid source questions/searches and continue directly from supplied facts.
+- [x] Existing-source work uses exact links/account-design search as appropriate,
+  preserves originals, and offers early fallback permission. Missing strict sources
+  can still require one focused clarification; hidden permission cannot switch a
+  selected blank-canvas route. Legacy source/selection values remain compatible.
+- [x] Shared public Canva workflow policy now feeds initialization, tool discovery
+  and completed handoff. It includes brand exceptions, image-versus-layout scope,
+  honest source-of-truth semantics, polling/quotas, visual review and required native
+  edit approval. Supported prompt keys are explicit after a trace used content.
+- [x] Focused briefing/MCP tests: 22 pass, including new-Canva routing, exact answer
+  retention, source requirement versus authorized fallback, legacy compatibility,
+  hidden fallback isolation and discovery consistency.
+- [x] Full npm run check passes TypeScript and 169 tests in 26 files. The production
+  Sites build passes. Private test-Site deployment is recorded by release evidence.
+- [x] Also reviewed “Create Astra vs Argon infographic”: after two empty Brand
+  Template searches, the assistant offered alternatives and interpreted "approve"
+  as permission for GraphicRouter blank-canvas composition. create_canvas/edit_canvas
+  built 31 basic objects, inspect_canvas ran twice, export succeeded, and app import
+  required Canva sign-in. This differs from the native Canva generation path used
+  for the illustrated handwashing result. No API-price fact checking was performed
+  in this routing review, and the existing designs were not altered.
+- [x] Route choices now show their visual/toolkit differences before selection.
+  Policy preserves the selected engine across subjects and does not treat a bare
+  approval after multiple alternatives as blank-canvas authorization. It cannot
+  promise identical aesthetics across different routes or force host compliance.
+- No new Canva generation was requested or started for this policy change. Existing
+  chat success is an observed generation check, not proof of a new model's future
+  choices. Model continuation and subjective layout quality still need real use.
+- Current work is authorized across the intake/MCP/UI directories. Apply the same
+  source changes to GitHub without copying the private test Site identity or secrets;
+  publish only GraphicRouter Test in this account.

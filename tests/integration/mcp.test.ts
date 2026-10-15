@@ -42,6 +42,18 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
     // rpc's service factory throws; succeeding here proves no deck write/export.
     expect(result.result.isError).not.toBe(true);
   });
+  it("advertises direct new-Canva creation consistently and does not add template questions to that route", async () => {
+    const init = await rpc("initialize", { protocolVersion: "2025-03-26", capabilities: {}, clientInfo: { name: "test", version: "1" } });
+    const list = await rpc("tools/list");
+    const tools = list.result.tools as { name: string; description: string }[];
+    for (const instructions of [init.result.instructions, tools.find(t => t.name === "create_canvas")?.description]) {
+      for (const text of ["Let Canva create a design", "call create-design directly; do not search Brand Templates first", "only when the user explicitly authorized", "content is not a supported prompt key"]) expect(instructions).toContain(text);
+    }
+    const result = await rpc("tools/call", { name: "start_briefing", arguments: { answers: { complexity: "Quick and simple", template: "Let Canva create a design" } } }, "owner");
+    expect(result.result).toMatchObject({ structuredContent: { questionCount: 6 }, _meta: { briefing: { answers: { template: "Let Canva create a design" } } } });
+    const existing = await rpc("tools/call", { name: "start_briefing", arguments: { answers: { complexity: "Quick and simple", template: "Use my Canva template/design" } } }, "owner");
+    expect(existing.result).toMatchObject({ structuredContent: { questionCount: 7 } });
+  });
   it("protects briefing access and rejects unbounded or unknown answer fields", async () => {
     expect((await rpc("tools/call", { name: "start_briefing", arguments: {} })).result).toMatchObject({ isError: true, structuredContent: { error: { code: "UNAUTHORIZED" } } });
     for (const answers of [{ topic: "x".repeat(1501) }, { password: "not-a-supported-field" }]) {
