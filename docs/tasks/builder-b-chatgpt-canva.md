@@ -3,7 +3,7 @@
 Branch: `feat/chatgpt-canva`. Start from the common initialization commit.
 Tracking: https://github.com/4d696e6b/GraphicRouter/issues/2
 
-Status: **ready to start; no integration features implemented**.
+Status: **local integration implemented and tested; draft handoff, blocked on the real engine and account access**.
 
 ## Paste this into your Codex chat
 
@@ -38,7 +38,7 @@ Do not implement A's engine or claim account-level verification from mocks.
 
 ### B1 — integration spike (first two hours)
 
-- [ ] Read current OpenAI MCP and Canva import/authentication documentation.
+- [x] Read current OpenAI MCP and Canva import/authentication documentation.
 - [ ] Prove a small callable tool from the actual ChatGPT account.
 - [ ] Register/configure creator-account Canva OAuth (Authorization Code + PKCE).
 - [ ] Import A's fixture and manually edit each selected text/shape/image object.
@@ -46,27 +46,27 @@ Do not implement A's engine or claim account-level verification from mocks.
 
 ### B2 — service and tools (target hour 8)
 
-- [ ] Inject `SlideEngine`; develop tests with a clearly labelled double first.
-- [ ] Register exactly create_deck, get_deck, revise_deck, export_deck, send_to_canva.
-- [ ] Use shared input schemas and `DeckResult`/`ToolError` outputs.
-- [ ] Plan the narrative in ChatGPT tool instructions from provided facts only.
-- [ ] Store immutable owner-scoped decks/versions in D1; allocate IDs server-side.
-- [ ] Reject stale baseVersion atomically and preserve the prior working version.
-- [ ] Store generated PPTX/notes in R2; authorize every download and preview route.
-- [ ] Add DB/BUCKET bindings, generated migrations, and environment declarations.
-- [ ] Keep tokens server-side; protect OAuth state and encrypt persisted token data.
+- [x] Inject `SlideEngine`; develop tests with a clearly labelled double first.
+- [x] Register exactly create_deck, get_deck, revise_deck, export_deck, send_to_canva.
+- [x] Use shared input schemas and `DeckResult`/`ToolError` outputs.
+- [x] Plan the narrative in ChatGPT tool instructions from provided facts only.
+- [x] Store immutable owner-scoped decks/versions in D1; allocate IDs server-side.
+- [x] Reject stale baseVersion atomically and preserve the prior working version.
+- [x] Implement R2 PPTX/notes storage and authorize download/preview routes (adapter tested; actual PPTX awaits A).
+- [x] Add DB/BUCKET bindings, generated migrations, and environment declarations.
+- [x] Keep tokens server-side; protect OAuth state and encrypt persisted token data.
 - [ ] Merge A's usable engine, then land the thin end-to-end integration.
 
 ### B3 — preview and Canva (hours 8–16)
 
-- [ ] Show five thumbnails and layout/content/finished stages from the stored plan.
-- [ ] Add speaker notes, selected-slide preview, version label, and change summary.
-- [ ] Use the MCP Apps resource/bridge so the preview works inside ChatGPT.
+- [x] Implement five thumbnails and layout/content/finished stages from the stored plan (actual engine preview pending).
+- [x] Add speaker notes, selected-slide preview, version label, and change summary.
+- [x] Implement the MCP Apps resource/bridge (local transport verified; ChatGPT rendering pending).
 - [ ] Inject A's `assets: Asset[]` from `src/engine/assets.ts` into render/export calls.
-- [ ] Implement binary PPTX import, persisted pending jobs, and status refresh through
+- [x] Implement binary PPTX import, persisted pending jobs, and status refresh through
   get_deck. Never create duplicate imports while polling an existing job.
-- [ ] Expose actionable connection/import errors and a working download fallback.
-- [ ] Label each new Canva design version and explain the lack of reverse sync.
+- [x] Expose connection/import errors and authenticated download fallback routes (real files await A).
+- [x] Label each new Canva design version and explain the lack of reverse sync.
 - [ ] Generate the real pitch through the integrated tools with A by hour 12.
 - [ ] Freeze a verified complete flow and final deck by hour 16.
 
@@ -94,5 +94,61 @@ secret values, and clear remaining limitations.
 
 ## Evidence and blockers
 
-Initialization only. The private Site is registered but unpublished; D1/R2 are
-disabled. Canva developer credentials have not been supplied or configured.
+### Verified locally — 2026-10-15
+
+- Installed dependencies with `npm install`. The first check attempt ran while
+  installation was incomplete and failed to find `tsc`; after installation all seven
+  original contract tests passed. Added esbuild only for bundling the local Apps UI.
+- `npm run check`: **35 tests pass**, including all original contract tests. Tests
+  use real production SQL against SQLite and a clearly labelled test engine; its
+  bytes explicitly say they are not a PowerPoint. No double is wired into routes.
+- Tests cover owner isolation for decks/files/previews; HTTP 401/404 and no-store
+  downloads; shared validation; concurrent stale revisions; immutable SQL versions;
+  failed validation/export; notes; stored blueprint passed to preview/export; missing
+  Canva authorization; one import claim per version; pending/success/failure mapping;
+  polling without reimport; state expiry/replay/owner/cookie checks; PKCE; AES-GCM
+  owner binding/tampering; refresh concurrency; backend binary bytes and secret redaction.
+- Local MCP tests initialize, discover exactly five shared schemas, read the bundled
+  UI resource, and create a labelled test deck through HTTP with stored blueprint and
+  all three preview stages. An actual local dev `/mcp` tools/list also returned all
+  five tools. **These are not actual ChatGPT account calls.**
+- The MCP test caught the SDK exposing a refined Zod schema as `{}`. Discovery now
+  uses the shared schema's underlying object; the service still applies the complete
+  shared refinement before calling the engine. No shared contract files changed.
+- `npm run build`: passes the production Vinext build, including MCP, OAuth, files,
+  preview, browser tool route, and locally bundled Apps bridge. Original Sites build
+  integration and project identity retained. D1/R2/MCP are declared in source config;
+  hosted provisioning has not occurred.
+- Both SQL migrations executed successfully against Wrangler local D1 (5 table
+  commands and 4 trigger commands). No hosted database changes were attempted.
+- Local homepage returns HTTP 200 and was inspected in the in-app browser. It
+  explicitly labels the engine/account verification as pending. Actual slide/widget
+  visual QA awaits the engine and ChatGPT connection.
+
+### Concrete blockers
+
+1. `origin/feat/slide-engine` still points to initialization commit `d0f5cdb` at the
+   latest fetch. No `src/engine/index.ts`, assets module, or native PPTX fixture is
+   available. Production provider returns `NOT_IMPLEMENTED`; no real deck, PPTX,
+   manual upload fallback, or final pitch is claimed.
+2. Existing Site ID `appgprj_6ad04f78c2188191b6c0be6c93b79ac2` is unchanged. First
+   `get_site(include_mcp_connection: true)` failed at transport; retry returned
+   `SitesConnectorError: Sites project not found`, code 404 / `project_not_found`,
+   in this connected account/workspace. Cannot obtain its source credential, canonical
+   plugin, or verify an actual ChatGPT call. Restore access to this same Site; do not
+   register a replacement. No publication attempted.
+3. No Canva developer credentials/configuration have been supplied. OAuth HTTP tests
+   are mocked and labelled. A real editability test cannot start without A's PPTX
+   fixture and creator authorization. No Canva import-tested design link exists.
+
+### Handoff
+
+See `src/server/SETUP.md` for runtime key names, local migrations, the two-line engine
+handoff, official documentation, OAuth callback/scopes, honest manual fallback, and
+account verification steps. Merge A's usable engine through main; never merge an
+unfinished branch wholesale. Replace only `src/server/engine-provider.ts` with A's
+engine/assets exports. Keep the UI's pending status accurate. Re-run checks and the
+real create/revise/export path, then privately publish through the existing Sites
+source workflow and test the canonical plugin inside ChatGPT. Check imported text,
+shape, and image independently in Canva, record the actual design link and font
+substitutions, then complete the pitch/rehearsal/backup items above.
