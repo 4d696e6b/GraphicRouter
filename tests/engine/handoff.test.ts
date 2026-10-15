@@ -47,6 +47,11 @@ it("generates a native two-slide import probe and a real five-slide engine hando
   const changedSlideNotes = structuredClone(revised);
   changedSlideNotes.slides[2].notes.core += " Unrelated note on the target slide.";
   expect(() => rehearsalProof(blueprint, changedSlideNotes, bytes, changed)).toThrow("exact-revision proof");
+  const mismatchedNativeNotes = structuredClone(revised);
+  mismatchedNativeNotes.slides[2].notes.core += " Unrequested native note.";
+  mismatchedNativeNotes.input.slides[2].notes.core = mismatchedNativeNotes.slides[2].notes.core;
+  const wrongNotesPptx = await engine.compilePowerPoint(mismatchedNativeNotes, assets);
+  expect(() => rehearsalProof(blueprint, revised, bytes, wrongNotesPptx)).toThrow("unrelated PowerPoint");
   expect(() => rehearsalProof(blueprint, revised, bytes, bytes)).toThrow("expected named headline");
   const unsafeTitle = "</script><script>alert(1)</script>";
   const titledBefore = structuredClone(blueprint), titledAfter = structuredClone(revised);

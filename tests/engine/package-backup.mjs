@@ -29,6 +29,7 @@ await writeFile(join(directory, 'backup-context.json'), JSON.stringify({
   animation: 'Scripted replay from precomputed SVGs. No live ChatGPT, service, Canva call, or screen recording.',
   speakingPaceVerified: false,
 }, null, 2));
+await copyFile(new URL('../../src/fixtures/stage-runbook.md', import.meta.url), join(directory, 'stage-runbook.md'));
 await copyFile(new URL('./package-backup.py', import.meta.url), join(directory, 'build-backup.py'));
 const result = spawnSync('python3', [join(directory, 'build-backup.py'), directory], { encoding: 'utf8' });
 if (result.status !== 0) throw new Error(result.stderr || 'Backup packaging failed. Python needs Pillow, reportlab, and PyMuPDF.');

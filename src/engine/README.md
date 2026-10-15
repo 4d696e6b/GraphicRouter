@@ -221,3 +221,16 @@ export; editable objects remain in the PPTX.
 Final account-dependent acceptance remains open: hosted ChatGPT/widget use, app
 OAuth/import, Canva shape/line/font checks, actual speaking pace, and a recorded
 live demonstration. Do not present the GIF or offline HTML as that recording.
+
+The final recovery proof now checks byte-for-byte equality of all decompressed
+native `ppt/` parts other than slide 3, including notes and media. Slide 3 must equal
+the original XML with only the named headline's text paint changed. Unrelated native
+notes fail even when the supplied blueprint itself is correct. The proof records
+`unchangedNativePartCount`; exported version/title/timestamp metadata outside ppt/
+may differ. This is evidence about the native export, not Canva conversion.
+
+Each recovery ZIP also contains `stage-runbook.md`: three-minute timing targets,
+exact edit/version steps, what to show in Canva, and language for switching to an
+accurately labelled local demo or precomputed replay. Its 273-word core plan leaves
+30 seconds for the demo. Real presenter pace and the complete live path still need
+rehearsal before declaring presentation freeze.

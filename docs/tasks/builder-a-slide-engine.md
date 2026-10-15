@@ -236,3 +236,23 @@ every PR; B handles platform/build integration.
   rehearse actual three-minute pitch/live edit and record it; finish submission.
 - B's reported account blockers remain project_not_found for the preserved Site and
   unavailable developer credentials. No claim those were fixed from GitHub access.
+
+## Worker A final handoff hardening
+
+- Reproduced an additional handoff-proof gap with a valid PPTX containing unrelated
+  slide-three speaker-note edits while supplying the correct revised blueprint.
+  The new negative assertion failed before the fix.
+- Proof now compares every native `ppt/` part as decompressed bytes (including
+  notes, media, relationships, masters, and untouched slides); only slide3.xml can
+  differ, and its complete content must equal the original with just the named
+  headline paint substituted. Version/title/timestamp properties outside ppt/ are
+  not treated as unrelated slide content. Blueprint preservation remains complete.
+- A-only check: 39 pass / one explicit service skip. Combined B aa16ed1 review:
+  87 tests pass and production build passes, with the new negative case included.
+- Refreshed original/violet decks, notes, proof, PDF/GIF/HTML and both ZIP backups.
+  Added src/fixtures/stage-runbook.md to each checksummed ZIP: timed cue sheet,
+  exact edit request, version handling, asynchronous import boundary, and honest
+  recovery language. Core is 273 spoken words, planning target 150 seconds plus
+  30-second demo; actual speaking pace is not yet verified.
+- No Worker B files, contracts, dependencies, or account configuration changed.
+  The live account/editor/rehearsal checks remain explicitly open.

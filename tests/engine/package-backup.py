@@ -49,6 +49,7 @@ names = [
     'graphicrouter-pitch-v1.pptx', 'graphicrouter-pitch-v2-violet.pptx',
     'speaker-notes.md', 'offline-rehearsal.html', 'revision-proof.json',
     'graphicrouter-pitch-backup.pdf', 'precomputed-revision-replay.gif', 'backup-context.json',
+    'stage-runbook.md',
 ]
 for optional in ['graphicrouter-pitch-expanded.pptx', 'create-deck.json', 'verification-context.json']:
     if (root / optional).is_file():
