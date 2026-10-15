@@ -608,3 +608,43 @@ arbitrary upload/font ingestion, detailed native illustrations, universal beauty
 score, automatic lossless format conversion, OCR certification, two-way Canva sync
 or external commit lock. Actual Canva import/layer fidelity and host model skill
 selection require separate real-use verification. No generation credits consumed.
+
+
+## Long-context and detailed-deck optimization (2026-10-15, 0.9.0)
+
+- [x] User-authorized coordinated engine/service/tool/preview changes documented
+  in CONTRACTS and COORDINATION before implementation; legacy APIs retained.
+- [x] Preserve original source verbatim, including whitespace; ordered append-only
+  chunks with source IDs, up to120000 characters, up to200 mapped requirements.
+- [x] Atomic immutable ledger writes, owner isolation, concurrent stale rejection,
+  conflicting source rejection, affected semantic-review invalidation. New source
+  resets extraction and reviews; identical source replay leaves them intact.
+- [x] Chapter context with requirement/source inventory and explicit dense-object
+  windows; oversized responses reject with smaller-window guidance. Compact MCP
+  checkpoints omit full blueprint/raw brief/SVG. Explicit full compatibility read.
+- [x] Lazy preview rendering bounded to5, notes/navigation retained, requirement
+  status and load control rendered. Static UI tests pass. Current browser automation
+  failed initialization (`codex app-server exited before returning initialize`), so
+  interactive lazy-load browser verification is incomplete; no workaround server.
+- [x] Registered mandatory checks and reported extraction block final export;
+  unresolved work cannot start an import. Caller-reported semantic/extraction scope
+  is explicit; no guarantee of omitted instructions, truth, beauty or Canva layers.
+- [x] Document budget4000 objects/250 revisions, existing200 per page/40 edits/
+  40 pages preserved.1.8MB serialized ceiling protects D1 storage; no migrations.
+- [x] Full npm run check: TypeScript and233 tests in39 files pass. Synthetic SQL
+  service fixture:24 slides,1440 native objects,96 requirements,62250 original
+  characters,60 versions, actual24-slide PPTX/notes. Late slide24 edit preserves
+  other23 pages/prior version/source and invalidates only its4 page requirements.
+  Artifacts: artifacts/long-context/{stress-report.json,synthetic-24-slides.pptx}.
+  Reproduce: GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/integration/long-context.test.ts
+- [x] Model-result JSON7496 bytes versus303555 bytes (97.53% smaller). This is
+  synthetic response size, not token/latency/transport/visual quality benchmarking.
+- [x] Main npm run build passes; Test checkout also passes233 tests.
+- [ ] Private Test deployment evidence recorded below once
+  complete. This account can access Test again (opened source1664127 before edits);
+  original GraphicRouter now returns project_not_found and must remain untouched.
+
+No dependency request or package change is needed. The Test rollout includes the
+previously merged design-skills/documents work because its live source was older.
+Real ChatGPT long-deck orchestration and current Canva import/layer fidelity remain
+separate real-use checks. No Canva import or generation was started by these tests.

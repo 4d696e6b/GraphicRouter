@@ -41,8 +41,8 @@ and caveats without writing; apply objects to the desired saved page with unique
 IDs/layers. Straight descending diagonal lines remain unsupported by the current
 primitive, so step connections must not be described as smooth interpolation.
 
-Limits: 40 pages, 200 native elements/page, 1000/document, 40 total changes per
-revision, 100 versions, 320–4000px per side and one page size per export. All native
+Limits: 40 pages, 200 native elements/page, 4000/document, 40 total changes per
+revision, 250 versions, 320–4000px per side and one page size per export. All native
 visible type uses measured English Arial. Other fonts/languages, arbitrary assets
 or detailed illustrative gestures require supported connected Canva capabilities
 or an explicit limitation, not a promise from instructions alone.
@@ -69,3 +69,41 @@ These are source design studies, not proof of imported Canva fidelity. Every fin
 Canva page still needs actual layer and visual review. Native generation can mix
 image lettering and text; it stays a draft until it passes those checks. No more
 generation credits are consumed automatically after a failed review.
+
+## Long and detailed briefs (0.9.0)
+
+Preserve the full original brief before composing chapters. append_document_requirements
+saves ordered, append-only chunks and requirement IDs with source references, priority,
+page/object/notes bindings and optional exact copy. Source text is bounded to120000
+characters total,12000/chunk; the checklist supports200 items. The intake dialog can
+hold40000 context characters and16000 per answer. Over-limit material rejects explicitly;
+it is never silently clipped. Split larger native projects deliberately with the user.
+
+get_document now defaults to a compact checkpoint: page inventory, current version,
+change summary, blank pages, review counts and resume instruction. get_document_context
+reads only1–5 pages and up to20 relevant requirements, or one original source chunk.
+Dense page objects can be paginated with elementOffset/elementLimit; follow the explicit
+nextElementOffset to recover every object. Windows over300000 UTF-8 bytes reject with
+smaller-window guidance. detail=full remains available for an intentional complete read.
+Widget metadata remains separate and contains source objects, but omits raw source and
+renders only up to5 requested/changed page previews. Other previews load on request.
+
+review_document_requirements paginates exact-copy/binding failures, conflicts and
+pending semantic reviews. Chapter edits invalidate affected satisfaction; newly saved
+source resets extraction and existing semantic reviews. Final export checks reported
+extraction completeness and unresolved mandatory registered items. It cannot detect an
+instruction never registered or independently certify meaning, facts, beauty or Canva
+layers. Original text and the requirement ledger accompany exported notes.
+
+Reproduce the synthetic stress evidence (not a user presentation or Canva check):
+
+```sh
+GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/integration/long-context.test.ts
+```
+
+The fixture exercises24 slides,1440 native objects,96 requirements and62250 original
+characters through60 versions, actual native PPTX export and a narrow late-slide edit.
+Its compact model response is7496 bytes versus303555 bytes for the full service result
+(97.53% smaller). This measures model-result JSON, not total transport, tokens, runtime,
+visual quality or host context-window capacity. Registered requirements still require
+honest semantic review. Documents reject above1800000 serialized UTF-8 bytes.
