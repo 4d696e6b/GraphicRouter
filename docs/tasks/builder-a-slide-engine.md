@@ -298,3 +298,32 @@ every PR; B handles platform/build integration.
   that ChatGPT asks the right follow-ups or certify subjective slide beauty.
 - Scope includes MCP instructions under the user's request to update this plugin;
   no shared contracts, dependencies, credentials or builder service logic changed.
+
+
+## User-directed question dialog — 2026-10-15
+
+- Inspected “Design a beautiful presentation”: the initial assistant asked five
+  prose questions without a tool call; the user's one-page infographic request
+  then caused a switch to image generation. This was an unsupported-format escape,
+  not a failed Canva import.
+- [x] Added supplemental read-only start_briefing tool, retaining the five existing
+  deck-operation schemas and source-of-truth behavior. Documented the bounded
+  briefing contract in docs/CONTRACTS.md; no database migration or new dependency.
+- [x] Implemented an in-app dialog with 20 questions, one visible at a time, context
+  prefills, progress, optional skip, back, review and answer editing. Four essentials
+  gate submission. Unsupported one-page formats cannot be submitted as decks.
+- [x] User-triggered MCP Apps user-message handoff carries the entire brief and asks
+  for GraphicRouter creation/Canva delivery. Host rejection retains the answer view
+  and a copy-back fallback. No automatic send retry, storage write or image tool.
+- [x] Added standalone /briefing fallback; local HTTP returns 200. Unsent answers
+  are intentionally view-local; closing/reloading can lose them, disclosed in UI.
+- [x] npm run check: TypeScript and 100 tests pass. npm run build passes, including
+  /briefing. Tests cover discovery/access/bounds, required fields, unsupported format,
+  all-20-answer preservation, one-question markup, escaping and host handoff errors.
+- [ ] Actual host dialog display, user click-through, continuation by the model and
+  subjective Canva quality remain live checks. Browser inventory failed with an
+  app-server error; direct IAB preview then failed its security policy verification.
+  No browser-control fallback or policy bypass was attempted.
+- Updated scope was requested by the user after the prose-only interview proved
+  insufficient. The extra tool is an intake entry point; all original engine and
+  deck-tool interfaces remain compatible.
