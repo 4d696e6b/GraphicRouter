@@ -538,3 +538,29 @@ not count as verification of the new standalone static delivery.
 - Screenshots: outputs/static-website/corrected-cards-desktop.png,
   corrected-cards-640.png, corrected-cards-mobile.png,
   canva-hero-desktop.png and canva-hero-mobile.png.
+
+### Balanced hero composition and actions
+
+- Set one hero spacing rhythm: badge/headline 32px, headline/description 24px,
+  description/actions 32px and actions/summary 24px, with compact mobile values.
+  Description now uses the supplied complete sentence and a balanced 480px max.
+- Desktop actions share a 560px two-column group with 16px gap; both measure
+  272x56px. Secondary action is a pale violet outlined button. At <=600px, both
+  stack at equal full width, 56px tall, with 16px/600 labels and matching radii.
+- Unavailable hero download is now a native disabled button with no arrow or fake
+  link. Existing section availability text provides its accessible description.
+  Removed the duplicate hero availability sentence. Compact capability line kept.
+- Preserved gradient, background, headline copy and existing entrance/tablet code.
+  Character proximity remains removed by the user's immediately preceding undo;
+  this refinement does not reintroduce the reverted effect.
+- TypeScript + 124 tests, build and static HTML/hash checks pass. Updated existing
+  unavailable-CTA test for the hero's true disabled state. Browser measured matching
+  action widths/heights and no page overflow at desktop/tablet/mobile widths plus
+  a stepped resize sweep of 28 viewport sizes from 360 to 1440. Button labels fit
+  completely; mobile stacking verified at 360/390/600; desktop columns at 640+.
+- Keyboard focus is visible on the secondary action; Enter navigates to #workflow.
+  Corrected target scroll offset so its heading clears the sticky header (112px
+  target top, header bottom 88px). Browser warning/error log empty.
+- Screenshots: outputs/static-website/balanced-hero-1440.png and
+  balanced-hero-390.png. Static preview refreshed. No application/backend,
+  dependency, contract or fixture changes; no merge or deployment.

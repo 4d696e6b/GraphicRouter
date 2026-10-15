@@ -13,9 +13,8 @@ export default {
   availabilityNote: "The official plugin download is not available yet. Release and installation details will follow.",
   releaseStrip: "Product preview · Official download coming soon. Explore prepared examples below.",
   headline: ["Your ideas.", "Ready for Canva."],
-  description: "GraphicRouter is a presentation plugin that turns your brief into a clear story for Canva.",
+  description: "Turn your brief into a clear presentation for Canva with GraphicRouter.",
   heroSummary: ["Clear stories", "Focused edits", "Made for Canva"],
-  heroAvailability: "Plugin download coming soon.",
   examplePrompt: "Create a five-slide pitch using only my verified facts. Include three-minute core notes and five-minute expanded notes. Keep missing evidence explicit.",
   revisionPrompt: "Change only the headline on slide three to violet. Keep everything else unchanged.",
   designWorkflow: [

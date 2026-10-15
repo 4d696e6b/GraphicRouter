@@ -19,7 +19,8 @@ describe("standalone distribution surface", () => {
     expect(config.downloadUrl).toBeNull(); expect(config.connectionUrl).toBeNull();
     expect(html).not.toContain("data-plugin-download");
     expect(html).toContain('disabled aria-describedby="download-status">Download coming soon');
-    expect(html.match(/data-download-status href="#download"/g)).toHaveLength(3);
+    expect(html.match(/data-download-status href="#download"/g)).toHaveLength(2);
+    expect(html).toContain('class="primary heroUnavailable" type="button" disabled aria-describedby="download-status">Download coming soon</button>');
     expect(html).toContain("Sample files only — not the plugin installer.");
   });
   it("authors every configured official download into HTML and omits cross-origin download attributes", () => {

@@ -421,3 +421,49 @@ html { background: #faf8ff; }
   .hero .mutedTitle > span { background: none; color: CanvasText; }
   .site :is(a,button,summary,[tabindex]):focus-visible { outline-color: Highlight; }
 }
+
+/* Hero rhythm: one centred stack, with matched primary/secondary action tracks. */
+.hero {
+  --hero-badge-gap: 32px; --hero-description-gap: 24px;
+  --hero-action-gap: 32px; --hero-summary-gap: 24px;
+}
+.heroCopy { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.heroCopy > .pill { margin: 0 0 var(--hero-badge-gap)!important; }
+.heroCopy > h1 { width: 100%; margin: 0!important; }
+.heroCopy > .heroDescription {
+  width: 100%; max-width: 480px; margin: var(--hero-description-gap) 0 0!important;
+  font-size: 17px; line-height: 1.8; text-align: center; text-wrap: balance;
+}
+.hero .actions {
+  display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px;
+  width: 560px; max-width: 100%; margin: var(--hero-action-gap) 0 0;
+}
+.hero .actions > :is(a,button) {
+  display: inline-flex; justify-content: center; align-items: center; gap: 12px;
+  width: 100%; min-width: 0; min-height: 56px; padding: 16px 20px;
+  border-radius: 12px; font-size: 16px; font-weight: 600; line-height: 1.35;
+  text-align: center; text-decoration: none;
+}
+.hero .actions > .textButton {
+  border: 1px solid #d5c1ef; background: #f1e9fc; color: #643796!important;
+  transition: background 180ms ease, border-color 180ms ease;
+}
+.hero .actions > .textButton:hover { background: #e9ddfa; border-color: #b795df; color: #54277f!important; }
+.hero .actions > .textButton:active { background: #e3d3f6; }
+.hero .actions > .heroUnavailable:disabled {
+  background: #7c3aed; border-color: #7130df; color: #fff; opacity: 1;
+  box-shadow: 0 4px 10px #7c3aed12; cursor: not-allowed;
+}
+.hero .actions > .heroUnavailable:disabled:hover { background: #7c3aed; border-color: #7130df; box-shadow: 0 4px 10px #7c3aed12; }
+.hero .actions span[aria-hidden] { font-size: 16px; line-height: 1; flex-shrink: 0; }
+.hero .brandSummary { margin: var(--hero-summary-gap) 0 0!important; }
+.site section.productSection { scroll-margin-top: 112px; }
+@media(max-width:760px) {
+  .site section.productSection { scroll-margin-top: 96px; }
+}
+@media(max-width:600px) {
+  .hero { --hero-badge-gap: 28px; --hero-description-gap: 20px; --hero-action-gap: 28px; }
+  .heroCopy > .heroDescription { font-size: 15px; max-width: 340px; }
+  .hero .actions { grid-template-columns: minmax(0,1fr); width: 360px; gap: 12px; }
+  .hero .actions > :is(a,button) { min-height: 56px; font-size: 16px; }
+}
