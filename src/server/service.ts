@@ -1,6 +1,7 @@
 import { createDeckSchema, deckVersionSchema, reviseDeckSchema, type Asset, type CanvaImport, type DeckBlueprint, type DeckResult, type PreviewStage, type SlideEngine, type ToolName } from "../contracts";
 import type { DeckStore } from "./store";
 import { fail, ServiceError } from "./errors";
+import { EngineError } from "../engine/errors";
 
 export interface FileStore {
   put(key: string, bytes: Uint8Array, mime: string): Promise<void>;
@@ -22,8 +23,15 @@ export class DeckService {
     try { return action(); }
     catch (error) {
       if (error instanceof ServiceError) throw error;
+      if (error instanceof EngineError) this.engineFailure(error);
       fail("VALIDATION_FAILED", "The slide engine could not compose this request. Check element IDs and shorten content or choose a compatible layout. The previous version is unchanged.");
     }
+  }
+  private engineFailure(error: EngineError): never {
+    // Keep the shared ToolError shape: include engine issue paths/messages in its
+    // actionable message rather than introducing a parallel or breaking contract.
+    const details = error.issues.filter(issue => issue.severity === "error").map(issue => `${issue.path}: ${issue.message}`);
+    fail(error.code, details.length ? `${error.message}\n${details.join("\n")}` : error.message);
   }
   async call(name: ToolName, raw: unknown, owner: string | null): Promise<DeckResult> {
     if (!owner) fail("UNAUTHORIZED", "Sign in with ChatGPT to access your presentations.");
@@ -102,6 +110,7 @@ export class DeckService {
       return this.exportUrls(b);
     } catch (error) {
       if (error instanceof ServiceError) throw error;
+      if (error instanceof EngineError) this.engineFailure(error);
       fail("EXPORT_FAILED", "PowerPoint export failed. Your blueprint and prior files are preserved; retry export or contact the creator.");
     }
   }

@@ -5,6 +5,7 @@ import { testDatabase } from "./database";
 import { testEngine } from "./engine-double";
 import { sampleDeck } from "../../src/fixtures/sample-deck";
 import { engine as productionEngine } from "../../src/server/engine-provider";
+import { engine as realEngine } from "../../src/engine";
 
 function setup() {
   const { db, sql } = testDatabase(), store = new D1DeckStore(db), objects = new Map<string, Uint8Array>();
@@ -131,7 +132,8 @@ describe("service using labelled engine double, real SQLite migrations", () => {
     expect(result.files).toBeUndefined();
     expect((await service.preview(owner, b.deckId, 1, "finished")).slides).toHaveLength(5);
   });
-  it("production provider cannot accidentally emit test output", () => {
-    expect(() => productionEngine.createBlueprint(sampleDeck, { deckId: crypto.randomUUID(), version: 1 })).toThrow("not integrated");
+  it("production provider is the reviewed real engine, never the test double", () => {
+    expect(productionEngine).toBe(realEngine);
+    expect(productionEngine).not.toBe(testEngine);
   });
 });

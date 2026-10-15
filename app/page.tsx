@@ -8,7 +8,7 @@ export default async function Home() {
       <p style={{ color: "#7C3AED", fontWeight: 700, letterSpacing: ".12em", fontSize: 12 }}>GRAPHICROUTER / INTEGRATION PREVIEW</p>
       <h1 style={{ fontSize: "clamp(32px, 6vw, 60px)", lineHeight: 1.1, letterSpacing: "-.04em", margin: "24px 0" }}>Plan the story.<br />Direct the changes.</h1>
       <p style={{ maxWidth: 620, color: "#62606B", lineHeight: 1.8 }}>Turn your supplied facts into a five-slide story in ChatGPT. Preview the composition, revise one element, and hand off a PowerPoint to Canva.</p>
-      <p role="status" style={{ background: "#EDE9F5", padding: 20, borderRadius: 12, lineHeight: 1.7 }}>The integration is under review. Slide generation awaits the slide engine. The hosted ChatGPT connection and Canva editability have not been verified.</p>
+      <p role="status" style={{ background: "#EDE9F5", padding: 20, borderRadius: 12, lineHeight: 1.7 }}>The slide engine is integrated. Creation, previews, focused revisions, and PowerPoint export pass local checks. The hosted ChatGPT connection and application Canva authorization are still awaiting verification.</p>
       <section style={{ margin: "40px 0", lineHeight: 1.8 }} aria-label="How to use GraphicRouter">
         <h2 style={{ fontSize: 24 }}>Your facts. One clear presentation.</h2>
         <ol style={{ paddingLeft: 24 }}>
