@@ -210,8 +210,6 @@ secret values, and clear remaining limitations.
 - Local identity remains simulated. Canva auth-recovery tests use mocked HTTP;
   hosted ChatGPT and application OAuth are still unverified.
 
-### Concrete blockers still open
-
 ### PR #5 review and service recheck — 2026-10-15
 
 - Fetched origin and merged origin/main: already current at the reviewed PR #4
