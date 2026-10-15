@@ -1,7 +1,7 @@
 // Authoring/check helper only. Not imported by the published website.
 export function validateConfig(config) {
   if (!config.productName?.trim() || !config.availabilityNote?.trim()) throw new Error("Product and availability text are required.");
-  for (const key of ["repositoryUrl", "documentationUrl", "connectionUrl"]) {
+  for (const key of ["repositoryUrl", "documentationUrl", "connectionUrl", "setupUrl"]) {
     if (config[key] != null && !/^https:\/\/[^\s]+$/.test(config[key])) throw new Error(`${key} must be a verified HTTPS URL or null.`);
   }
   if (config.downloadUrl != null) {
@@ -17,6 +17,7 @@ export function downloadAction(config, { section = false, compact = false } = {}
     const attribute = config.downloadUrl.startsWith("assets/") ? ` download${config.downloadFileName ? `="${escapeHtml(config.downloadFileName)}"` : ""}` : "";
     return `<a class="primary" data-plugin-download href="${escapeHtml(config.downloadUrl)}"${attribute}>Download ${escapeHtml(config.productName)} ↗</a>`;
   }
+  if (config.connectionUrl) return `<a class="primary" data-plugin-connect href="${escapeHtml(config.connectionUrl)}">Use in ChatGPT ↗</a>`;
   if (section) return `<button class="primary unavailable" type="button" disabled aria-describedby="download-status">Download coming soon</button>`;
   return `<a class="primary" data-download-status href="#download">${compact ? "Download" : "Download coming soon"} <span aria-hidden="true">↓</span></a>`;
 }

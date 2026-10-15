@@ -3,7 +3,7 @@
 **Upload this entire `website/` directory as-is.** Its checked-in `index.html`, CSS,
 JavaScript modules, artwork, SVG examples and sample files are ready to serve.
 There is no mandatory build step and no Node/Next/backend/database/authentication
-requirement for hosting. The existing GraphicRouter application is separate.
+requirement for standalone hosting. The existing GraphicRouter app also serves a generated copy at `/product/index.html`; its home page redirects there. The app build/dev launcher copies only public website files into ignored `public/product/`. Edit `website/`, not the generated copy.
 
 `basic.html` is an equivalent script-free view, generated from the same source with
 no script tags and the no-JavaScript fallbacks expanded. It is linked in the footer
@@ -24,11 +24,14 @@ Do not run both on the same port. On Windows, use `python` if `python3` is absen
 
 ## Official plugin availability
 
-No official downloadable plugin artifact or verified public connection URL was
-found. GitHub's official releases API returned an empty release list, and the root
-package is a private application package. Its development package version is **not**
-presented as a published plugin version. The current page therefore says
-**Download coming soon**. It does not provide a working plugin download.
+The owner supplied the exact existing ChatGPT plugin link:
+https://chatgpt.com/plugins/plugin_asdk_app_sites_801c42220f4c8191bc43e3442008fd98
+All four **Use in ChatGPT** buttons use that link, authored directly into both
+HTML pages. ChatGPT handles installation/connection. No ZIP installer is required.
+`downloadUrl` remains null; the app package version is not a plugin-distribution
+version. `/install` in the hosted app provides setup help and a starter prompt.
+Site access and plugin availability remain separate checks; do not claim a visitor
+is installed or connected merely because they clicked a link.
 
 The `.pptx` and `.txt` links in the Export example are explicitly labelled sample
 presentation/notes. They are prepared product illustrations, never installers.
@@ -61,9 +64,9 @@ When a real official distribution is available:
    Upload the updated directory. No on-visitor initialization renders the release
    link: it is authored directly into HTML.
 
-For a genuine connection-only release, set a verified public `connectionUrl` and
-describe that separately as **Connect GraphicRouter**. A hosted connection is not
-a downloadable package. Never use a source archive, sample PPTX, empty file or
+For a hosted release, set `connectionUrl` to the exact plugin Copy link and
+`setupUrl` to the hosted setup guide. The same `connectionUrl` supplies the verified plugin link to that guide. Current buttons say **Use in ChatGPT**. A hosted
+connection is not a downloadable package. Never use a source archive, sample PPTX, empty file or
 fabricated installer as the plugin CTA.
 
 The generator requires the repository's existing development dependencies only
@@ -108,7 +111,9 @@ remain untouched. Deployment and release publication are outside this work.
 
 ## Repository content sources
 
-The product copy uses only material contained in this project:
+The current capability copy reflects the updated product scope (including native
+infographics and documents up to 40 pages). Historical verification notes and the
+five-slide prepared examples describe their original scope. Sources include:
 
 - `docs/PRODUCT.md`: product goal, five roles/recipes, preview stages, 16:9/Arial
   theme, 180/300-second notes, supported revisions and v1 exclusions.

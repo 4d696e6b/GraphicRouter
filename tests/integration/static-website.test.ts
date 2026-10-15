@@ -16,11 +16,12 @@ const data = JSON.parse(await readFile(resolve(directory, "assets/example-data.j
 describe("standalone distribution surface", () => {
   it("keeps release config and authored HTML in sync without runtime initialization", () => {
     expect(renderWebsite(config, data)).toBe(html);
-    expect(config.downloadUrl).toBeNull(); expect(config.connectionUrl).toBeNull();
+    expect(config.downloadUrl).toBeNull();
+    expect(config.connectionUrl).toBe("https://chatgpt.com/plugins/plugin_asdk_app_sites_801c42220f4c8191bc43e3442008fd98");
     expect(html).not.toContain("data-plugin-download");
-    expect(html).toContain('disabled aria-describedby="download-status">Download coming soon');
-    expect(html.match(/data-download-status href="#download"/g)).toHaveLength(2);
-    expect(html).toContain('class="primary heroUnavailable" type="button" disabled aria-describedby="download-status">Download coming soon</button>');
+    expect(html).not.toContain("Download coming soon");
+    expect(html.match(/data-plugin-connect href=/g)).toHaveLength(4);
+    expect(html).toContain('href="https://graphicrouter.blue-hare-8389.chatgpt.site/install"');
     expect(html).toContain("Sample files only — not the plugin installer.");
   });
   it("authors every configured official download into HTML and omits cross-origin download attributes", () => {
@@ -32,6 +33,14 @@ describe("standalone distribution surface", () => {
   });
   it.each(["#", "javascript:alert(1)", "assets/../private.zip", "https://example.test/slides.pptx", "https://github.com/example/repo/archive/main.zip"])("rejects a misleading or unsafe artifact: %s", downloadUrl => {
     expect(() => validateConfig({ ...config, downloadUrl, supportedHostLabel: "Test host" })).toThrow();
+  });
+  it("retains an honest unavailable state when neither connection nor installer is configured", () => {
+    const rendered = renderWebsite({ ...config, connectionUrl: null, setupUrl: null }, data);
+    expect(rendered).toContain('disabled aria-describedby="download-status">Download coming soon');
+    expect(rendered).not.toContain("data-plugin-connect");
+  });
+  it.each(["javascript:alert(1)", "//example.test/plugin", "https://example.test/\nplugin"])("rejects unsafe connection links: %s", connectionUrl => {
+    expect(() => validateConfig({ ...config, connectionUrl })).toThrow();
   });
   it("works at a subdirectory using existing local files, without application endpoints", async () => {
     const origin = "https://example.test/nested/graphicrouter/";
@@ -51,12 +60,13 @@ describe("standalone distribution surface", () => {
     expect(basic).toContain(config.headline[0]); expect(basic).toContain('id="download"');
     expect(basic).toContain("CONCEPT PREVIEW");
     for (const step of config.designWorkflow) expect(basic).toContain(step.title);
-    expect(basic).toContain('class="mobileMenu"'); expect(basic).toContain("Official release pending");
+    expect(basic).toContain('class="mobileMenu"'); expect(basic).toContain("Hosted ChatGPT plugin");
+    expect(basic.match(/data-plugin-connect href=/g)).toHaveLength(4);
     expect(basic).toContain("The product story in three chapters");
     expect(basic).toContain(".showcasePanel[hidden]{display:grid!important}");
     expect(basic).toContain("Prepared after example:");
   });
-  it("ships a real sample PowerPoint separately from the missing installer", async () => {
+  it("ships a real sample PowerPoint separately from the hosted plugin", async () => {
     const bytes = await readFile(resolve(directory, "assets/sample-presentation.pptx"));
     const parts = readPptx(bytes);
     expect([...parts.keys()].filter(key => /^ppt\/slides\/slide\d+\.xml$/.test(key))).toHaveLength(5);

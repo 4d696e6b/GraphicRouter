@@ -5,16 +5,16 @@ export const prompts = {
   export: "Export the current saved version as PowerPoint with speaker notes. If Canva is connected, start a separate import and show its status. Keep the downloads available while the import processes.",
 };
 export const faqs = [
-  ["What can I create?", "Version one creates exactly five 16:9 slides: problem, answer, workflow, proof, and next step. Core and expanded speaker notes support three- and five-minute talks. Arbitrary deck import, single-page infographics, and freeform placement are outside this prototype."],
+  ["What can I create?", "Create editable infographics, tall graphics, carousels and presentations of up to 40 pages. The prepared five-slide demo is one example. Use the connected Canva tools for supported edits to an existing Canva link."],
   ["Do I need Canva to use the presentation?", "PowerPoint and speaker notes remain available. Manual PowerPoint upload to Canva is the fallback if automatic import is unavailable. Review the converted design before presenting."],
   ["Will Canva changes update my original deck?", "No. Each Canva import creates a separate design version. Edits made in Canva do not sync back to the stored GraphicRouter blueprint."],
   ["Will my objects and fonts look the same in Canva?", "Native PowerPoint objects do not guarantee identical Canva layout, fonts, or shape conversion. A separate manual fixture import confirmed text and image editing. Application OAuth/import, shape and line editing, and font fidelity still need verification."],
-  ["Can I install or buy it today?", "This is a hackathon product demo, with no checkout or paid plan. Hosted ChatGPT tools/widget and application Canva OAuth/import are awaiting account verification. This page does not install the plugin."],
+  ["Can I install or buy it today?", "Open the Get the plugin link to install or connect GraphicRouter inside ChatGPT. There is no ZIP installer or checkout. ChatGPT account and workspace access rules apply."],
 ];
 export const searchEntries = [
   { title: "How it works", description: "Shape the story, see the plan, direct the details.", href: "#workflow" },
   { title: "Guided demo", description: "Prepared Plan, Preview and Refine examples. Slides and preview stages.", href: "#demo" },
-  { title: "Quick start", description: "20-question design brief, required answers, and copy-back to ChatGPT.", href: "#quick-start" },
+  { title: "Quick start", description: "Adaptive quick, balanced or detailed design brief, with known answers reused.", href: "#quick-start" },
   { title: "Start your brief", description: "Answer questions about format, topic, audience and outcome.", href: "/briefing" },
   { title: "Availability", description: "Local verification and pending hosted ChatGPT and Canva checks.", href: "#availability" },
   { title: "Create a story prompt", description: prompts.create, href: "#prompt-create" },
