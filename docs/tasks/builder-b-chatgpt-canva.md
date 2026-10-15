@@ -644,3 +644,10 @@ not count as verification of the new standalone static delivery.
 - Evidence: outputs/static-website/pointer-follow-glow.jpg and
   graphicrouter-pointer-glow.mp4 (5.5 seconds of actual browser captures).
   OS reduced-motion/coarse pointer transitions were not physically emulated.
+
+### Pointer glow intensity adjustment
+
+- Increased gradient alpha by 15% relative, from 23/255 (about 9.02%) to 10.37%.
+  Radius, fade stop, tracking and spring response unchanged.
+- TypeScript and 129 tests pass; refreshed browser confirms updated gradient.
+  Screenshot: outputs/static-website/pointer-glow-intensity.jpg.
