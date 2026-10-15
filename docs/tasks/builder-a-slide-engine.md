@@ -816,7 +816,20 @@ release gates. No audience or account permissions were expanded.
   Native Chrome desktop and375px QA: original composition, Shape-layer highlight,
   revision anchor→violet toggle/status/actual SVG, mobile menu and Escape pass.
   Minor phone FAQ word spacing corrected. No model/provider design was generated.
-- [ ] Exact source production build/publication and public read-back pending.
+- [x] Exact hosted source287 tests/46 files, JS/HTML/asset checks and production
+  build pass. Original Site version8 deployment succeeded, source
+  e7cdb96ff044a668d7c089bce0a791d0ccc438cd, deployment
+  appgdep_6ad0fae53f088191952a11196a31f7ed; MCP enabled, secret revision3 retained.
+  Public access/same plugin ID/version8 read-back confirmed. Live HTML/basic/setup,
+  sample PPTX and active CSS/JS/logo return200; removed product camera/glow modules
+  and author config return404. Forged anonymous tool identity still returns401.
+  Native Chrome confirms the published design. PR20 merged (main734f0da).
+- [x] Initial native saves returned internal errors without saving a version.
+  Reconciled version history before retrying. Repackaged the exact unchanged pushed
+  source with COPYFILE_DISABLE=1 through site-workflow.mjs; this removed macOS
+  AppleDouble metadata and the normal public save/deploy succeeded. No backend
+  root-cause detail was supplied. Future macOS packaging should use this prefix.
+  Accepted archive: graphicrouter-hosted/artifacts/studio-website-clean.tar.gz.
 
 Customer installation limitation: signed-out incognito reaches ChatGPT but shows
 “We couldn't load this plugin right now.” The owner's page works and offers
