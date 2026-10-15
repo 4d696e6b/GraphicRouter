@@ -47,7 +47,9 @@ describe("standalone distribution surface", () => {
   });
   it("retains essentials, native navigation and all examples in a script-free page", () => {
     expect(basic).not.toMatch(/<script\b/);
-    expect(basic).toContain("Your story."); expect(basic).toContain('id="download"');
+    expect(basic).toContain(config.headline[0]); expect(basic).toContain('id="download"');
+    expect(basic).toContain("CONCEPT PREVIEW");
+    for (const step of config.designWorkflow) expect(basic).toContain(step.title);
     expect(basic).toContain('class="mobileMenu"'); expect(basic).toContain("Official release pending");
     expect(basic).toContain("The product story in three chapters");
     expect(basic).toContain(".showcasePanel[hidden]{display:grid!important}");

@@ -138,3 +138,11 @@ responsive polish. Header/footer use the original SVG logo. Typography is a loca
 system stack; no font CDN, external assets or runtime dependency was introduced.
 Forced-colour mode restores solid heading text, and both system reduced-motion
 and the existing page control disable decorative feedback.
+
+The tablet's Choose → Generate → Customize illustration is a workflow concept
+requested in the latest design brief, not functionality supplied by the current
+presentation engine. It is explicitly labelled CONCEPT PREVIEW. All thumbnails,
+example prompt and generic editing UI are authored HTML/CSS/SVG in
+scripts/static-workflow-device.mjs and styled in brand.css; no design is analyzed,
+AI prompt generated, result transferred or Canva session opened on this website.
+Existing prepared presentation examples below the tablet are unchanged.

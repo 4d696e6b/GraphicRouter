@@ -16,6 +16,11 @@ export default {
   description: "GraphicRouter is a presentation plugin that turns your ideas and supplied facts into a clear five-slide story, with focused edits and a PowerPoint handoff.",
   examplePrompt: "Create a five-slide pitch using only my verified facts. Include three-minute core notes and five-minute expanded notes. Keep missing evidence explicit.",
   revisionPrompt: "Change only the headline on slide three to violet. Keep everything else unchanged.",
+  designWorkflow: [
+    { title: "Choose a Design", text: "Pick a design or website style you like." },
+    { title: "Generate AI Prompt", text: "Turn the selected style into a structured AI prompt." },
+    { title: "Customize in Canva", text: "Open the result in Canva and make it your own." },
+  ],
   installationSteps: [
     { title: "Official release pending", text: "There is no plugin package to install yet." },
     { title: "Installation details to follow", text: "Supported hosts and setup steps will accompany the release." },

@@ -487,3 +487,28 @@ not count as verification of the new standalone static delivery.
   and no horizontal overflow. Tablet camera/gesture code unchanged.
 - Screenshots: outputs/static-website/headline-detail-desktop.png and
   headline-detail-mobile.png. Preview on port 5184 refreshed.
+
+### Three-step design workflow concept
+
+- Replaced only the central tablet chapters and surrounding floating-card content
+  with the user-requested Choose a Design → Generate AI Prompt → Customize in Canva
+  workflow. All three steps remain visible, connected and numbered; scrolling
+  highlights each step and changes the supporting illustration.
+- Added code-native template thumbnails, structured prompt example and generic
+  customization/editor illustration. These are labelled CONCEPT PREVIEW, not a
+  real design-analysis tool or verified Canva transfer. This user-supplied workflow
+  is not implemented by the existing presentation service; no integration claim.
+- Kept the page's presentation content, prepared preview tabs, revision controls,
+  downloadable sample files and availability unchanged. Camera easing, gesture,
+  native scroll and chapter progression preserved. Stage now clears sticky nav.
+- TypeScript + 124 tests, production build and static HTML/config/hash checks pass.
+  Updated the script-free test to check current configured headline and all concept
+  steps rather than a removed old tablet slogan. Five viewport checks pass with
+  no page overflow and all three device panels within their available height.
+- Reduced-motion summary exposes all three steps. Existing keyboard tab/revision
+  control still works; browser warning/error log empty. No backend/account test
+  performed, no deployment or merge. Existing preview on port 5184 refreshed.
+- Screenshots: outputs/static-website/workflow-choose-desktop.png,
+  workflow-generate-desktop.png, workflow-customize-desktop.png,
+  workflow-1280x720.png, workflow-768x1024.png, workflow-390x844.png,
+  workflow-360x800.png.

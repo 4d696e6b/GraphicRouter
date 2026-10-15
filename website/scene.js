@@ -21,7 +21,7 @@ export function mountScene(root, isReduced) {
   const track = root.querySelector("[data-scroll-track]"), stage = root.querySelector("[data-scroll-stage]"), caption = root.querySelector("[data-scene-caption]");
   if (!track || !stage || !globalThis.ResizeObserver || !globalThis.IntersectionObserver) return () => {};
   let visible = false, frame = 0;
-  const captions = ["01 / PLAN YOUR STORY", "02 / REFINE A DETAIL", "03 / TAKE IT WITH YOU"];
+  const captions = ["01 / CHOOSE A DESIGN", "02 / GENERATE AI PROMPT", "03 / CUSTOMIZE IN CANVA"];
   function layout() {
     const size = tabletDeviceLayout(stage.clientWidth, stage.clientHeight);
     for (const [key, value] of Object.entries({ size: size.size, left: size.left, top: size.top })) root.style.setProperty(`--device-${key}`, `${value}px`);
