@@ -7,6 +7,7 @@ import { fail, safeError } from "../server/errors";
 import { presentationData } from "../preview/data";
 import widgetJs from "graphicrouter:widget";
 import { plannerInstructions } from "./planner";
+import { briefingSchema, questions } from "../briefing/questions";
 
 const uri = "ui://graphicrouter/presentation.html";
 const descriptions = {
@@ -18,8 +19,8 @@ Create exactly five slides from the completed brief using supplied facts only. S
   export_deck: "Export the exact stored blueprint to native PowerPoint and both note durations. Export alone does not complete a requested Canva presentation: call send_to_canva, then get_deck while its existing job is pending, and return the actual Canva editUrl on success. Return authenticated download links. If Canva is unavailable, download PPTX and manually upload to Canva; verify text, shapes, image remain independently editable.",
   send_to_canva: "Import this deck version's binary PowerPoint into Canva. Requires Canva authorization. Reuses an existing job for this version. Each version creates a new Canva design; edits made there never sync back. Pending import must not block presenting the saved deck.",
 };
-export function createMcpServer(owner: string | null, getService: () => DeckService) {
-  const server = new McpServer({ name: "GraphicRouter", version: "0.2.0" }, { instructions: plannerInstructions });
+export function createMcpServer(owner: string | null, getService: () => DeckService, origin = "") {
+  const server = new McpServer({ name: "GraphicRouter", version: "0.3.0" }, { instructions: plannerInstructions });
   registerAppResource(server, "Presentation", uri, {}, async () => ({ contents: [{ uri, mimeType: RESOURCE_MIME_TYPE,
     text: `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><div id="root" role="status">Waiting for a saved presentation…</div><script>${widgetJs.replace(/<\/script/gi, "<\\/script")}</script></body></html>`,
     _meta: { ui: { prefersBorder: true, csp: { connectDomains: [], resourceDomains: [] } } },
@@ -52,10 +53,33 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
       }
     });
   }
+  server.registerTool("start_briefing", {
+    title: "GraphicRouter design brief",
+    description: "Start here for any new GraphicRouter presentation request with missing context, especially requests to ask questions first or show a question dialog. Call this tool immediately instead of asking a list of questions in prose. Opens an interactive one-question-at-a-time design dialog with up to 20 questions, optional skips, answer review and a user-triggered return to this chat. Pass known context and prefill only explicitly supplied answers; never invent them. The five-slide format must be explicitly accepted. Once the dialog opens, wait for the user to submit it; do not create slides or images in the meantime. On submission, continue using GraphicRouter create_deck and send_to_canva. Do not substitute an image tool for an unsupported infographic request; explain the boundary and offer the supported five-slide presentation. If the host cannot display the dialog, offer briefingUrl or ask one question at a time in chat while retaining GraphicRouter as the workflow. Existing deck edits do not need this dialog.",
+    inputSchema: briefingSchema,
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    _meta: { ui: { resourceUri: uri }, "openai/outputTemplate": uri },
+  }, async (args: unknown) => {
+    try {
+      if (!owner) fail("UNAUTHORIZED", "Sign in with ChatGPT to open your design brief.");
+      const parsed = briefingSchema.safeParse(args);
+      if (!parsed.success) fail("VALIDATION_FAILED", "Use supported question keys and answers under 1500 characters.");
+      const data = parsed.data;
+      const briefingId = crypto.randomUUID();
+      return {
+        content: [{ type: "text" as const, text: "GraphicRouter's 20-question design dialog is open. Wait for the user's completed brief. Do not generate an infographic or switch tools. If no dialog is visible, open briefingUrl; it provides a copy-back fallback." }],
+        structuredContent: { kind: "briefing", briefingId, status: "awaiting_answers", questionCount: questions.length, briefingUrl: `${origin}/briefing`, ...data },
+        _meta: { briefing: data, briefingId },
+      };
+    } catch (error) {
+      const detail = safeError(error);
+      return { isError: true, content: [{ type: "text" as const, text: JSON.stringify(detail) }], structuredContent: { error: detail } };
+    }
+  });
   return server;
 }
 export async function handleMcp(request: Request, owner: string | null, getService: () => DeckService) {
-  const server = createMcpServer(owner, getService);
+  const server = createMcpServer(owner, getService, new URL(request.url).origin);
   const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
   await server.connect(transport);
   try { return await transport.handleRequest(request); }
