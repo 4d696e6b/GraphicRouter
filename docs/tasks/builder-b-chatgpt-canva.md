@@ -434,3 +434,17 @@ not count as verification of the new standalone static delivery.
   inspection shows the new section with no horizontal overflow.
 - Source mapping: website/README.md. Local screenshots:
   outputs/static-website/project-content-desktop.png and project-content-mobile.png.
+
+### Three-section refinement brief
+
+- Implemented the attached refinement brief on website/ only: product-first hero,
+  cohesive animated product section, download/get-started with one prompt, three
+  FAQ disclosures and inline dark callout, plus compact footer.
+- Preserved artwork, scene code, timing/easing, chapter/reverse scroll, hover and
+  tab interactions, native navigation and reduced-motion/script-free alternatives.
+- TypeScript + 124 tests and static HTML/config/hash check pass. Browser desktop
+  and mobile show product explanation/download above animation without overflow;
+  menu/Escape, tab keys, prepared revision, FAQ, copy status, reduced motion and
+  native scroll forward/back passed. See static website verification addendum.
+- Official artifact remains unavailable. No package fabricated, backend changed,
+  production deployment, merge or live ChatGPT/Canva success claimed.

@@ -44,7 +44,7 @@ When a real official distribution is available:
 1. Independently verify the official artifact URL, actual package/file, version,
    compatibility and host's real installation instructions. Do not create a plugin
    package/release or expose a private endpoint to fill these fields.
-2. Set `downloadUrl`, relevant optional metadata, three real `installationSteps`,
+2. Set `downloadUrl`, relevant optional metadata, one to three real `installationSteps`,
    and truthful availability/release copy. For a bundled official artifact, place
    it in `assets/` and use an `assets/...` URL with a real filename. For a hosted
    official release, use the direct HTTPS artifact URL. The generator adds a
@@ -121,7 +121,6 @@ The product copy uses only material contained in this project:
   and checked local behavior. Historical initialization wording in the root README
   is not treated as current implementation evidence.
 
-The How to use section describes the intended product workflow when available in
-an account; it is separate from installation instructions and the prepared demo.
+The three-section page explains the product first, shows prepared examples in one animated product section, and groups download availability, an optional prompt and three FAQs together.
 No external marketing facts, testimonials, pricing, usage numbers or unsupported
 integration promises were added.

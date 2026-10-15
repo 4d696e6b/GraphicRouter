@@ -81,3 +81,42 @@ import, shape/line/font fidelity, Site access and recorded live rehearsal remain
 separate integration checks. This static page does not establish those checks.
 No replacement Site was registered. No credentials were added. No merge or
 production deployment was performed.
+
+## Three-section refinement
+
+Implemented the supplied refinement brief: hero / product in action / download
+and get started, followed by a compact footer. The hero explicitly identifies a
+presentation plugin, with download status and a short supporting line before the
+animation. One animated product section contains the existing tablet, shorter
+rail copy, hover illustrations and Story/Revision/Export tabs. Download includes
+at most three real steps when available, one optional prompt, three FAQ disclosures
+and an inline dark closing callout. Separate availability strip, basics/usage
+sections, prompt library and repeated large introductions were removed.
+
+The animation scene module, artwork, camera easing/timing, gesture and chapter
+logic are unchanged. Public facts continue to come only from the repository.
+No official artifact exists; primary unavailable actions lead to #download and
+the download section reports Download coming soon, without a fabricated package.
+
+Refinement verification: npm run check passes TypeScript and 124 tests; static
+HTML/config consistency and asset hashes pass. Browser verified 1440x900 and
+390x844 layouts, product/CTA before scrolling (CTA bottoms 560px / 509px), three
+main sections, one prompt and three FAQs. No horizontal overflow. Mobile menu
+Escape restores focus, ArrowRight switches tabs, prepared violet comparison
+works, FAQ/prompt disclosure and copy-success status work. Actual clipboard
+contents could not be reliably read back through the browser bridge, so only the
+visible success status is reported for this pass.
+
+Normal native scroll reached chapter 1 at progress .580, then reverse scroll
+returned to chapter 0/.000. Explicit reduced motion exposes chapter summaries.
+System preference was not changed. Script-free view remains generated with no
+scripts and expanded fallbacks. No account integration checks were run.
+Screenshots: outputs/static-website/refined-desktop.png, refined-mobile.png,
+refined-animation.png and refined-download-mobile.png (local ignored outputs).
+
+Final refinement checks: production build passes. HTTP probe again verifies 16
+static resources byte-for-byte, API 404 and POST 405. A separate application was
+responding on port 5173 during this later probe; it was not stopped or modified.
+The site itself was served only from website/ on port 5184. The script-free page
+was opened in the browser: zero script tags, three main sections and all prepared
+panels visible. Browser warning/error log was empty.
