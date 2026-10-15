@@ -212,6 +212,35 @@ secret values, and clear remaining limitations.
 
 ### Concrete blockers still open
 
+### PR #5 review and service recheck — 2026-10-15
+
+- Fetched origin and merged origin/main: already current at the reviewed PR #4
+  engine merge. Production provider still re-exports the real engine/assets; no
+  NOT_IMPLEMENTED engine implementation or test double is wired into routes.
+- Reviewed PR #5 at `229dc1762ce131836802d72249f311d9be339f45` in a temporary,
+  uncommitted merge. Combined checks passed: **84 tests** and production build.
+  Repeated the actual local Worker/D1/R2 HTTP create/three-stage-preview/revise/export
+  flow with concurrent exports. Deck `94c2b81f-4be5-4905-ab27-e6617ccc7267` preserved
+  unrelated elements and v1, rejected anonymous downloads with 401, returned useful
+  EngineError invalid-target details with HTTP 400, and served real local MCP data.
+- **Review finding [P2], tests/engine/rehearsal.ts:17–24:** the proof excludes all
+  slide data from validHeader, and only compares element changes plus four unchanged
+  slides. It therefore accepts an unrelated change to slide3.notes.core alongside
+  the colour edit, even when the supplied PPTX still contains the original notes.
+  Reproduced by appending a note to revised.slides[2].notes.core after exporting the
+  valid revised deck: rehearsalProof succeeds and reports only slide3.headline.
+  Compare all metadata on the changed slide (or normalize the expected blueprint's
+  single paint change and compare the complete slides), and add that negative case.
+- PR #5 remains unmerged for A to fix. Temporary merge aborted after verification;
+  this branch's unchanged baseline still has **79 passing tests**. No A-owned files
+  or shared contracts were edited. Offline rehearsal is a labelled fallback, never
+  account-level/live integration proof.
+- Fresh get_site for the preserved project again returned project_not_found.
+  See SETUP.md's access/configuration requirements; GitHub permissions do not grant
+  access to the Site or configure a Canva developer app.
+
+### Current account requirements
+
 1. Existing Site ID `appgprj_6ad04f78c2188191b6c0be6c93b79ac2` is unchanged. First
    `get_site(include_mcp_connection: true)` failed at transport; retry returned
    `SitesConnectorError: Sites project not found`, code 404 / `project_not_found`,

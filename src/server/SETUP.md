@@ -108,6 +108,26 @@ PPTX and notes. An R2 read failure before import leaves the import claim availab
 
 ## Account verification still required
 
+### What is needed to unblock it
+
+- **Sites:** connect the account/workspace that owns
+  `appgprj_6ad04f78c2188191b6c0be6c93b79ac2`, or grant the currently connected
+  account editor/owner access to that exact project. A successful get_site response
+  must expose its expected/live origin and source access. The current lookup returns
+  project_not_found. GitHub repo access cannot resolve this; do not create another Site.
+- **Canva app:** configure the creator developer app's CANVA_CLIENT_ID and
+  CANVA_CLIENT_SECRET in server-side secret storage, not in chat or Git. Register
+  design:content:write and design:meta:read, and the exact callback
+  `<SITE_ORIGIN>/api/canva/callback`. Once the Site's real origin is available, set
+  SITE_ORIGIN/CANVA_REDIRECT_URI to match. CANVA_TOKEN_KEY can be generated server-side
+  as 32 random bytes encoded in base64; no existing personal token is needed.
+- **Manual fidelity checks:** a signed-in browser session for the Canva account
+  owning the imported probe is needed for shape/line and font inspection. The Canva
+  connector's working manual import does not provide this app's OAuth credentials.
+- **ChatGPT:** after private deployment, install/connect the same Site's canonical
+  plugin and perform an actual account tool call and widget check. Local HTTP/MCP
+  tests and the offline rehearsal cannot substitute for that check.
+
 1. Restore access to the **existing** private Site in the correct account/workspace;
    do not create a replacement or substitute a project ID.
 2. Re-run the integrated engine/assets create/revise/export tests after any changes.
