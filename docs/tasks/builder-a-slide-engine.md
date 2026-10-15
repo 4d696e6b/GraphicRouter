@@ -85,7 +85,7 @@ every PR; B handles platform/build integration.
 
 - Implemented the complete shared engine port, five recipes, all five operations,
   PNG/JPEG asset handling, shared SVG/PPTX line layout, and structured errors.
-- `npm run check`: 33 tests pass; `npm run build` passes. A local Cloudflare Worker
+- `npm run check`: 38 tests pass; `npm run build` passes. A local Cloudflare Worker
   also generated the five-slide PPTX successfully with the intended compatibility flag.
 - Actual Canva imports succeeded for the probe and five-slide engine-stage pitch.
   Readback found five editable 1920×1080 pages, 53 text objects, and an editable logo.
@@ -119,3 +119,25 @@ every PR; B handles platform/build integration.
   this is independent of B's unavailable Sites access and unconfigured app OAuth.
   Actual Canva shape/line recolouring, imported font matching, hosted plugin calls,
   and full pitch rehearsal remain pending.
+
+## Follow-up after PR #4 merged
+
+- [x] Add regressions and reject truncated/damaged PNG containers and JPEGs
+  missing scan/end structure. No new dependencies; no claim of full pixel decoding.
+- [x] Reject orphan/missing recipe elements and incompatible source block counts
+  before export or layout revision, preserving the working version on failure.
+- [x] Generate a portable, clearly labelled offline engine replay with embedded
+  PPTX downloads, three preview stages, speaker notes, and a rehearsal timer.
+- [x] Generate revision-proof hashes and verify only `slide3.headline` changed;
+  reject unrelated edits and an unchanged PPTX passed off as the revised export.
+- [x] Repeat check (38 tests), production build, and local Worker export:
+  five slides, 131810 bytes, ZIP signature 80/75/3/4, no validation errors.
+- [ ] Check offline replay controls visually. Browser security could not verify
+  the admin policy for either localhost or Canva, so browser access was denied.
+  No browser security workaround was used. Generated outputs and proof assertions
+  pass; UI operation and actual speaking pace remain unverified.
+- New files: `artifacts/builder-a/offline-rehearsal.html` and
+  `artifacts/builder-a/revision-proof.json`, reproduced by the existing artifact command.
+- Builder B integration exports and shared contracts are unchanged. No dependency
+  requests. PR #4 is merged; B can bring main into its own branch and wire the
+  existing provider. The offline replay does not complete B's OAuth/Sites checks.

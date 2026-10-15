@@ -7,6 +7,7 @@ import { finalPitch } from "../../src/fixtures/final-pitch";
 import { imageDataUri } from "../../src/engine/image";
 import { escapeXml } from "../../src/engine/svg";
 import { readPptx } from "./read-pptx";
+import { buildRehearsal, rehearsalProof } from "./rehearsal";
 
 it("generates a native two-slide import probe and a real five-slide engine handoff", async () => {
   const probe = new PptxGenJS();
@@ -37,6 +38,19 @@ it("generates a native two-slide import probe and a real five-slide engine hando
   const bytes = await engine.compilePowerPoint(blueprint, assets);
   const revised = engine.reviseBlueprint(blueprint, [{ type: "set_element_color", elementId: "slide3.headline", color: "#7C3AED" }]);
   const changed = await engine.compilePowerPoint(revised, assets);
+  const rehearsal = buildRehearsal(blueprint, revised, assets, { original: bytes, revised: changed });
+  expect(rehearsal.proof.changedElementIds).toEqual(["slide3.headline"]);
+  expect(rehearsal.proof.unchangedPptxPages).toEqual([1, 2, 4, 5]);
+  const unrelatedChange = structuredClone(revised);
+  unrelatedChange.slides[0].notes.core += " Unrelated change.";
+  expect(() => rehearsalProof(blueprint, unrelatedChange, bytes, changed)).toThrow("exact-revision proof");
+  expect(() => rehearsalProof(blueprint, revised, bytes, bytes)).toThrow("expected named headline");
+  const unsafeTitle = "</script><script>alert(1)</script>";
+  const titledBefore = structuredClone(blueprint), titledAfter = structuredClone(revised);
+  titledBefore.input.title = unsafeTitle; titledAfter.input.title = unsafeTitle;
+  const escapedReplay = buildRehearsal(titledBefore, titledAfter, assets, { original: bytes, revised: changed });
+  expect(escapedReplay.html).not.toContain(unsafeTitle);
+  expect(escapedReplay.html).toContain("\\u003c/script>");
   const expanded = structuredClone(finalPitch); expanded.durationSeconds = 300;
   const expandedPlan = engine.createBlueprint(expanded, { deckId: blueprint.deckId, version: 1 });
   const expandedBytes = await engine.compilePowerPoint(expandedPlan, assets);
@@ -54,6 +68,8 @@ it("generates a native two-slide import probe and a real five-slide engine hando
   await writeFile(join(directory, "graphicrouter-pitch-5-minute-notes.pptx"), expandedBytes);
   await writeFile(join(directory, "blueprint-v1.json"), JSON.stringify(blueprint, null, 2));
   await writeFile(join(directory, "blueprint-v2.json"), JSON.stringify(revised, null, 2));
+  await writeFile(join(directory, "offline-rehearsal.html"), rehearsal.html);
+  await writeFile(join(directory, "revision-proof.json"), JSON.stringify(rehearsal.proof, null, 2));
   const notes = ["# GraphicRouter — engine-stage pitch", "", "These notes reflect verified engine capabilities; ChatGPT/Canva verification remains separate.", `Core: ${coreWords} words plus a 30-second demo. Expanded: ${expandedWords} words plus demo. Rehearse actual pacing.`, "", ...finalPitch.slides.flatMap((slide) => [`## ${slide.id}: ${slide.headline.replace(/\n/g, " ")}`, "", "### Three-minute core", "", slide.notes.core, "", "### Five-minute expanded", "", slide.notes.expanded, ""])].join("\n");
   await writeFile(join(directory, "speaker-notes.md"), notes);
   const sections: string[] = [];

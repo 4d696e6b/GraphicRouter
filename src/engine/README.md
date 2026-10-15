@@ -51,6 +51,11 @@ text overflow, missing assets, invalid targets, and incompatible switches do blo
   entire switch instead. Global accent changes preserve explicit paints and images.
 - PNG/JPEG assets are contained without stretching. Limits: 8 assets, 2 MiB each,
   8 MiB combined, 4096×4096 maximum dimensions. Missing images never export as placeholders.
+  PNG chunk boundaries/checksums/end markers and JPEG frame/scan/end structure are
+  checked before export. This is container validation, not full pixel decoding.
+- Validation rejects elements absent from the selected recipe, missing required
+  elements, and incompatible source block counts before revision or export. This
+  prevents a layout switch from silently discarding an unplanned stored object.
 - PPTX objects use semantic object names and remain separate native text/shape/line/
   image objects. Core or expanded speaker notes are selected by durationSeconds.
 
@@ -74,6 +79,16 @@ stage views, a preview HTML page, and a speaker-notes Markdown file. Serve that
 folder with a local static server to view the full storyboard. The five-slide pitch
 has 295 core words plus a 30-second demo and 580 expanded words plus demo; rehearse
 actual pacing. It does not claim the unfinished plugin is installed or deployed.
+
+The same command also creates `offline-rehearsal.html` and `revision-proof.json`.
+The HTML is self-contained: five thumbnails, three construction stages, prepared
+violet revision, core/expanded notes, timer, and embedded PPTX downloads work without
+a server or external requests. Open the file locally. It is visibly labelled a
+**precomputed engine replay**, not a live ChatGPT/Canva demonstration or recording.
+The report verifies the one-element blueprint change, four unchanged native slide
+XML files, and artifact hashes. Generation rejects unrelated edits or an original
+PPTX incorrectly supplied as the revision. Browser interaction testing is pending:
+the current admin policy prevented both Canva and localhost access.
 
 ## Builder B PR #3 integration
 
@@ -102,7 +117,9 @@ remain in the PPTX. PDF generation is not a method in the shared engine port.
 
 ## Verification recorded
 
-- `npm run check`: strict TypeScript plus 33 passing tests.
+- `npm run check`: strict TypeScript plus 38 passing tests, including malformed
+  PNG/JPEG containers and recipe/source integrity regressions. Replay assertions
+  also reject unrelated changes, incorrect revised files, and unsafe script text.
 - `npm run build`: framework shell builds; it does not imply completed integration.
 - Export tests inspect OOXML for five slides, 16:9 dimensions, Arial sizes, text,
   rectangle/ellipse/line objects, a separate PNG, notes, and a contained JPEG.
