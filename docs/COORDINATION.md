@@ -89,3 +89,12 @@ SlideEngine, storage formats, Site identities and secrets remain unchanged.
 Publish only the owner-private GraphicRouter Test Site in the current account.
 Do not merge the unrelated Builder B homepage draft or overwrite the original
 Site's manifest. No message to the other builder is implied by this work.
+
+## User-directed skills expansion — 2026-10-15
+
+The user authorized all eight design skills, shared quality workflow, and needed
+multi-page support. This owning chat coordinates the additive shared schema and
+engine/service/UI/briefing integration. Preserve legacy tools and stored versions.
+Current connected account owns the original private Site; Test Site access now
+returns project_not_found. Work from the original Site's opened current source and
+preserve both identities/secrets. No replacement Site or audience change is allowed.
