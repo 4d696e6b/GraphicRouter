@@ -51,6 +51,11 @@ text overflow, missing assets, invalid targets, and incompatible switches do blo
   entire switch instead. Global accent changes preserve explicit paints and images.
 - PNG/JPEG assets are contained without stretching. Limits: 8 assets, 2 MiB each,
   8 MiB combined, 4096×4096 maximum dimensions. Missing images never export as placeholders.
+  PNG chunk boundaries/checksums/end markers and JPEG frame/scan/end structure are
+  checked before export. This is container validation, not full pixel decoding.
+- Validation rejects elements absent from the selected recipe, missing required
+  elements, and incompatible source block counts before revision or export. This
+  prevents a layout switch from silently discarding an unplanned stored object.
 - PPTX objects use semantic object names and remain separate native text/shape/line/
   image objects. Core or expanded speaker notes are selected by durationSeconds.
 
@@ -75,11 +80,38 @@ folder with a local static server to view the full storyboard. The five-slide pi
 has 295 core words plus a 30-second demo and 580 expanded words plus demo; rehearse
 actual pacing. It does not claim the unfinished plugin is installed or deployed.
 
+The same command also creates `offline-rehearsal.html` and `revision-proof.json`.
+The HTML is self-contained: five thumbnails, three construction stages, prepared
+violet revision, core/expanded notes, timer, and embedded PPTX downloads work without
+a server or external requests. Open the file locally. It is visibly labelled a
+**precomputed engine replay**, not a live ChatGPT/Canva demonstration or recording.
+The report verifies the one-element blueprint change, four unchanged native slide
+XML files, and artifact hashes. Generation rejects unrelated edits or an original
+PPTX incorrectly supplied as the revision. Browser interaction testing is pending:
+the current admin policy prevented both Canva and localhost access.
+
 ## Builder B PR #3 integration
 
-Read the existing provider and service in draft PR #3 without merging that branch.
-Its expected exports exactly match this implementation. After this engine PR lands
-through main, Builder B can replace `src/server/engine-provider.ts` with:
+### Updated local-workflow pitch
+
+`src/fixtures/local-workflow-pitch.ts` is a separate pitch reflecting Builder B's
+recorded evidence at `f23b071`: real-engine local service flow with simulated local
+identity and separate manual Canva text/image checks. The original engine-stage
+fixture stays available. Hosted ChatGPT, app OAuth, shape/line editing, and font
+matching remain explicitly unverified. This pitch has not been created through the
+service yet; its slides/PPTX/replay are generated directly through the engine.
+
+Run `GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/local-workflow-pitch.test.ts`.
+Outputs under `artifacts/builder-a/local-workflow/` include the exact `create-deck.json`
+for B to submit through the service, original/violet/expanded PPTX files, notes,
+revision proof, and a self-contained offline rehearsal. All five rendered slide
+previews were visually inspected with no clipping. The fixture passes fit checks
+and the one-element revision proof. Actual speaking pace and browser controls still
+need rehearsal. This does not certify B's unmerged branch or hosted account behavior.
+
+B's remote branch at `f23b071` already wires the provider to these exports.
+PR #3 remains draft and unmerged; A read its evidence without merging the branch.
+The provider exports are:
 
 ```ts
 export { engine } from "../engine";
@@ -87,10 +119,10 @@ export { assets } from "../engine/assets";
 ```
 
 There are no shared-contract or dependency changes to coordinate. Builder B should
-then exercise real create/revise/preview/export through `DeckService` and preserve
-`EngineError` messages/issues when mapping errors; its current generic compose catch
-otherwise hides the actionable text-fit/target diagnostics. This note does not change
-B's service code or claim that its installed-account checks have run.
+preserve the real create/revise/preview/export checks through `DeckService` and
+`EngineError` diagnostics; its latest evidence records these locally. This does not
+claim installed-account checks have run. The new pitch input still needs its own
+service creation and verification before presentation freeze.
 
 Builder B's unavailable Sites access and missing Canva app credentials still block
 its production path. The successful imports below used this chat's existing Canva
@@ -102,7 +134,9 @@ remain in the PPTX. PDF generation is not a method in the shared engine port.
 
 ## Verification recorded
 
-- `npm run check`: strict TypeScript plus 33 passing tests.
+- `npm run check`: strict TypeScript plus 39 passing tests, including malformed
+  PNG/JPEG containers and recipe/source integrity regressions. Replay assertions
+  also reject unrelated changes, incorrect revised files, and unsafe script text.
 - `npm run build`: framework shell builds; it does not imply completed integration.
 - Export tests inspect OOXML for five slides, 16:9 dimensions, Arial sizes, text,
   rectangle/ellipse/line objects, a separate PNG, notes, and a contained JPEG.
