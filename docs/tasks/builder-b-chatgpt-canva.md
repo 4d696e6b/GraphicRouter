@@ -100,7 +100,7 @@ secret values, and clear remaining limitations.
 - Installed dependencies with `npm install`. The first check attempt ran while
   installation was incomplete and failed to find `tsc`; after installation all seven
   original contract tests passed. Added esbuild only for bundling the local Apps UI.
-- `npm run check`: **70 tests pass**, including A's 26 engine tests and all seven
+- `npm run check`: **79 tests pass**, including A's 26 engine tests and all seven
   original contract tests. Adapter tests retain a clearly labelled engine double;
   separate real-engine service tests and production routes use A's implementation.
 - Tests cover owner isolation for decks/files/previews; HTTP 401/404 and no-store
@@ -184,6 +184,31 @@ secret values, and clear remaining limitations.
   other objects stayed unchanged. Both operations returned success; the transaction
   was cancelled to preserve the fixture. Shape/line editability and font matching
   are still pending. Browser editor access redirected to the Canva login page.
+
+### Authorization recovery and export reliability — 2026-10-15
+
+- New-import token/refresh failures before upload and explicit HTTP 401 rejections
+  now return connection_required and release only the unstarted claim. Reconnecting
+  can retry that version. Transport failures after import POST starts remain unknown
+  and never auto-retry. This distinction is covered by mocked HTTP regression tests.
+- Authorization loss while polling preserves the existing pending job in D1 while
+  returning a reconnect link. The next authorized refresh polls the same job. Pending
+  and completed job records cannot be deleted by unstarted-claim recovery.
+- HTTP 404 for an existing import job becomes an actionable terminal failure instead
+  of leaving the UI pending forever. No replacement import starts automatically.
+- PowerPoint bytes are read before claiming an import. An R2 read failure therefore
+  returns EXPORT_FAILED without consuming the version's import claim.
+- R2FileStore uses conditional write-once puts for versioned exports. Metadata-only
+  existence checks avoid loading the entire PowerPoint during get_deck/refresh or
+  repeated export; cached PPTX and notes are not regenerated or rewritten.
+- `npm run check`: 79 passing tests; `npm run build`: passed. Re-ran the real local
+  Worker/D1/R2 HTTP flow with two concurrent exports: deck
+  `f79b4c62-274e-4492-9b7a-24158440c572` passed create/three stages/revise/export,
+  unchanged v1/unrelated elements, authenticated downloads, anonymous 401, invalid
+  target 400, and real local MCP get_deck 200. Backups are under ignored
+  `outputs/real-service/f79b4c62-274e-4492-9b7a-24158440c572/`.
+- Local identity remains simulated. Canva auth-recovery tests use mocked HTTP;
+  hosted ChatGPT and application OAuth are still unverified.
 
 ### Concrete blockers still open
 

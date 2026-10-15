@@ -89,6 +89,12 @@ A unique deck/version row claims the external side effect before starting it. Ex
 jobs are reused; `get_deck` only polls. If the start request times out or the process
 fails before saving the job ID, the outcome stays uncertain and will not auto-retry.
 Check Canva before creating another version/import. Existing downloads remain usable.
+When authorization fails before import bytes are sent, or Canva explicitly rejects
+the request with HTTP 401, the service releases only the unstarted claim and returns
+a reconnect link. A timeout after the import POST begins remains ambiguous and is
+never automatically retried. Authorization loss while polling keeps the existing job
+in D1; reconnecting then refreshing polls that same job. A missing/expired job (404)
+returns an actionable failure without creating a replacement design.
 Canva's returned edit URL currently expires after 30 days; design ID is stored too.
 Each version is a separate design, with no reverse sync. Automatic import fidelity
 must be checked manually; successful JSON is not proof of editable slide elements.
@@ -96,6 +102,9 @@ Completed import states cannot regress when concurrent polling returns out of or
 If SVG rendering fails after a successful tool call, its saved version and download
 links remain visible with an explicit preview-unavailable message. The UI surfaces
 structured service errors and preserves the previous presentation during failures.
+R2 export objects use conditional write-once puts. File-existence checks use object
+metadata instead of downloading PowerPoint bodies, and repeated exports reuse both
+PPTX and notes. An R2 read failure before import leaves the import claim available.
 
 ## Account verification still required
 
@@ -126,6 +135,7 @@ are now verified locally; the two-slide manual Canva import is also verified.
 - [Canva OAuth and PKCE](https://www.canva.dev/docs/apps/rest-apis/authentication/)
 - [Binary import job](https://www.canva.dev/docs/apps/rest-apis/reference/design-imports/create-design-import-job/)
 - [Poll import status and returned design URLs](https://www.canva.dev/docs/apps/rest-apis/reference/design-imports/get-design-import-job/)
+- [Cloudflare R2 conditional operations](https://developers.cloudflare.com/r2/api/workers/workers-api-reference/#conditional-operations)
 
 Local MCP/HTTP tests and mocked Canva HTTP tests prove adapter behavior only. They
 do not establish hosted ChatGPT authentication or Canva editability.
