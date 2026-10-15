@@ -25,6 +25,12 @@ Use Node 22.13+ (Node 24 also works). `npm ci`, `npm run check`, `npm run build`
 `npm run dev` serves http://127.0.0.1:5173. The Sites starter's local sign-in is an
 explicit local identity simulation, **not** a ChatGPT account connection.
 
+For isolated preview-control QA while the engine/account are unavailable, run
+`node tests/integration/preview-qa.mjs` and open http://127.0.0.1:5180. The banner
+identifies simulated slides/actions. It uses the production presentation component
+with test-only data; it proves no export, engine composition, ChatGPT host bridge,
+or Canva integration. Stop the fixture server after testing.
+
 `.openai/hosting.json` retains the original project ID and declares DB, BUCKET, and
 the MCP capability. The Sites build integration remains intact. Sites provisions
 D1/R2 and applies Drizzle migrations during supported publication. Local and hosted
@@ -82,6 +88,10 @@ Check Canva before creating another version/import. Existing downloads remain us
 Canva's returned edit URL currently expires after 30 days; design ID is stored too.
 Each version is a separate design, with no reverse sync. Automatic import fidelity
 must be checked manually; successful JSON is not proof of editable slide elements.
+Completed import states cannot regress when concurrent polling returns out of order.
+If SVG rendering fails after a successful tool call, its saved version and download
+links remain visible with an explicit preview-unavailable message. The UI surfaces
+structured service errors and preserves the previous presentation during failures.
 
 ## Account verification still required
 

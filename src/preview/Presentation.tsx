@@ -10,7 +10,9 @@ export function Presentation({ data, invoke }: { data: PresentationData; invoke?
   const slide = b.slides[selected] ?? b.slides[0];
   async function run(name: ToolName) {
     setBusy(true); setError("");
-    try { await invoke?.(name); } catch { setError("The request failed. Your saved deck is preserved. Try again or open the presentation."); } finally { setBusy(false); }
+    try { await invoke?.(name); }
+    catch (error) { setError(error instanceof Error ? error.message : "The request failed. Your saved deck is preserved. Try again or open the presentation."); }
+    finally { setBusy(false); }
   }
   const image = (svg: string) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
   const btn = { padding: "9px 14px", borderRadius: 8, border: "1px solid #d8d3e4", background: "white", color: "#302744", cursor: "pointer" };

@@ -5,5 +5,5 @@ import { fileURLToPath } from "node:url";
 export default defineConfig({
   plugins: [previewBundle()],
   resolve: { alias: { "@": fileURLToPath(new URL(".", import.meta.url)) } },
-  test: { environment: "node", include: ["tests/**/*.test.ts"], exclude: ["node_modules", "dist"] },
+  test: { environment: "node", include: ["tests/**/*.test.ts", "tests/**/*.test.tsx"], exclude: ["node_modules", "dist"] },
 });

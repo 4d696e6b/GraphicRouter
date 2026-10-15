@@ -99,7 +99,7 @@ secret values, and clear remaining limitations.
 - Installed dependencies with `npm install`. The first check attempt ran while
   installation was incomplete and failed to find `tsc`; after installation all seven
   original contract tests passed. Added esbuild only for bundling the local Apps UI.
-- `npm run check`: **35 tests pass**, including all original contract tests. Tests
+- `npm run check`: **41 tests pass**, including all original contract tests. Tests
   use real production SQL against SQLite and a clearly labelled test engine; its
   bytes explicitly say they are not a PowerPoint. No double is wired into routes.
 - Tests cover owner isolation for decks/files/previews; HTTP 401/404 and no-store
@@ -124,6 +124,30 @@ secret values, and clear remaining limitations.
 - Local homepage returns HTTP 200 and was inspected in the in-app browser. It
   explicitly labels the engine/account verification as pending. Actual slide/widget
   visual QA awaits the engine and ChatGPT connection.
+
+### Additional reliability checks — 2026-10-15
+
+- Fixed out-of-order Canva polling: completed import states cannot regress to an
+  older pending response. Concurrent success/pending and failure/pending regression
+  tests execute the real SQL; each caller receives the stored terminal state.
+- Preview rendering failure now preserves successful browser tool results, committed
+  versions, speaker notes, and existing download links. The UI explicitly says the
+  operation succeeded and offers refresh. It no longer suggests repeating a write.
+- Optional R2 file-discovery failures no longer hide the D1 blueprint/preview.
+  Explicit export/download failures remain errors.
+- The preview shows structured service error messages, including current version
+  on conflicts. An initial widget error renders an alert instead of waiting forever.
+- Browser QA used `node tests/integration/preview-qa.mjs`, a standalone, explicitly
+  labelled test-only UI fixture. Verified slide 3 selection, layout-stage switching,
+  expanded speaker notes, and a simulated actionable error while preserving selection.
+  At a 390×844 viewport, content width was 375px (no horizontal overflow); browser
+  warnings/errors were empty. This fixture does not test A's renderer, real export,
+  the Apps host bridge inside ChatGPT, or Canva. Screenshot saved locally under
+  ignored `outputs/preview-ui-mobile-test.png`; fixture server stopped after QA.
+- PR #3 is open, draft, and mergeable. The GitHub check-runs API returned no remote
+  check results for the prior head; local test/build evidence is recorded separately.
+- A fresh fetch still showed A's branch at initialization, and a fresh lookup of the
+  existing Site again returned `project_not_found`. Original identity preserved.
 
 ### Concrete blockers
 
