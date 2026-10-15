@@ -146,3 +146,13 @@ example prompt and generic editing UI are authored HTML/CSS/SVG in
 scripts/static-workflow-device.mjs and styled in brand.css; no design is analyzed,
 AI prompt generated, result transferred or Canva session opened on this website.
 Existing prepared presentation examples below the tablet are unchanged.
+
+Homepage motion lives in `homepage-motion.js` and the final section of `brand.css`.
+It adds a nonblocking 1.4-second intro and three background fields, without changing
+content or template generation. The optional session key is
+`graphicrouter.intro.v1`; reload/history/anchor guards prevent routine replay.
+Escape or the first interaction dismisses the decorative intro immediately.
+The existing motion toggle also disables these effects. Reduced-motion users get
+static content; coarse pointers do not track or drift. Short mobile viewports omit
+the small intro window. Script-free `basic.html` is unchanged. The earlier reverted
+character-proximity feature is not reintroduced by this module.

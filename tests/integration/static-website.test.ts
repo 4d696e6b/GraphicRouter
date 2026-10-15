@@ -41,7 +41,7 @@ describe("standalone distribution surface", () => {
       expect(url.pathname).toContain("/nested/graphicrouter/");
       const file = resolve(directory, value); expect(file.startsWith(directory + sep)).toBe(true); await access(file);
     }
-    for (const name of ["main.js", "interactions.js", "scene.js", "index.html", "basic.html"]) {
+    for (const name of ["main.js", "interactions.js", "scene.js", "homepage-motion.js", "index.html", "basic.html"]) {
       const text = await readFile(resolve(directory, name), "utf8");
       expect(text).not.toMatch(/engine-provider|from\s+["']react|\/api\/|\/mcp\b|\/briefing\b|CANVA_CLIENT_SECRET|fetch\s*\(|XMLHttpRequest|WebSocket/);
     }

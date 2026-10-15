@@ -576,3 +576,37 @@ not count as verification of the new standalone static delivery.
 - TypeScript + 124 tests and static HTML/config/hash checks pass. Evidence:
   outputs/static-website/headline-glyph-fix-desktop.png and
   headline-glyph-fix-mobile.png. No application/backend changes.
+
+### Homepage entrance and ambient motion
+
+- Read all six requested files in the supplied pachpim reference ZIP. Adapted its
+  easing, brief typing, slide connections, radial exit and stagger principles in
+  native JS/CSS using GraphicRouter's own mark; no reference app code/dependencies.
+- Added a decorative 1.4-second intro, once per tab session, with Escape and first
+  interaction skip. Real content is immediately usable; no scroll lock or loading
+  state. Reload, history and anchor guards work even if storage is unavailable.
+  Short mobile viewports hide the intro window to keep the action area clear.
+- Added three diffuse side-biased violet fields behind content in an isolated
+  stacking context. Cached hero bounds, passive pointer tracking, separate spring
+  and drift wrappers, one settling RAF loop, no per-event gradient repaint.
+  Reduced motion hides the effects; coarse/touch pointers remain static. Offscreen
+  and hidden-tab guards pause decoration, with listener/observer cleanup on exit.
+- Character proximity remains reverted per the user's earlier undo. No headline
+  splitting or font/layout changes were introduced. Existing descender paint
+  space, tablet scroll/chapter code, hover effects and disabled download preserved.
+- Verification: TypeScript + 128 tests (18 files), production build, generator
+  consistency/hash check pass. HTTP check: 18 static files served byte-for-byte,
+  API 404 and POST 405. Separate application still responds 200 on port 5173.
+- Browser: Escape removed intro immediately; reload skipped replay; resize sweep
+  at 360/390/480/600/640/768/900/1024/1280/1440 had no horizontal overflow and equal
+  56px buttons. Pointer movement produced distinct gradual transforms; CTA hit
+  testing reached the actual controls. Tab focus visible. Anchor navigation works.
+  Explicit reduced-motion control hides fields; offscreen drift state is paused.
+  Native OS reduced-motion/coarse-device and hidden-tab transitions are guarded in
+  source but were not emulated as physical device/account verification.
+- Evidence: outputs/static-website/homepage-motion-1440.jpg and
+  homepage-motion-390.jpg; graphicrouter-motion-demo.mp4 records 85 actual browser
+  frames over nine seconds, with original capture timing (not a fabricated replay).
+  Reference-frame screenshots were visually inspected. Preview remains port 5184.
+- Local static UI only: no hosted ChatGPT/Canva verification, release artifact,
+  deployment, engine, fixture, shared-contract or application dependency changes.
