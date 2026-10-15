@@ -474,3 +474,16 @@ not count as verification of the new standalone static delivery.
 - Evidence: outputs/static-website/brand-desktop.png, brand-mobile.png,
   brand-1280x720.png, brand-768x1024.png, brand-360x800.png, brand-showcase.png,
   brand-download.png and brand-animation.png. Preview remains port 5184.
+
+### Headline comparison readability
+
+- Replaced the tablet's two tiny full-slide thumbnails with enlarged headline
+  details from the same prepared SVG files. Clear Before/After labels, original/
+  violet markers and a compact preservation note explain the single change.
+- CSS crops only the visible presentation detail; original assets and blueprint
+  data are untouched. Full-slide previews and sample files remain elsewhere.
+- TypeScript + all 124 tests pass; HTML/config/hash check passes. Browser inspected
+  desktop 1440x900 and mobile 390x844 in chapter 1, with positive card/crop heights
+  and no horizontal overflow. Tablet camera/gesture code unchanged.
+- Screenshots: outputs/static-website/headline-detail-desktop.png and
+  headline-detail-mobile.png. Preview on port 5184 refreshed.
