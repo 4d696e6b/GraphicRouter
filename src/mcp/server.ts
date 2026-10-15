@@ -7,8 +7,8 @@ import { fail, safeError } from "../server/errors";
 import { presentationData } from "../preview/data";
 import widgetJs from "graphicrouter:widget";
 import { plannerInstructions } from "./planner";
-import { briefingSchema, questions } from "../briefing/questions";
-import { CANVAS_TOOL_NAMES, createCanvasSchema, editCanvasSchema, canvasVersionSchema } from "../contracts";
+import { briefingSchema, getQuestions } from "../briefing/questions";
+import { CANVAS_TOOL_NAMES, createCanvasSchema, editCanvasSchema, canvasVersionSchema, inspectCanvasSchema } from "../contracts";
 import type { CanvasService } from "../server/canvas-service";
 import { canvasData } from "../preview/data";
 
@@ -23,7 +23,7 @@ Create exactly five slides from the completed brief using supplied facts only. S
   send_to_canva: "Import this deck version's binary PowerPoint into Canva. Requires Canva authorization. Reuses an existing job for this version. Each version creates a new Canva design; edits made there never sync back. Pending import must not block presenting the saved deck.",
 };
 export function createMcpServer(owner: string | null, getService: () => DeckService, origin = "", getCanvasService?: () => CanvasService) {
-  const server = new McpServer({ name: "GraphicRouter", version: "0.4.0" }, { instructions: plannerInstructions });
+  const server = new McpServer({ name: "GraphicRouter", version: "0.5.0" }, { instructions: plannerInstructions });
   registerAppResource(server, "Presentation", uri, {}, async () => ({ contents: [{ uri, mimeType: RESOURCE_MIME_TYPE,
     text: `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><div id="root" role="status">Waiting for a saved presentation…</div><script>${widgetJs.replace(/<\/script/gi, "<\\/script")}</script></body></html>`,
     _meta: { ui: { prefersBorder: true, csp: { connectDomains: [], resourceDomains: [] } } },
@@ -58,7 +58,7 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
   }
   const canvasDescriptions = {
     create_canvas: `${plannerInstructions}\nCreate a genuinely BLANK editable infographic canvas from the supplied brief, custom dimensions (320–4000 per side), palette and a short public design direction. There is no template, fixed slide count or layout recipe. Return the blank canvas, then continue with edit_canvas in deliberate structure/content/polish passes. Do not stop at the blank canvas or substitute image generation. Use the five-slide deck APIs only for an explicitly requested legacy presentation.`,
-    edit_canvas: "Compose a freeform canvas by adding, replacing or removing named editable text, shape, line and registered image objects. ChatGPT chooses positions, sizes, hierarchy and reading order from the brief. Operations apply in order; max40 per pass, max200 objects, max100 versions. Use separate structure/content/polish passes. Each pass returns actual staged previews and validation; correct text fit/bounds/contrast before export. Preserve stable IDs when replacing; specify the full replacement object and current baseVersion. No arbitrary SVG, code, external assets or flattened full-canvas image. Rectangles/ellipses, positive line deltas and measured English/Arial text are currently supported. Use get_canvas on a stale conflict; never silently discard unrelated objects.",
+    edit_canvas: "Compose a freeform canvas by adding, replacing or removing named editable text, shape, line and registered image objects. ChatGPT chooses positions, sizes, hierarchy and reading order from the brief. Operations apply in order; max40 per pass, max200 objects, max100 versions. Use separate structure/content/polish passes. Each pass returns staged previews and validation. Call inspect_canvas to actually see the rendered PNG after content placement and meaningful polish; correct visible weaknesses and text fit/bounds/contrast before export. Preserve stable IDs when replacing; specify the full replacement object and current baseVersion. No arbitrary SVG, code, external assets or flattened full-canvas image. Rectangles/ellipses, positive line deltas and measured English/Arial text are currently supported. Use get_canvas on a stale conflict; never silently discard unrelated objects.",
     get_canvas: "Retrieve this immutable freeform canvas version and refresh its existing Canva import job without starting another. Returns its exact editable objects, construction history, validations, and preview. CANVA_POLL_FAILED preserves the same job; retry this read. Use this tool for schemaVersion2 canvases, not get_deck.",
     export_canvas: "Export the exact freeform objects as a single-page native editable PowerPoint at the chosen canvas dimensions, plus design notes. This is a fallback, not completed Canva delivery. Use send_canvas_to_canva and get_canvas to deliver an actual Canva editUrl. Blank canvases must be composed before export.",
     send_canvas_to_canva: "Import this exact freeform infographic version's native PowerPoint into Canva. Requires authorization; reuses any existing import job and never starts a duplicate. Return connectUrl when required, poll via get_canvas when pending, and report only the real editUrl on success. Each version creates a separate Canva design. Canva fidelity/editability need actual inspection; manual Canva edits do not sync back.",
@@ -84,9 +84,23 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
       return { content: [{ type: "text" as const, text: JSON.stringify(result) }, { type: "text" as const, text: next }], structuredContent: { ...result }, _meta: meta };
     } catch (error) { const detail = safeError(error); return { isError: true, content: [{ type: "text" as const, text: JSON.stringify(detail) }], structuredContent: { error: detail } }; }
   });
+  server.registerTool("inspect_canvas", {
+    description: "Render a saved GraphicRouter canvas as a real PNG image visible to ChatGPT, plus actionable design diagnostics. Call after content placement and after meaningful refinements before final Canva delivery. Actually look at the image: critique hierarchy, meaningful illustrations, spacing, contrast, balance and phone-size readability, then use edit_canvas for specific improvements. Optional region crops inspect small details without changing the source. This is a preview of stored GraphicRouter objects, not the imported Canva design or a template. No writes, new imports or model service are used; a rendering error must not be described as a successful visual review.",
+    inputSchema: inspectCanvasSchema,
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+  }, async (args: unknown) => {
+    try {
+      if (!owner) fail("UNAUTHORIZED", "Sign in with ChatGPT to inspect a canvas.");
+      if (!getCanvasService) fail("NOT_IMPLEMENTED", "Canvas inspection is unavailable in this host.");
+      const { image, report } = await getCanvasService().inspect(owner, args);
+      const chunks: string[] = [];
+      for (let i = 0; i < image.bytes.length; i += 16384) chunks.push(String.fromCharCode(...image.bytes.subarray(i, i + 16384)));
+      return { content: [{ type: "image" as const, mimeType: "image/png", data: btoa(chunks.join("")) }, { type: "text" as const, text: JSON.stringify(report) }], structuredContent: report };
+    } catch (error) { const detail = safeError(error); return { isError: true, content: [{ type: "text" as const, text: JSON.stringify(detail) }], structuredContent: { error: detail } }; }
+  });
   server.registerTool("start_briefing", {
     title: "GraphicRouter design brief",
-    description: "Start here for a new infographic or presentation with missing context, especially requests to ask questions first or show a dialog. Call immediately instead of a prose questionnaire. Opens up to20 questions one at a time with optional skips/review and a user-triggered return to this chat. Prefill supplied answers only. Supports freeform single-page infographics with custom canvas dimensions; legacy five-slide presentations remain an explicit option. Wait for submission, then use create_canvas blank→edit_canvas object passes→send_canvas_to_canva/get_canvas for infographics. Do not substitute image generation. Rich complete briefs may go straight to create_canvas. If no app is visible, offer briefingUrl or ask one question per message. Existing narrow edits do not need another interview.",
+    description: "Start an adaptive design brief for a new infographic or presentation with missing context. Call immediately instead of a prose questionnaire. First ask project complexity, then whether to use a Canva template. Simple/balanced/detailed work gets only relevant questions (roughly6/9/14, plus an optional template-source question). Prefill known facts and optionally tailor non-routing question prompts (title/help) to this topic without changing the first two questions. Wait for the user submission; do not reopen intake afterward. Template choice routes ChatGPT to inspect and adapt an accessible copy through the separately connected Canva tools; Canva is that mode's source of truth. It is not a template-search capability in this backend and does not cover the entire public Canva catalogue. Blank-canvas choice uses create_canvas→edit_canvas→inspect_canvas→Canva. Never silently switch the user's chosen mode. Rich briefs and narrow edits can skip intake. If no app is visible, offer briefingUrl or ask one question at a time.",
     inputSchema: briefingSchema,
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     _meta: { ui: { resourceUri: uri }, "openai/outputTemplate": uri },
@@ -98,8 +112,8 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
       const data = parsed.data;
       const briefingId = crypto.randomUUID();
       return {
-        content: [{ type: "text" as const, text: "GraphicRouter's 20-question design dialog is open. Wait for the completed brief, then compose an editable canvas with GraphicRouter. Do not switch to a raster image generator. If no dialog is visible, offer briefingUrl for the copy-back fallback." }],
-        structuredContent: { kind: "briefing", briefingId, status: "awaiting_answers", questionCount: questions.length, briefingUrl: `${origin}/briefing`, ...data },
+        content: [{ type: "text" as const, text: "GraphicRouter's adaptive design dialog is open. Ask complexity first and template preference second; the remaining questions follow the chosen context. Wait for submission, preserve its template/blank choice, and visually review before delivery. If no dialog is visible, offer briefingUrl." }],
+        structuredContent: { kind: "briefing", briefingId, status: "awaiting_answers", questionCount: getQuestions(data.answers).length, briefingUrl: `${origin}/briefing`, ...data },
         _meta: { briefing: data, briefingId },
       };
     } catch (error) {

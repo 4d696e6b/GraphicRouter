@@ -1,12 +1,13 @@
-import { canvasVersionSchema, createCanvasSchema, editCanvasSchema, type Asset, type CanvasBlueprint, type CanvasEngine, type CanvasResult, type CanvasToolName, type CanvaImport } from "../contracts";
+import { canvasVersionSchema, createCanvasSchema, editCanvasSchema, inspectCanvasSchema, type Asset, type CanvasBlueprint, type CanvasEngine, type CanvasRasterizer, type CanvasResult, type CanvasToolName, type CanvaImport } from "../contracts";
 import type { DeckStore } from "./store";
 import type { CanvaPort, FileStore } from "./service";
 import { EngineError } from "../engine/errors";
 import { CanvaConnectionRequired } from "../integrations/canva/errors";
 import { fail, ServiceError } from "./errors";
+import { reviewDesign } from "../engine/design-review";
 
 export class CanvasService {
-  constructor(private deps: { store: DeckStore<CanvasBlueprint>; files: FileStore; engine: CanvasEngine; assets: Asset[]; canva: CanvaPort; origin: string }) {}
+  constructor(private deps: { store: DeckStore<CanvasBlueprint>; files: FileStore; engine: CanvasEngine; assets: Asset[]; canva: CanvaPort; origin: string; raster?: CanvasRasterizer }) {}
   private compose(action: () => CanvasBlueprint) {
     try {
       const b = action();
@@ -103,5 +104,25 @@ export class CanvasService {
     // A bounded set of cumulative object views avoids sending 200 full SVG copies.
     const counts = [...new Set([0, Math.ceil(b.elements.length / 3), Math.ceil(2 * b.elements.length / 3), b.elements.length])];
     return { previews, constructionPreviews: counts.map(count => engine.render(b, "finished", assets, count)) };
+  }
+  async inspect(owner: string | null, raw: unknown) {
+    if (!owner) fail("UNAUTHORIZED", "Sign in with ChatGPT to inspect this canvas.");
+    const parsed = inspectCanvasSchema.safeParse(raw);
+    if (!parsed.success) fail("VALIDATION_FAILED", "Supply a saved canvas ID/version and an optional in-bounds inspection region.");
+    const { deckId, version, region } = parsed.data, b = await this.read(owner, deckId, version);
+    if (region && (region.x + region.width > b.canvas.width || region.y + region.height > b.canvas.height)) fail("VALIDATION_FAILED", "Keep the inspection region inside this canvas. The stored design is unchanged.");
+    if (!this.deps.raster) fail("NOT_IMPLEMENTED", "Image inspection is unavailable in this host. The editable canvas remains saved; use its preview link and do not claim a visual review.");
+    try {
+      let svg = this.deps.engine.render(b, "finished", this.deps.assets);
+      if (region) svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${region.width}" height="${region.height}" viewBox="0 0 ${region.width} ${region.height}">${svg.replace("<svg ", `<svg x="${-region.x}" y="${-region.y}" `)}</svg>`;
+      const image = await this.deps.raster(svg, region ?? b.canvas);
+      return { image, report: { deckId, version, title: b.title, canvas: b.canvas, region: region ?? null,
+        image: { width: image.width, height: image.height, fontNote: image.fontNote },
+        issues: [...b.validationIssues, ...reviewDesign(b)],
+        reviewInstructions: "Look at the attached PNG. Critique hierarchy, illustration meaning, balance, spacing, density and readability at the target viewing size. Tie each issue to named elements and revise only when it improves the design. This is the GraphicRouter source preview, not the imported Canva rendering; inspect Canva separately before claiming imported fidelity. Automated warnings guide review and are not a beauty score." } };
+    } catch (error) {
+      if (error instanceof ServiceError) throw error;
+      fail("EXPORT_FAILED", "Could not render the inspection image. Your saved canvas is unchanged. Retry inspect_canvas or open its preview; do not claim visual inspection succeeded.");
+    }
   }
 }

@@ -1,80 +1,104 @@
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
-import { briefingIssues, briefingSchema, buildBriefingMessage, infographicDimensions, questions, type Answers } from "../../src/briefing/questions";
+import { briefingIssues, briefingSchema, buildBriefingMessage, getQuestions, nextBriefingQuestion, infographicDimensions, questions, type Answers } from "../../src/briefing/questions";
 import { Briefing } from "../../src/preview/Briefing";
 import { sendBriefingToChat } from "../../src/preview/briefing-handoff";
 
-const ready: Answers = { format: "Five-slide presentation", topic: "Our real project", audience: "Hackathon judges", outcome: "Understand our prototype" };
-describe("GraphicRouter guided briefing", () => {
-  it("requires the format and three essential story answers but allows optional skips", () => {
-    expect(briefingIssues({}).map(x => x.id)).toEqual(["format", "topic", "audience", "outcome"]);
+const ready: Answers = { complexity: "Quick and simple", template: "Start from a blank canvas", topic: "Our real project and supplied facts", audience: "Hackathon judges", outcome: "Understand our prototype" };
+const payload = (message: string) => JSON.parse(message.slice(message.indexOf("\n\n{") + 2));
+describe("adaptive GraphicRouter briefing", () => {
+  it("asks complexity then template first, without displaying the full question bank", () => {
+    expect(getQuestions({}).map(q => q.id)).toEqual(["complexity", "template"]);
+    expect(nextBriefingQuestion({})?.id).toBe("complexity");
+    expect(nextBriefingQuestion({ complexity: "Balanced" })?.id).toBe("template");
+    expect(briefingIssues({}).map(i => i.id)).toEqual(["complexity", "template", "topic", "audience", "outcome"]);
+    const html = renderToStaticMarkup(<Briefing initial={{ context: "", answers: {} }} />);
+    expect(html).toContain('role="dialog"');
+    expect(html).toContain("How complex is this project?");
+    expect(html).not.toContain("What is it about");
+  });
+  it("changes question budgets and adds a source question only for template work", () => {
+    for (const [complexity, count] of [["Quick and simple", 6], ["Balanced", 9], ["Detailed", 14]] as const) {
+      const blank = getQuestions({ complexity, template: "Start from a blank canvas" });
+      expect(blank).toHaveLength(count);
+      expect(blank.slice(0, 2).map(q => q.id)).toEqual(["complexity", "template"]);
+      expect(getQuestions({ complexity, template: "Use a Canva template" })).toHaveLength(count + 1);
+      expect(getQuestions({ complexity, template: "Help me choose" })).toHaveLength(count + 1);
+      expect(blank.some(q => q.id === "templateSource")).toBe(false);
+    }
+  });
+  it("preserves prefills and branch answers when changing complexity or starting point", () => {
+    const detailed: Answers = { ...ready, complexity: "Detailed", brand: "Exact teal #007C78", references: "A supplied reference", templateSource: "https://www.canva.com/design/example/edit" };
+    expect(nextBriefingQuestion(detailed, "template")?.id).toBe("format");
+    const shorter = { ...detailed, complexity: "Quick and simple" };
+    expect(getQuestions(shorter).some(q => q.id === "brand")).toBe(false);
+    const data = payload(buildBriefingMessage({ context: "Saved notes", answers: shorter }));
+    expect(data.workflowMode).toBe("graphicrouter_canvas");
+    expect(data.answers).toContainEqual(expect.objectContaining({ id: "brand", answer: "Exact teal #007C78" }));
+    expect(data.answers).toContainEqual(expect.objectContaining({ id: "references", answer: "A supplied reference" }));
+    expect(nextBriefingQuestion({ ...shorter, template: "Use a Canva template", templateSource: "" }, "template")?.id).toBe("templateSource");
+    expect(getQuestions({ ...shorter, template: "Start from a blank canvas" }).some(q => q.id === "templateSource")).toBe(false);
+  });
+  it("accepts essential facts without optional questions and uses a portrait default", () => {
     expect(briefingIssues(ready)).toEqual([]);
     const message = buildBriefingMessage({ context: "Supplied facts only", answers: ready });
-    expect(message).toContain("GraphicRouter create_deck");
-    expect(message).toContain("send_to_canva");
+    for (const tool of ["create_canvas", "edit_canvas", "inspect_canvas", "send_canvas_to_canva", "get_canvas"]) expect(message).toContain(tool);
+    expect(message).toContain("blank 1080 × 1920 canvas");
+    expect(message).toContain("not a request for another interview");
     expect(message).toContain("Not supplied — use design judgment; never invent facts.");
+    expect(() => buildBriefingMessage({ context: "", answers: { ...ready, complexity: "maximum" } })).toThrow("Choose Quick");
   });
-  it("routes infographics through a blank canvas and editable object passes, preserving the deck option", () => {
-    for (const [format, size] of [["Infographic — portrait", "1080 × 1920"], ["Infographic — square", "1080 × 1080"], ["Infographic — landscape", "1600 × 900"], ["Infographic — custom 1200 × 1800", "1200 × 1800"]]) {
-      const answers = { ...ready, format };
-      expect(briefingIssues(answers)).toEqual([]);
-      const message = buildBriefingMessage({ context: "", answers });
-      expect(message).toContain(`blank ${size} canvas`);
-      for (const tool of ["create_canvas", "edit_canvas", "export_canvas", "send_canvas_to_canva", "get_canvas"]) expect(message).toContain(tool);
-      expect(message).toContain("structure, content, and polish");
-      expect(message).not.toContain("Use GraphicRouter create_deck");
-      expect(message).toContain("Do not replace GraphicRouter with image generation");
-    }
-    expect(buildBriefingMessage({ context: "", answers: ready })).toContain("exactly five native editable slides");
+  it("routes native Canva work explicitly without claiming a synchronized blueprint or public catalogue", () => {
+    const message = buildBriefingMessage({ context: "", answers: { ...ready, template: "Use a Canva template" } });
+    expect(payload(message).workflowMode).toBe("canva_native");
+    for (const text of ["connected Canva tools", "create-design-from-brand-template", "copy-design", "user approval", "source of truth", "do not silently substitute"]) expect(message).toContain(text);
+    expect(message).not.toContain("Use GraphicRouter create_canvas");
+    const choose = buildBriefingMessage({ context: "", answers: { ...ready, template: "Help me choose" } });
+    expect(payload(choose).workflowMode).toBe("choose");
+    expect(choose).toContain("one selection question");
   });
-  it("rejects unknown formats and invalid custom dimensions before handoff", () => {
-    for (const format of ["Single-page infographic / another format", "Infographic — custom size", "Infographic — 319 × 1080", "Infographic — 1080 x 4001", "Infographic — -1080 × 1920", "Arbitrary external format"]) {
-      expect(briefingIssues({ ...ready, format })[0]).toMatchObject({ id: "format" });
-      expect(() => buildBriefingMessage({ context: "", answers: { ...ready, format } })).toThrow("Choose an infographic size");
+  it("supports custom canvas sizes and legacy slides with previously supplied durations", () => {
+    for (const [format, size] of [["Infographic — square", "1080 × 1080"], ["Infographic — landscape", "1600 × 900"], ["Infographic — custom 1200 × 1800", "1200 × 1800"]]) {
+      expect(buildBriefingMessage({ context: "", answers: { ...ready, format } })).toContain(`blank ${size} canvas`);
     }
     expect(infographicDimensions("Infographic — 320 x 4000")).toEqual({ width: 320, height: 4000 });
+    for (const format of ["Arbitrary format", "Infographic — 319 × 1080", "Infographic — 1080 × 4001"]) expect(briefingIssues({ ...ready, format })[0].id).toBe("format");
+    const message = buildBriefingMessage({ context: "", answers: { format: "Five-slide presentation", topic: "Old complete brief", audience: "Judges", outcome: "Understand", duration: "5 minutes" } });
+    expect(message).toContain("exactly five native editable slides");
+    expect(payload(message).answers).toContainEqual(expect.objectContaining({ id: "duration", answer: "5 minutes" }));
   });
-  it("preserves a previously supplied duration without adding a question", () => {
-    const message = buildBriefingMessage({ context: "", answers: { ...ready, duration: "5 minutes" } });
-    const payload = JSON.parse(message.slice(message.indexOf("\n\n{") + 2));
-    expect(questions).toHaveLength(20);
-    expect(payload.answers).toContainEqual({ id: "duration", question: "Previously supplied talk duration", answer: "5 minutes" });
-  });
-  it("carries all 20 answers and original context into a single user handoff without truncation", () => {
-    const answers = Object.fromEntries(questions.map(q => [q.id, `Supplied ${q.id} — ภาษาไทย <script>example</script>`])) as Answers;
-    answers.format = ready.format;
-    const context = "Original notes with \"quotes\" and\na newline";
-    const message = buildBriefingMessage({ context, answers });
-    const payload = JSON.parse(message.slice(message.indexOf("\n\n{") + 2));
-    expect(payload.context).toBe(context);
-    expect(payload.answers).toHaveLength(20);
-    for (const answer of payload.answers) expect(answer.answer).toBe(answers[answer.id as keyof Answers]);
-    expect(briefingSchema.safeParse({ answers: { unknownKey: "x" } }).success).toBe(false);
-  });
-  it("renders one accessible question, preserves prefills and escapes user-supplied text", () => {
-    const html = renderToStaticMarkup(<Briefing initial={{ context: "", answers: { format: "Five-slide presentation", topic: "" } }} />);
-    expect(html).toContain('role="dialog"');
-    expect(html).toContain("Question 2 of 20");
-    expect(html).toContain("What is your graphic or presentation about?");
-    expect(html).not.toContain("What should the audience understand or do?");
+  it("escapes supplied text, displays one question, and shows custom dimension fields", () => {
+    const html = renderToStaticMarkup(<Briefing initial={{ context: "", answers: { complexity: "Balanced", template: "Start from a blank canvas", topic: "<script>alert(1)</script>" } }} />);
+    expect(html).not.toContain("<script>");
+    expect(html).toContain("Who will read or see it?");
     expect(html).toContain('aria-describedby="question-help"');
-    const unsafe = renderToStaticMarkup(<Briefing initial={{ context: "", answers: { format: "<script>alert(1)</script>" } }} />);
-    expect(unsafe).not.toContain("<script>");
+    const supplied = Object.fromEntries(questions.map(q => [q.id, "Supplied answer"])) as Answers;
+    supplied.complexity = "Detailed"; supplied.template = "Start from a blank canvas"; supplied.format = "Infographic — custom 1200 × 1800";
+    const reviewHtml = renderToStaticMarkup(<Briefing initial={{ context: "", answers: supplied }} />);
+    expect(reviewHtml).toContain("Ready to compose your design?");
+    expect(reviewHtml).toContain("1200 × 1800");
   });
-  it("shows custom dimension fields in the canvas-size question", () => {
-    const answers = Object.fromEntries(questions.map(q => [q.id, "Supplied answer"])) as Answers;
-    answers.format = "Infographic — custom 1200 × 1800";
-    const html = renderToStaticMarkup(<Briefing initial={{ context: "", answers }} />);
-    expect(html).toContain("Infographic — portrait");
-    expect(html).toContain("Infographic — custom size");
-    expect(html).toContain("Custom canvas dimensions");
-    expect(html).toContain('type="number" min="320" max="4000" step="1"');
-    expect(html).toContain('value="1200"');
-    expect(html).toContain('value="1800"');
-    expect(html).not.toContain("single-page infographic is not supported");
+  it("preserves all supplied hidden answers and rejects unknown fields", () => {
+    const answers = Object.fromEntries(questions.map(q => [q.id, `Supplied ${q.id} — ภาษาไทย <script>example</script>`])) as Answers;
+    Object.assign(answers, { ...ready, format: "Infographic — square" });
+    const data = payload(buildBriefingMessage({ context: 'Original "quotes"\nand a newline', answers }));
+    expect(data.answers).toHaveLength(questions.length);
+    for (const item of data.answers) expect(item.answer).toBe(answers[item.id as keyof Answers]);
+    expect(data.context).toBe('Original "quotes"\nand a newline');
+    expect(briefingSchema.safeParse({ answers: { password: "x" } }).success).toBe(false);
   });
-  it("hands the complete brief to the host as one user message and never retries automatically", async () => {
+  it("tailors topic questions to the brief while protecting the first two choices", () => {
+    const prompts = { topic: { title: "Which actions should this instructional graphic demonstrate?", help: "List the required steps and the source you trust." } };
+    const html = renderToStaticMarkup(<Briefing initial={{ context: "Instructional graphic", answers: { complexity: "Quick and simple", template: "Start from a blank canvas" }, prompts }} />);
+    expect(html).toContain(prompts.topic.title);
+    expect(html).toContain(prompts.topic.help);
+    expect(payload(buildBriefingMessage({ context: "", answers: ready, prompts })).answers).toContainEqual(expect.objectContaining({ id: "topic", question: prompts.topic.title }));
+    expect(briefingSchema.safeParse({ prompts: { complexity: prompts.topic } }).success).toBe(false);
+    expect(briefingSchema.safeParse({ prompts: { password: prompts.topic } }).success).toBe(false);
+    expect(briefingSchema.safeParse({ prompts: { topic: { title: "x".repeat(141), help: "x" } } }).success).toBe(false);
+  });
+  it("sends one complete user handoff and never retries automatically", async () => {
     const message = buildBriefingMessage({ context: "No results yet", answers: ready });
     const send = vi.fn().mockResolvedValue({});
     await sendBriefingToChat(send, message);

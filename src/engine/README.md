@@ -288,3 +288,22 @@ GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/freeform-proof.test.ts
 Outputs under ignored artifacts/freeform include blank/structure/finished SVG,
 blueprint, exact input objects and native PPTX for portrait and landscape canvases.
 The preview PNGs are local SVG renders; Canva fidelity is a separate live check.
+
+## Offline visual inspection
+
+`renderInspectionPng` renders the stored canvas SVG with `@resvg/resvg-wasm` 2.6.2
+and bundled OFL Liberation Sans regular/bold. Workers receive a static WASM module;
+Node tests use the separate test-only loader. No runtime network fetch or proprietary
+font distribution is required. Inspection substitutes Arial-compatible glyphs while
+the editable blueprint and PowerPoint retain Arial. See `/third-party-notices.txt`.
+
+The read-only `inspect_canvas` MCP tool returns a real PNG image block, optional
+detail crop, and advisory design issues. Output is capped at 1600px on its long
+side and two million pixels, with two concurrent renders. Rendering never changes
+the saved canvas. Phone-size, density, hierarchy and edge checks are review prompts,
+not a beauty score; inspect both the source image and final imported Canva design.
+
+`GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/quality-revision.test.ts` writes
+the before/after readable portrait example, revised blueprint and native PPTX to
+`artifacts/inspection/`. It verifies an actual targeted revision with prior-version
+and unrelated-object preservation, rather than changing a rendering fixture.
