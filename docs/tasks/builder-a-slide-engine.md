@@ -204,3 +204,35 @@ every PR; B handles platform/build integration.
 - Remaining A checklist items require the live accounts/presenter: imported shape/
   line/font check, complete stage freeze, actual speaking pace, and live recording.
   These remain unchecked, rather than being inferred from the offline package.
+
+## Full-project recheck — B aa16ed1
+
+- Reviewed B's latest pushed implementation, tool registration, runtime bindings,
+  preview, immutable storage, Canva client, setup notes, and acceptance evidence.
+- Rebuilt an isolated combined tree: 87 existing tests pass; production build
+  passes. First build hit ENOSPC during Sites artifact packaging; retry after disk
+  space became available completed successfully. No branch or B source was edited.
+- B now records the exact updated pitch created through local Worker/D1/R2 HTTP
+  and local MCP, plus offline-replay browser controls. These are stronger local
+  checks; identity is still simulated and hosted ChatGPT/app OAuth remain unverified.
+- **B follow-up, P2:** src/server/service.ts lines 64–72 catches all poll errors but
+  only handles CanvaConnectionRequired. Other failures (including the Canva client's
+  CANVA_IMPORT_FAILED for HTTP 403/429/500) disappear, returning success/pending with
+  no useful explanation. Reproduced with real DeckService/SQLite: seed existing
+  pending job, have canva.poll throw ServiceError CANVA_IMPORT_FAILED, call get_deck;
+  result silently returns the same pending job and omits the error message.
+- Suggested B correction: preserve the pending job in storage, but propagate an
+  actionable tool error for non-auth poll failures so the UI can show retry-refresh
+  guidance. Never erase/restart the import. Regression should assert that the same
+  job persists and no second start occurs while the caller sees the error.
+- Reproduction is a review-only test in the isolated snapshot, not a production
+  file or an A-owned service change. One reproduction test passed by confirming
+  the current incorrect silent behavior; it is not counted in the 87 green checks.
+- PR #3 remains open/draft; PR #6 open/mergeable. Shared main does not yet contain
+  B's service or A's latest acceptance/package utility. No merge/publication attempted.
+- Outstanding complete-product acceptance: resolve the poll-error gap; integrate the
+  two open PRs; restore existing Site access; configure app Canva credentials; verify
+  hosted tools/widget and real app import; inspect Canva shape/line/font fidelity;
+  rehearse actual three-minute pitch/live edit and record it; finish submission.
+- B's reported account blockers remain project_not_found for the preserved Site and
+  unavailable developer credentials. No claim those were fixed from GitHub access.
