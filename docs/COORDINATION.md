@@ -156,3 +156,14 @@ This authorizes changing the original Site audience to public for this release;
 it does not authorize changing user-owned data access or publishing a marketplace
 listing. Keep both Site identities, credentials and per-user authorization intact.
 Original Site is accessible in this account again; Test returns project_not_found.
+
+## User-directed original website design — 2026-10-15
+
+The user identified RepoSetup as a reference and requested a better GraphicRouter
+website without copying it. This owning chat replaces the active static homepage
+composition, styles and interactions with an original editorial studio direction.
+Preserve the exact plugin install link, public Site audience authorized above,
+authenticated tools/data, sample exports and setup/briefing routes. No reference
+artwork, camera motion or pointer glow is loaded by the new page. Historical source
+and MIT notices may remain for provenance. Publication uses the existing public
+Site's normal save/deploy flow, not owner-private publication or a new Site.

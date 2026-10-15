@@ -788,6 +788,44 @@ release gates. No audience or account permissions were expanded.
   Owner selected “Everyone with the link” after explicit audience explanation;
   original Site visibility may change to public, while user-owned data remains
   authenticated/isolated. No marketplace submission is authorized or claimed.
-- [ ] Exact hosted source build/publication, audience read-back and live HTTP
-  verification will be recorded after their actual completion. Existing release
-  advisory/provider verification limits remain in docs/RELEASE-QUALITY.md.
+- [x] Exact hosted source passed287 tests and the production build. Original
+  Site version7 succeeded: source0e2bc9925a0b3e36e23248723fa5e506e4f25f83,
+  deployment appgdep_6ad0f63476148191986da23a6afcac99, MCP enabled and unchanged
+  secret revision3. Then the authorized public access change succeeded; read-back
+  confirms public/revision2 and the same plugin ID. Live unauthenticated home,
+  setup, script-free page and PPTX return200. Protected tool returns401 with
+  absent or forged identity; connected long-presentation planning smoke succeeds.
+  PR10 and PR19 are merged (main551f479). Existing release advisory/provider
+  verification limits remain in docs/RELEASE-QUALITY.md. Test was not changed.
+
+## Original GraphicRouter website direction — 2026-10-15
+
+- [x] Read the user-supplied RepoSetup reference in native Chrome (web open/search
+  unavailable). Replaced the active website layout/styles and page interaction
+  module with an original editorial studio: asymmetrical paper/ink/violet hero,
+  HTML/CSS layer illustration, four-step human design process, custom format
+  studies, dark prepared-example section, customer setup, prompt and FAQ.
+- [x] No reference source or assets were fetched/copied for this redesign. Active
+  page no longer loads tablet/hand artwork, camera code, intro overlay or pointer
+  tracking. Existing unused reference material/license is retained for provenance;
+  the product deployment allowlist excludes its unused PNGs and scripts.
+- [x] Exact four plugin CTAs, sample PowerPoint/notes, source notices and script-free
+  view are retained. Illustration is explicitly not a live editor; actual engine
+  examples are labelled prepared and do not claim a live Canva operation.
+- [x] TypeScript/287 tests/46 files, HTML/asset consistency and JS syntax pass.
+  Native Chrome desktop and375px QA: original composition, Shape-layer highlight,
+  revision anchor→violet toggle/status/actual SVG, mobile menu and Escape pass.
+  Minor phone FAQ word spacing corrected. No model/provider design was generated.
+- [ ] Exact source production build/publication and public read-back pending.
+
+Customer installation limitation: signed-out incognito reaches ChatGPT but shows
+“We couldn't load this plugin right now.” The owner's page works and offers
+Try in chat. This does not establish a non-owner signed-in account's eligibility;
+public Site access and its authenticated content guards were verified separately.
+No credentials/account state were changed to conceal this remaining check.
+
+The owner's ChatGPT Manage page also reports Review status DEVELOPMENT/dev mode.
+No public plugin-release control is exposed through the connected tools. Site
+access is public; cross-account ChatGPT installation remains a distinct unverified
+platform step, not something the website can silently grant. No account permissions
+or marketplace submission were changed.
