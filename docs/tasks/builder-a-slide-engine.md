@@ -718,3 +718,43 @@ scope, use examples, repro commands and real-use checks.
   and evidence changes committed separately. Original Site checkout remains clean
   at484047c0703a59dcac02d7fcbf4920e736e9b5bc; no original publication or audience
   change. Browser handoff queued through the app; interactive QA still unavailable.
+
+
+## Brief redesign and final quality/stability checkpoint (0.10.1)
+
+- [x] Rebuilt the shared hosted/widget form with scoped styles, light controls,
+  compact sidebar/progress, short headings and progressive help, choice cards,
+  contextual placeholders/character counts and cleaner editable review. Existing
+  question contracts, modes, exact copy/hidden answers and handoff stay intact.
+- [x] Native Chrome browser QA completed on actual local /briefing and an isolated
+  actual-component harness: required errors, pace/route selection, forward/back,
+  exact content,375px mobile question/review CTA, dark surrounding UI, accessible
+  heading focus and local viewport reset. Simulated pending double-click sends
+  exactly once; success, failure fallback and a16000-character tail/hidden brand
+  retention pass. Harness uses no host account/provider writes and is excluded
+  from publication. Owned preview servers stopped before dependency installation.
+- [x] Full initial and patched-engine checks:254 tests in43 files plus TypeScript
+  pass; main production build passes on React19.2.8/Vite8.0.16. Targeted security
+  patches reduce all-dependency audit30→14 entries, high20→8. Production-only audit
+  is0, but RSC/build classification was explicitly examined, not treated as proof.
+  Remaining unpatched braces/build/glob/lint and dev esbuild findings are recorded
+  in docs/RELEASE-QUALITY.md; broad public security readiness is not claimed.
+- [x] No native Canva read/edit/upload/import was performed without a real user
+  target/image. Previous live layer/fidelity, private upload, same-file save and
+  long-deck rehearsal gates remain. Original Site remains inaccessible/untouched.
+- [x] Final exact Test checks/build pass. Compiled Worker HTTP200/new form,
+  version0.10.1,29-tool discovery/widget resource and HTTP401 anonymous rejection
+  pass. npm ls has no invalid/missing dependencies; final audit remains14 total
+  (8 high/4 moderate/2 low), production-only0, with documented scope limits.
+- [x] Private Test version7 succeeded: source a477be05a94d970279aa36b933e15084bb961985,
+  deployment appgdep_6ad0f076f0d08191a45e8b3a877ea125, MCP enabled, unchanged secret
+  revision2. Connected start_briefing returns6 quick questions and preserves the
+  same-file/picture guidance. No provider design/import/upload/edit was initiated.
+  https://graphicrouter-test.pacharapol-pim.chatgpt.site/briefing
+- [x] PR: https://github.com/4d696e6b/GraphicRouter/pull/18. Source changes committed
+  in UI, dependency and evidence increments. Owned QA servers are stopped; original
+  Site still returns project_not_found and remains clean at484047c.
+
+This checkpoint supports continued owner-private testing; public/marketplace
+publication remains conditional on the documented real-use and upstream dependency
+release gates. No audience or account permissions were expanded.

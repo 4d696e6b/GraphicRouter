@@ -127,3 +127,19 @@ registered-only; do not claim an attachment was uploaded or placed from metadata
 User also requested richer, less text-only long-prompt designs. Add a read-only
 native slide-composition helper and story/visual-density guidance; do not redesign
 unrelated elements in the existing-file edit route. No dependency changes needed.
+
+## User-directed brief interface redesign — 2026-10-15
+
+User authorized redesign of the question dialog from a supplied screenshot. This
+owning chat updates the shared hosted/widget Briefing component, scoped visual
+styles and presentation copy. Preserve existing adaptive question/validation/tool
+contracts, same-file routing, supplied answers, accessible focus/error handling and
+one complete chat handoff. No new model, dependency, storage or account permission
+is needed. Publish only the existing owner-private Test Site after source opening.
+
+The user's subsequent project-wide release stability check found current package
+advisories. This authorizes necessary compatible security patch pins/overrides in
+this owning chat after registry/advisory verification, including build dependencies
+that ship runtime RSC code. Preserve the Sites/Vinext integration, use one installer,
+retest builds and record remaining upstream advisories rather than claiming a clean
+security release from npm's production-only classification.

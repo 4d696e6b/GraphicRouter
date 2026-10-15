@@ -16,7 +16,7 @@ describe("adaptive GraphicRouter briefing", () => {
     expect(briefingIssues({}).map(i => i.id)).toEqual(["complexity", "template", "topic", "audience", "outcome"]);
     const html = renderToStaticMarkup(<Briefing initial={{ context: "", answers: {} }} />);
     expect(html).toContain('role="dialog"');
-    expect(html).toContain("How complex is this project?");
+    expect(html).toContain("How much direction would you like?");
     expect(html).not.toContain("What is it about");
   });
   it("changes question budgets and adds a source question only for template work", () => {
@@ -64,8 +64,9 @@ describe("adaptive GraphicRouter briefing", () => {
   it("shows three honest starting points and routes a completed new-Canva brief without template discovery", () => {
     const html = renderToStaticMarkup(<Briefing initial={{ context: "", answers: { complexity: "Quick and simple" } }} />);
     for (const option of ["Let Canva create a design", "Use my Canva template/design", "Start from a blank canvas"]) expect(html).toContain(option);
-    expect(html).toContain("Recommended for independently editable text");
-    expect(html).toContain("simpler toolkit suits precise charts");
+    expect(html).toContain("Precise, separate text and simple graphic elements.");
+    const selected = renderToStaticMarkup(<Briefing initial={{ context: "", answers: { complexity: "Quick and simple", template: "Start from a blank canvas" } }} />);
+    expect(selected).toContain("What&#x27;s the story?");
     expect(html).not.toContain(">Use a Canva template<");
     const answers: Answers = { ...ready, template: "Let Canva create a design", topic: "Five handwashing steps", audience: "Children", outcome: "Follow the steps", setting: "Printed page / poster", mustInclude: "Preserve the supplied source credit" };
     const message = buildBriefingMessage({ context: "Verified facts in the completed brief", answers });
@@ -119,8 +120,8 @@ describe("adaptive GraphicRouter briefing", () => {
   it("escapes supplied text, displays one question, and shows custom dimension fields", () => {
     const html = renderToStaticMarkup(<Briefing initial={{ context: "", answers: { complexity: "Balanced", template: "Start from a blank canvas", topic: "<script>alert(1)</script>" } }} />);
     expect(html).not.toContain("<script>");
-    expect(html).toContain("Who will read or see it?");
-    expect(html).toContain('aria-describedby="question-help"');
+    expect(html).toContain("Who are we designing for?");
+    expect(html).toContain('aria-describedby="question-help answer-meta"');
     const supplied = Object.fromEntries(questions.map(q => [q.id, "Supplied answer"])) as Answers;
     supplied.complexity = "Detailed"; supplied.template = "Start from a blank canvas"; supplied.format = "Infographic — custom 1200 × 1800";
     const reviewHtml = renderToStaticMarkup(<Briefing initial={{ context: "", answers: supplied }} />);
