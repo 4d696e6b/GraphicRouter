@@ -1,39 +1,49 @@
 "use client";
-
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { PreviewStage } from "../../src/contracts";
-import styles from "./landing.module.css";
+import type { DemoData } from "./types";
+import { nextTab, prompts } from "./content";
+import { CopyPrompt } from "./CopyPrompt";
+import s from "./landing.module.css";
 
-export function GuidedDemo({ views, violet }: { views: Record<PreviewStage, string[]>; violet: Record<PreviewStage, string> }) {
-  const [stage, setStage] = useState<PreviewStage>("finished");
-  const [slide, setSlide] = useState(2);
-  const [changed, setChanged] = useState(false);
-  const activeViolet = changed && slide === 2 && stage === "finished";
-  const svg = changed && slide === 2 ? violet[stage] : views[stage][slide];
-  return <div className={styles.demoWrap} id="demo">
-    <div className={styles.demoTopline}><span><i aria-hidden="true"/> INTERACTIVE PRODUCT PREVIEW</span><span>PREPARED SAMPLE</span></div>
-    <div className={styles.demoWindow}>
-      <div className={styles.windowBar}><span className={styles.windowDots} aria-hidden="true">● ● ●</span><span>GraphicRouter / the presentation plan</span><span aria-hidden="true">↗</span></div>
-      <div className={styles.demoToolbar}><span>THE WORKFLOW <span className={styles.version}>v{changed ? 2 : 1}</span></span><div role="group" aria-label="Preview stage">{(["layout", "content", "finished"] as const).map(value => <button key={value} aria-pressed={stage === value} onClick={() => setStage(value)}>{value}</button>)}</div></div>
-      <div className={styles.slideCanvas}><img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`} alt={`Prepared slide ${slide + 1}, ${stage} preview${activeViolet ? ", violet headline" : ""}`} width={1600} height={900}/></div>
-      <div className={styles.slideRail}><span>5 SLIDES. ONE STORY.</span><div role="group" aria-label="Select a sample slide">{views.finished.map((_, i) => <button aria-label={`Preview slide ${i + 1}`} aria-pressed={slide === i} key={i} onClick={() => setSlide(i)}>{String(i + 1).padStart(2, "0")}</button>)}</div></div>
-    </div>
-    <div className={styles.directionCard}><span className={styles.directionIcon} aria-hidden="true">↳</span><div><p>“Change only the headline on slide three to violet.”</p><div className={styles.editResult} role="status">{changed ? "✓ Prepared v2 · headline changed · v1 preserved" : "A precise request. A focused revision."}</div></div><button onClick={() => { if (changed) setChanged(false); else { setChanged(true); setSlide(2); setStage("finished"); } }}>{changed ? "Reset" : "Try it"}<span aria-hidden="true"> {changed ? "↺" : "↗"}</span></button></div>
-    <p className={styles.demoCaption}>Rendered by GraphicRouter’s real slide engine. This guided sample makes no ChatGPT or Canva calls.</p>
-  </div>;
-}
-
-const prompts = [
-  { label: "01 / Create a story", title: "Give your idea a clear direction.", text: "Create a five-slide, three-minute pitch for [audience] about [idea]. Our goal is [goal]. Use only these verified facts: [facts]. Mark missing evidence as an open question. Include core and expanded speaker notes." },
-  { label: "02 / Direct a detail", title: "Change one thing. Keep the rest.", text: "Change only the headline on slide three to violet (#7C3AED). Keep all other elements and notes unchanged, and preserve the previous version." },
-  { label: "03 / Prepare the handoff", title: "Take your story with you.", text: "Export the current saved version as PowerPoint with speaker notes. If Canva is connected, start a separate import and show its status. Keep the downloads available while the import processes." },
+const panels = [
+  { label: "Plan", title: "A clear story before you compose.", description: "Start with the audience, the point, and the facts you can support. Five roles give your presentation a deliberate direction.", chips: ["Supplied facts", "Five slide roles", "Core + expanded notes"] },
+  { label: "Preview", title: "See how your story takes shape.", description: "Review the layout, content, and finished composition. Every view comes from the same element blueprint that drives PowerPoint export.", chips: ["One blueprint", "Three preview stages", "Five slides"] },
+  { label: "Refine", title: "One detail. A focused change.", description: "“Change only the headline on slide three to violet.” Compare prepared output while the previous version and unrelated content stay intact.", chips: ["Named elements", "Focused revisions", "Original preserved"] },
 ];
+export function GuidedDemo({ data }: { data: DemoData }) {
+  const [tab, setTab] = useState(0), [stage, setStage] = useState<PreviewStage>("finished"), [slide, setSlide] = useState(2), [changed, setChanged] = useState(false);
+  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  useEffect(() => { const hash = () => { if (location.hash === "#revision") setTab(2); }; hash(); window.addEventListener("hashchange", hash); return () => window.removeEventListener("hashchange", hash); }, []);
+  return <section className={s.showcase} id="demo" aria-labelledby="demo-heading" data-loop>
+    <div className={s.showcaseIntro}><p className={s.eyebrow}>THE PRESENTATION, WITH INTENTION</p><h2 id="demo-heading">See the bigger picture.</h2><p>A few considered steps. A story you can direct.</p></div>
+    <span id="revision" className={s.anchor}/>
+    <div className={s.showcaseTabs} role="tablist" aria-label="Explore the GraphicRouter workflow">
+      {panels.map((panel, i) => <button key={panel.label} ref={element => { tabs.current[i] = element; }} role="tab" id={`workflow-tab-${i}`} aria-controls={`workflow-panel-${i}`} aria-selected={tab === i} tabIndex={tab === i ? 0 : -1} onClick={() => setTab(i)} onKeyDown={event => { const next = nextTab(event.key, i, panels.length); if (next !== null) { event.preventDefault(); setTab(next); tabs.current[next]?.focus(); } }}><span>0{i + 1}</span>{panel.label}<span aria-hidden="true">↗</span></button>)}
+    </div>
+    <div className={s.showcaseBody}>{panels.map((panel, i) => <div className={s.showcasePanel} id={`workflow-panel-${i}`} role="tabpanel" aria-labelledby={`workflow-tab-${i}`} hidden={tab !== i} key={panel.label} tabIndex={0}>
+      <div className={s.showcaseCopy}><h3>{panel.title}</h3><p>{panel.description}</p><ul>{panel.chips.map(chip => <li key={chip}>{chip}</li>)}</ul><a href={i === 0 ? "/briefing" : "#quick-start"}>{i === 0 ? "Start with your brief" : "Find your next prompt"} ↗</a></div>
+      <div className={s.showcaseVisual}>
+        <div className={s.showcaseArt} aria-hidden="true"><img src={data.views.finished[i]} alt=""/></div>
+        <div className={s.productWindow}>
+          <div className={s.windowBar}><span aria-hidden="true">● ● ●</span><span>PREPARED EXAMPLE / {panel.label.toUpperCase()}</span></div>
+          {i === 0 ? <div className={s.planWindow}><p className={s.eyebrow}>{data.audience}</p><h4>{data.title}</h4><p>{data.idea}</p><ol>{data.slides.map((item, index) => <li key={item.role}><span>0{index + 1}</span><div><strong>{["Problem", "Answer", "Workflow", "Proof", "Next step"][index]}</strong><p>{item.headline.replaceAll("\n", " ")}</p></div></li>)}</ol></div> : i === 1 ? <>
+            <div className={s.demoToolbar}><span>SLIDE {slide + 1} / 5</span><div role="group" aria-label="Preview stage">{(["layout", "content", "finished"] as const).map(value => <button aria-pressed={stage === value} key={value} onClick={() => setStage(value)}>{value}</button>)}</div></div>
+            <img className={s.demoSlide} src={data.views[stage][slide]} alt={`Prepared slide ${slide + 1}, ${stage} preview`}/>
+            <div className={s.slideRail} role="group" aria-label="Select a sample slide">{data.slides.map((_, index) => <button key={index} aria-label={`Preview slide ${index + 1}`} aria-pressed={slide === index} onClick={() => setSlide(index)}>0{index + 1}</button>)}</div>
+          </> : <>
+            <div className={s.demoToolbar}><span>SLIDE 3 / PREPARED v{changed ? 2 : 1}</span><span className={s.violetSwatch}>#7C3AED</span></div>
+            <img className={s.demoSlide} src={changed ? data.violet : data.views.finished[2]} alt={`Prepared slide three ${changed ? "v2 with violet headline" : "v1 original"}`}/>
+            <div className={s.directionCard}><p role="status">{changed ? "✓ Prepared v2 · only slide3.headline changed · v1 preserved" : "Prepared v1 · original headline"}</p><button onClick={() => setChanged(!changed)}>{changed ? "Reset ↺" : "Try it ↗"}</button></div>
+          </>}
+          <p className={s.windowDetail}>{i === 0 ? "Sample facts and slide content come from the existing local workflow pitch." : i === 1 ? "Actual engine previews. This sample does not create a deck." : "Switching versions displays prepared output; no new version is saved."}</p>
+        </div>
+      </div>
+    </div>)}</div>
+    <div className={s.showcaseFooter}><span>Prepared demo · No live ChatGPT or Canva calls, saves, or imports.</span><a href="/briefing">Start your story →</a></div>
+  </section>;
+}
 export function PromptLibrary() {
-  const [copied, setCopied] = useState<number | null>(null);
-  const [error, setError] = useState(false);
-  async function copy(index: number) {
-    try { await navigator.clipboard.writeText(prompts[index].text); setCopied(index); setError(false); }
-    catch { setError(true); setCopied(null); }
-  }
-  return <><div className={styles.prompts}>{prompts.map((prompt, index) => <article key={prompt.label}><p className={styles.eyebrow}>{prompt.label}</p><h3>{prompt.title}</h3><p className={styles.promptText}>{prompt.text}</p><button onClick={() => copy(index)}>{copied === index ? "Copied ✓" : "Copy prompt ↗"}</button></article>)}</div><p className={styles.copyStatus} role="status">{error ? "Clipboard unavailable. Select and copy the prompt text above." : copied !== null ? "Prompt copied. Replace bracketed details with your own facts before using it." : "Example prompts · replace the brackets with your own facts."}</p></>;
+  useEffect(() => { const open = () => { if (location.hash.startsWith("#prompt-")) { const item = document.getElementById(location.hash.slice(1)); if (item instanceof HTMLDetailsElement) item.open = true; } }; open(); window.addEventListener("hashchange", open); return () => window.removeEventListener("hashchange", open); }, []);
+  return <div className={s.promptLibrary} id="prompts"><h3>Your next conversation, ready to start.</h3><p>Replace brackets with your own facts. Use these when GraphicRouter is available in your ChatGPT account.</p><details id="prompt-create"><summary>Create a story <span>↗</span></summary><CopyPrompt text={prompts.create} label="create story prompt"/></details><details id="prompt-revise"><summary>Change one detail <span>↗</span></summary><CopyPrompt text={prompts.revise} label="violet headline prompt"/></details><details id="prompt-export"><summary>Prepare the handoff <span>↗</span></summary><CopyPrompt text={prompts.export} label="export and handoff prompt"/></details></div>;
 }
