@@ -144,3 +144,34 @@ bundled OFL regular/bold fonts. Long side<=1600 and pixelarea<=2million, SVG<=4M
 at most2 simultaneous renders; external/executable markup rejects. Blueprint
 geometry is unchanged. The crop uses a nested translated SVG and the same object
 renderer. New diagnostics are advisory only; stored validation history is untouched.
+
+## Supplied Canva page review — additive 0.7.0 contract
+
+review_canva_design is read-only and owner-authenticated, registered outside the
+five legacy deck names and the five canvas names. It never loads DeckService,
+writes storage, starts imports, fetches Canva, or performs OCR. All earlier tool
+contracts and saved blueprint formats remain unchanged.
+
+src/contracts/design-review.ts accepts a strict snapshot: designId, one-based
+pageIndex, page width/height, at most 200 native texts (actual id/text/box and optional
+HTTPS hyperlink), at most 200 images (actual id, optional box, textInImage set to
+none/present/not_checked), at most 60 requiredText snippets, optional
+expectedTextById (at most 100 specific targets), at most 30 expected HTTPS links,
+and visualReview (not_checked/problems_found/passed). Strings and finite geometry
+are bounded. No credentials or unknown fields are accepted. SDK input errors may
+be returned before the handler as standard MCP invalid-argument text.
+
+The result is blocked, needs_visual_review or ready_for_user_review, with at most
+100 issues, object counts and explicit evidenceScope. Baked text, absent native
+copy, duplicate identities/layers, bounds violations and unmatched source URLs
+block. Unknown image text, collisions and incomplete visual review require review.
+Severity remains accurate even if the issue list is truncated. Required snippets
+match normalized whitespace and whole words; per-ID checks prevent correct copy
+elsewhere from masking the wrong label. This is a supplied-snapshot check, not an
+independent verification of the caller's claims. Repeat per page and after edits.
+A ready result does not authorize or bypass native Canva commit approval.
+
+Browser tool routes stream JSON up to 128000 bytes; MCP accepts up to 1000000 bytes.
+Overflow and invalid UTF-8/JSON return validation failures before service access.
+The import adapter rejects a poll response whose job ID differs from the stored
+job; the existing job remains available for retry without another import.

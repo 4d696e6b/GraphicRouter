@@ -77,3 +77,15 @@ across engine, interface and service tests. The schema was written first; scoped
 agents consumed it without editing shared contracts. Legacy deck APIs/storage stay
 compatible. Source/hosting identity and credentials are preserved. No message was
 sent to the other user-owned builder chat; deployment remains in this owning chat.
+
+## User-directed editability and stability hardening — 2026-10-15
+
+The user authorized a project-wide stability review and clarified that all design
+copy must be separate native text. This extends the current owning chat's scope
+across engine, shared additive contracts, intake, preview, HTTP routes, import
+adapter and dependency patches. The review_canva_design contract is documented
+before applying this release to the shared GitHub checkout. Existing tool names,
+SlideEngine, storage formats, Site identities and secrets remain unchanged.
+Publish only the owner-private GraphicRouter Test Site in the current account.
+Do not merge the unrelated Builder B homepage draft or overwrite the original
+Site's manifest. No message to the other builder is implied by this work.
