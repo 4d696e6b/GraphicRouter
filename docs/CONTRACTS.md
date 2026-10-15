@@ -243,3 +243,57 @@ string/BLOB/row limit: https://developers.cloudflare.com/d1/platform/limits/.
 New source chunks invalidate previous semantic satisfaction and reset extraction;
 identical replay does not. Extraction completeness and semantic satisfaction are
 caller-reported; only registered mandatory checks are export blockers.
+
+## Existing Canva edit orchestration — additive 0.10.0
+
+plan_canva_edit is authenticated/read-only. It validates a Canva design reference
+(full HTTPS canva.com design URL, canva.link shortlink, or returned D-prefixed ID),
+requested changes and explicit original/copy mode (default edit_original). It
+returns a next-tool plan and requirements for actual connected Canva reads,
+transaction inspection, narrowly targeted operations, previews, approval and
+commit verification. It does not fetch or edit the design. Never echo/persist
+collaboration-token URLs in the result: the model passes the user's complete
+original share URL directly to get-design. Shortlinks resolve first. No arbitrary
+URL fetch, inferred provider permissions, automatic copy/import/generation or sync.
+
+review_canva_edit is authenticated/read-only and checks bounded normalized before/
+after snapshots from one working design and editing transaction, at most5 pages
+with200 uniquely identified elements each. Flat captured properties use primitive
+values; preserve every exposed property and serialize complex fields consistently.
+Targets name exact captured property values for existing elements; explicit added/
+deleted IDs authorize only those structural differences. All unmatched differences
+(including page dimensions/order, deleted elements and extra properties) block
+readiness. Missing targets, partial snapshots, identity/transaction mismatch and
+unreviewed visuals block readiness. This checks caller-supplied snapshots, never
+provider state or independent semantic/visual/factual correctness. Ready means
+ready for user review, not authorization or proof of commit.
+
+The new Edit my existing Canva design briefing route collects only source and
+requested edits after routing; it preserves all other supplied answers. For a
+link plus narrow requested change, skip new-design intake entirely. Existing
+template adaptation remains copy-based, and original source blueprints remain
+immutable when their Canva imports are subsequently edited natively.
+
+Current tool contracts/docs checked: https://www.canva.dev/docs/apps/mcp/tools/start-editing-transaction/
+and https://www.canva.dev/docs/apps/mcp/tools/commit-editing-transaction/. Commit
+requires showing the latest preview and explicit user approval in the connected
+Canva tool; stale/conflicted snapshots must be reread and edits reviewed again,
+without blindly retrying saves or overwriting concurrent changes.
+
+plan_image_input is authenticated/read-only and binds1–10 pictures to explicit
+place/style_reference/edit_instruction/extract_content roles and optional targets.
+Sources are actual chat attachments (byte accessibility caller-reported), already
+public HTTPS URLs or returned Canva asset IDs. Public URL validation rejects local
+addresses/credentials; the server never fetches URLs. Result omits public URL query
+strings and computes only an optional contain rectangle from supplied dimensions.
+A plan has no upload/placement side effects. Actual private attachment upload uses
+the provider's supported byte/file mechanism; reference images are not uploaded
+automatically. Existing native blueprint assets remain registered-only.
+
+User additionally requested richer design for long text briefs. compose_slide is
+authenticated/read-only and returns actual unsaved16:9 native objects for seven
+meaning-based compositions, at most40 operations, stable prefixed IDs and supplied
+copy only. It validates measured text fit, never truncates or silently shrinks.
+Metrics require caller-supplied values. ChatGPT applies it to an intended blank
+document page, varies visual structure by meaning and inspects actual output.
+It never overwrites existing pages or mutates Canva; there is no aesthetic promise.

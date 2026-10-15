@@ -106,3 +106,24 @@ compact document MCP responses and stress tests across service/engine/UI contrac
 Current account exposes owner-private GraphicRouter Test; original Site lookup now
 returns project_not_found. Publish only the accessible Test Site after opening its
 current source; preserve original identity/secrets and do not imply original release.
+
+## User-directed same-file Canva editing — 2026-10-15
+
+User authorized editing existing/imported Canva infographics from a supplied link.
+This owning chat coordinates additive edit planning/snapshot review contracts,
+intake, MCP orchestration and focused tests. Preserve all existing native/import
+versions and tools. Existing-source adaptation still creates a copy; the new
+explicit edit-existing route uses the same Canva design ID by default. Actual
+reads/transactions/writes use the separately connected Canva tools and their
+approvals, not an invented Connect API editing endpoint. No model/API dependency,
+Site audience change, reverse sync or arbitrary server-side URL fetching is added.
+Publish the accessible owner-private Test Site; original Site remains unavailable.
+
+User additionally authorized pictures attached to the prompt for specific tasks.
+Coordinate role/target input planning and connected Canva attachment upload/asset
+placement guidance in the same release. Native blueprint asset ingestion remains
+registered-only; do not claim an attachment was uploaded or placed from metadata.
+
+User also requested richer, less text-only long-prompt designs. Add a read-only
+native slide-composition helper and story/visual-density guidance; do not redesign
+unrelated elements in the existing-file edit route. No dependency changes needed.

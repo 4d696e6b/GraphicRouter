@@ -1,3 +1,6 @@
+import { registerCanvaEditTools } from "./canva-edit-tools";
+import { canvaEditRouting } from "../briefing/canva-edit-workflow";
+import { imageInputRouting } from "../briefing/image-workflow";
 import { skillsRoutingInstructions } from "../design-skills/routing";
 import { registerDesignTools } from "./design-tools";
 import type { DocumentService } from "../server/document-service";
@@ -29,7 +32,7 @@ Create exactly five slides from the completed brief using supplied facts only. S
   send_to_canva: "Import this deck version's binary PowerPoint into Canva. Requires Canva authorization. Reuses an existing job for this version. Each version creates a new Canva design; edits made there never sync back. Pending import must not block presenting the saved deck.",
 };
 export function createMcpServer(owner: string | null, getService: () => DeckService, origin = "", getCanvasService?: () => CanvasService, getDocumentService?: () => DocumentService) {
-  const server = new McpServer({ name: "GraphicRouter", version: "0.9.0" }, { instructions: plannerInstructions });
+  const server = new McpServer({ name: "GraphicRouter", version: "0.10.0" }, { instructions: plannerInstructions });
   registerAppResource(server, "Presentation", uri, {}, async () => ({ contents: [{ uri, mimeType: RESOURCE_MIME_TYPE,
     text: `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><div id="root" role="status">Waiting for a saved presentation…</div><script>${widgetJs.replace(/<\/script/gi, "<\\/script")}</script></body></html>`,
     _meta: { ui: { prefersBorder: true, csp: { connectDomains: [], resourceDomains: [] } } },
@@ -117,9 +120,10 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
       return { content: [{ type: "text" as const, text: JSON.stringify(report) }], structuredContent: report };
     } catch (error) { const detail = safeError(error); return { isError: true, content: [{ type: "text" as const, text: JSON.stringify(detail) }], structuredContent: { error: detail } }; }
   });
+  registerCanvaEditTools(server, owner);
   server.registerTool("start_briefing", {
     title: "GraphicRouter design brief",
-    description: "Start an adaptive design brief with complexity first, then native blank-canvas objects (recommended for editable text), an existing Canva source, or a new Canva-generated draft. Every heading/number/label must be a native text object separate from images; generated drafts need review_canva_design and background-only inspection, not a promise of editability. Call immediately instead of prose questions. Ask roughly6/9/14 relevant questions; existing-source work alone adds a source/fallback question. Reuse known answers. Optional prompts use supported keys such as topic/audience/outcome/evidence/mustInclude/visuals, never content. Wait for submission; do not restart intake. New Canva creation needs no Brand Template search. Respect strict sources/explicit fallback and legacy choices. Native Canva is its mode's source of truth; no public-catalogue backend search or two-way sync exists. Blank-canvas work uses create_canvas→edit_canvas→inspect_canvas→Canva. Rich briefs/narrow edits can skip intake. If the app cannot show, offer briefingUrl or one question per message.",
+    description: "Start an adaptive design brief with complexity first, then native blank-canvas objects (recommended for editable text), an existing Canva source, or a new Canva-generated draft. Every heading/number/label must be a native text object separate from images; generated drafts need review_canva_design and background-only inspection, not a promise of editability. Call immediately instead of prose questions. Ask roughly6/9/14 relevant questions; existing-source work alone adds a source/fallback question. Reuse known answers. Optional prompts use supported keys such as topic/audience/outcome/evidence/mustInclude/visuals, never content. Wait for submission; do not restart intake. New Canva creation needs no Brand Template search. Respect strict sources/explicit fallback and legacy choices. Native Canva is its mode's source of truth; no public-catalogue backend search or two-way sync exists. Blank-canvas work uses create_canvas→edit_canvas→inspect_canvas→Canva. For a supplied Canva link or previously returned Canva file plus requested changes, call plan_canva_edit instead of new-design intake; edit the same file by default. Attached pictures use plan_image_input for role/target binding. Rich briefs/narrow edits can skip intake. If the app cannot show, offer briefingUrl or one question per message.",
     inputSchema: briefingSchema,
     annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
     _meta: { ui: { resourceUri: uri }, "openai/outputTemplate": uri },
@@ -131,7 +135,7 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
       const data = parsed.data;
       const briefingId = crypto.randomUUID();
       return {
-        content: [{ type: "text" as const, text: `GraphicRouter's adaptive design dialog is open. Ask complexity first, then choose native blank-canvas objects, an inspected existing Canva source, or a Canva-generated draft. Native composition is recommended for separate editable text. Wait for submission and continue the selected route without another interview. New Canva generation needs no Brand Template search. Respect strict sources and explicit fallback permission. If no dialog is visible, offer briefingUrl.\n\n${editabilityPolicy}\n\n${skillsRoutingInstructions}` }],
+        content: [{ type: "text" as const, text: `GraphicRouter's adaptive design dialog is open. Ask complexity first, then choose native blank-canvas objects, a copy-based Canva source, a Canva-generated draft, or Edit my existing Canva design for the same file. Native composition is recommended for separate editable text. Wait for submission and continue the selected route without another interview. New Canva generation needs no Brand Template search. Respect strict sources and explicit fallback permission. If no dialog is visible, offer briefingUrl.\n\n${editabilityPolicy}\n\n${canvaEditRouting}\n\n${imageInputRouting}\n\n${skillsRoutingInstructions}` }],
         structuredContent: { kind: "briefing", briefingId, status: "awaiting_answers", questionCount: getQuestions(data.answers).length, briefingUrl: `${origin}/briefing`, ...data },
         _meta: { briefing: data, briefingId },
       };

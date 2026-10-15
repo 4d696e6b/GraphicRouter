@@ -7,3 +7,9 @@ export * from "./design-review";
 export * from "./document";
 
 export * from "./requirements";
+
+export * from "./canva-edit";
+
+export * from "./image-input";
+
+export * from "./slide-composition";

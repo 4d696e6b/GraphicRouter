@@ -659,3 +659,62 @@ separate real-use checks. No Canva import or generation was started by these tes
 - [x] PR: https://github.com/4d696e6b/GraphicRouter/pull/16. Implementation committed
   in contract/feature/evidence increments; original Site checkout remains clean at
   484047c0703a59dcac02d7fcbf4920e736e9b5bc and was not republished.
+
+
+## Same-file edits, picture inputs and richer long slides (0.10.0)
+
+- [x] User-authorized coordinated contracts and implementation across native
+  engine helpers, briefing, MCP and skills; no package/secret/audience change.
+- [x] plan_canva_edit: strict Canva URLs/shortlinks/actual IDs, default same-file
+  mode, explicit copy mode, token-redacted output and native provider read plan.
+  It does not fetch/edit/save Canva; real calls use separately connected tools.
+- [x] review_canva_edit: target-specific captured-property comparison, explicit
+  additions/deletions, complete selected-page snapshots, transaction/design drift,
+  dimension/page drift, collateral copy/style/link/media changes and bounded issues.
+  Caller-supplied inspection only; it cannot verify omitted fields or other pages
+  or enforce Canva's independent preview/approval/commit rules.
+- [x] Existing-file briefing asks link and requested edits after routing, preserves
+  other answers and keeps actual format/language. Explicit link+edit skips intake.
+  Copy-based template creation and immutable source versions remain separate.
+- [x] plan_image_input binds placement/reference/annotated-edit/content-extraction
+  roles, instruction and target, with aspect-preserving contain geometry where
+  possible. Actual byte access/upload/placement is not inferred from an attachment.
+  References do not upload automatically. Real private attachments need a supported
+  byte/file upload path or user upload to Canva; native assets remain registered.
+- [x] compose_slide returns real unsaved native geometry for7 visual compositions,
+  within40 edits. Supplied values only, measured text fit, no source truncation,
+  no image flattening or silent overwrite. Skills encourage meaningful visual
+  variety while preserving exact detail/mandatory visible copy and shared style.
+- [x] Synthetic24-page mixed-composition native PPTX exports; every page has native
+  shapes and text. Seven PNG/blueprint studies under artifacts/compositions.
+  Inspected hero/editorial/comparison/process/timeline/metrics PNGs. Found timeline
+  connector crossing value labels, moved labels clear and added regression check.
+- [x] Full npm run check passes TypeScript and254 tests in43 files, including new
+  edit/image/composition tests and auth/discovery/minimal-brief integration tests.
+  Detailed edit/image instructions load on demand, not duplicated in discovery.
+- [x] Main production build passes.
+- [x] Test checkout also passes254 tests and its production build. Private Site
+  version6 succeeded, source ecf6f4c11bcb1a35d37e4c83b6b10fa28d34a414, deployment
+  appgdep_6ad0ea4a4270819180170bae70897f18; MCP enabled, unchanged secret revision2.
+  https://graphicrouter-test.pacharapol-pim.chatgpt.site. Test source opened at269e9808ad05e8ee241615eaf224b80b9c2f38d9
+  before edits; account still cannot access original Site. Keep its checkout clean.
+- [ ] Live same-file edit and private attachment placement remain unverified:
+  the user has not supplied an actual target link/picture for those checks. No
+  unrelated Canva design was read/edited, no test image uploaded, no generation
+  credits consumed and no native Canva transaction committed. Browser automation
+  initialization is still unavailable; static briefing UI tests and rendered PNG
+  inspection are complete, interactive browser form verification remains pending.
+
+Dependency requests: none. Provider tool descriptions and current official Canva
+MCP editing/commit/best-practice docs checked; no invented REST editing endpoint or
+broad hosted connector write proxy was added. See docs/CANVA-EDITING.md for exact
+scope, use examples, repro commands and real-use checks.
+
+- [x] Connected Test start_briefing routing smoke returned the4-question existing
+  edit form and plan_canva_edit/review_canva_edit/plan_image_input/compose_slide
+  guidance. This is not a provider read/edit/upload proof. The current chat still
+  exposes cached old tool names; open a fresh chat to rediscover all29 tools.
+- [x] PR: https://github.com/4d696e6b/GraphicRouter/pull/17. Contract, implementation
+  and evidence changes committed separately. Original Site checkout remains clean
+  at484047c0703a59dcac02d7fcbf4920e736e9b5bc; no original publication or audience
+  change. Browser handoff queued through the app; interactive QA still unavailable.

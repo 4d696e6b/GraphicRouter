@@ -3,6 +3,10 @@
 ChatGPT plans a graphic from its brief, composes individual objects, and prepares
 an editable Canva handoff. The adaptive brief asks complexity and starting point
 first, then approximately 6/9/14 relevant questions. Known answers are reused.
+Existing Canva links can also take a focused same-file edit route, with separate
+attachment roles for pictures and screenshots. Supported native Canva tools perform
+the reads, draft edits, uploads and approved saves; the planning/review helpers do
+not perform those provider actions. See [editing and pictures](docs/CANVA-EDITING.md).
 Legacy five-slide presentations and speaker notes remain supported.
 
 Every heading, number, label and source must be its own native editable text
