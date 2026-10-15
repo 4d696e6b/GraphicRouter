@@ -1,3 +1,30 @@
+# Current product direction — freeform infographic design
+
+User clarification supersedes the template-only presentation restriction below.
+GraphicRouter uses ChatGPT to turn the brief into a deliberate, editable design:
+blank canvas → structure → content → review/polish → native Canva handoff.
+ChatGPT selects dimensions, palette, hierarchy, positions, sizes and individual
+objects; no fixed layout recipe is used by the canvas engine. The deterministic
+renderer validates and draws these object choices, without an extra model service.
+
+The question dialog accepts one-page infographics and collects up to 20 useful
+answers one at a time. Rich briefs and quick drafts can skip optional intake.
+Old five-slide presentation tools and stored decks remain available explicitly.
+The canvas engine supports bounded portrait/square/landscape/custom dimensions,
+Arial English text, rectangles, ellipses, lines and registered images. It does not
+promise arbitrary fonts, unsupported language glyphs, custom asset ingestion,
+complex vector illustration, or automatic visual taste. Layout is freeform within
+these primitive and resource limits. Factual accuracy still depends on evidence.
+
+Every edit pass saves an immutable version and returns exact element previews.
+Canva receives native objects through PowerPoint import. Import success is
+separate from visual fidelity/editability verification. Stored canvas versions
+remain the source of truth; manual Canva edits do not sync back.
+
+---
+
+## Historical hackathon presentation scope
+
 # Product brief
 
 ## Goal
