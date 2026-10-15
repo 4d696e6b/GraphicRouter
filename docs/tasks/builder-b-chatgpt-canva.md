@@ -290,3 +290,14 @@ publish through the existing Sites
 source workflow and test the canonical plugin inside ChatGPT. Check imported text,
 shape, and image independently in Canva, record the actual design link and font
 substitutions, then complete the pitch/rehearsal/backup items above.
+
+### Canva polling recovery regression
+
+- A transient non-auth polling error now returns a visible CANVA_POLL_FAILED status
+  with the retained job ID and a Refresh import action. The persisted import remains
+  pending; retry polls the same job and never starts a second import. Saved previews,
+  notes and downloads stay available. Provider exception details remain server-side.
+- Regression checks cover the visible alert, retained job, successful same-job retry,
+  and one import start. Typecheck and all 87 current tests pass locally.
+- Existing Site lookup retried: project_not_found (404) for the preserved ID. No
+  replacement was registered; app OAuth/hosted ChatGPT verification remain blocked.

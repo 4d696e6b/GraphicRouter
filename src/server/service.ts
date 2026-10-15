@@ -62,13 +62,16 @@ export class DeckService {
     const b = await this.deps.store.read(owner, input.deckId, input.version);
     let state = await this.deps.store.importState(b.deckId, b.version);
     if (name === "get_deck" && state.status === "pending") {
+      const jobId = state.jobId;
       try {
-        const updated = await this.deps.canva.poll(owner, state.jobId);
+        const updated = await this.deps.canva.poll(owner, jobId);
         state = await this.deps.store.saveImport(b.deckId, b.version, updated);
       } catch (error) {
         // Keep the job persisted as pending while displaying a reconnect action.
         // After authorization, refresh continues this exact job rather than importing again.
         if (error instanceof CanvaConnectionRequired) state = this.connectionRequired();
+        else state = { status: "failed", jobId, code: "CANVA_POLL_FAILED",
+          message: `Could not refresh Canva import status. Job ${jobId} is preserved. Select Refresh import or call get_deck again to retry this job; no new import was started. Your saved presentation and downloads remain available.` };
       }
     }
     if (name === "export_deck" || name === "send_to_canva") {

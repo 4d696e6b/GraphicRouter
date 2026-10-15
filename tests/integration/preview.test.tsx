@@ -21,4 +21,12 @@ describe("presentation failure states using labelled fixtures", () => {
     expect(toolErrorMessage({ structuredContent: { error: { code: "VERSION_CONFLICT", message: "Read the latest version.", currentVersion: 4 } } })).toContain("Current version: 4");
     expect(toolErrorMessage({ debug: "private transport detail", message: "raw transport detail" })).not.toContain("transport detail");
   });
+  it("shows a failed status refresh as an actionable alert without claiming the import failed", () => {
+    const blueprint = testEngine.createBlueprint(sampleDeck, { deckId: crypto.randomUUID(), version: 1 });
+    const html = renderToStaticMarkup(<Presentation data={{ result: { blueprint, previewUrl: "https://example.test/preview", files: { pptxUrl: "https://example.test/pptx", notesUrl: "https://example.test/notes" }, canva: { status: "failed", jobId: "kept-job", code: "CANVA_POLL_FAILED", message: "Job kept-job is preserved. Select Refresh import to retry this job." } }, previews: null }} />);
+    expect(html).toContain("status unavailable · existing job preserved");
+    expect(html).toContain('role="alert">Job kept-job is preserved. Select Refresh import');
+    expect(html).toContain("Download PowerPoint");
+    expect(html).toContain(blueprint.slides[0].notes.core);
+  });
 });

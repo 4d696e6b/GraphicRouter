@@ -43,7 +43,7 @@ export function Presentation({ data, invoke }: { data: PresentationData; invoke?
       <a href={result.previewUrl} target="_blank" rel="noreferrer">Open presentation</a>
     </div>
     {busy && <p role="status">Working…</p>}{error && <p role="alert">{error}</p>}
-    <p role="status">Canva import: {result.canva.status.replace(/_/g, " ")}</p>
+    <p role="status">Canva import: {result.canva.status === "failed" && result.canva.code === "CANVA_POLL_FAILED" ? "status unavailable · existing job preserved" : result.canva.status.replace(/_/g, " ")}</p>
     {result.canva.status === "connection_required" && <a href={result.canva.connectUrl} target="_blank" rel="noreferrer">Connect Canva</a>}
     {result.canva.status === "succeeded" && <a href={result.canva.editUrl} target="_blank" rel="noreferrer">Edit this design in Canva</a>}
     {result.canva.status === "failed" && <p role="alert">{result.canva.message}</p>}
