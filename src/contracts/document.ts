@@ -1,3 +1,4 @@
+import {requirementsStateSchema} from "./requirements";
 import { z } from "zod";
 import { createCanvasSchema, canvasElementSchema, canvasOperationSchema } from "./canvas";
 import { deckVersionSchema } from "./deck";
@@ -11,6 +12,7 @@ export const pageContentSchema = z.object({
 export const pageShellSchema = pageContentSchema.extend({ id: pageId }).strict();
 export const documentFormatSchema = z.enum(["presentation", "carousel", "tall_infographic"]);
 export const createDocumentSchema = createCanvasSchema.extend({
+  requirements:requirementsStateSchema.optional(),
   format: documentFormatSchema, pages: z.array(pageShellSchema).min(1).max(40),
 }).strict();
 export const documentOperationSchema = z.discriminatedUnion("type", [
@@ -20,7 +22,7 @@ export const documentOperationSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("remove_page"), pageId }).strict(),
   z.object({ type: z.literal("reorder_pages"), pageIds: z.array(pageId).min(1).max(40) }).strict(),
 ]);
-export const editDocumentSchema = z.object({ deckId:z.string().uuid(), baseVersion:z.number().int().min(1).max(100), summary:z.string().trim().min(1).max(500), operations:z.array(documentOperationSchema).min(1).max(40) }).strict().superRefine((input,ctx)=>{
+export const editDocumentSchema = z.object({ deckId:z.string().uuid(), baseVersion:z.number().int().min(1).max(250), summary:z.string().trim().min(1).max(500), operations:z.array(documentOperationSchema).min(1).max(40) }).strict().superRefine((input,ctx)=>{
   const count=input.operations.reduce((sum,op)=>sum+(op.type==="edit_elements"?op.operations.length:1),0);
   if(count>40)ctx.addIssue({code:"custom",path:["operations"],message:"Use at most 40 total changes per revision."});
 });
@@ -28,10 +30,10 @@ export const inspectDocumentSchema = deckVersionSchema.extend({ pageId,
   region:z.object({x:z.number().int().nonnegative(),y:z.number().int().nonnegative(),width:z.number().int().min(64).max(4000),height:z.number().int().min(64).max(4000)}).strict().optional(),
 }).strict();
 export const documentBlueprintSchema = createDocumentSchema.extend({
-  schemaVersion:z.literal(3),kind:z.literal("document"),deckId:z.string().uuid(),version:z.number().int().min(1).max(100),
+  schemaVersion:z.literal(3),kind:z.literal("document"),deckId:z.string().uuid(),version:z.number().int().min(1).max(250),
   pages:z.array(pageShellSchema.extend({elements:z.array(canvasElementSchema).max(200)}).strict()).min(1).max(40),
   changes:z.array(z.object({target:z.string().max(240),description:z.string().max(500)}).strict()).max(40),
-  history:z.array(z.object({version:z.number().int().min(1).max(100),summary:z.string().min(1).max(500)}).strict()).min(1).max(100),
+  history:z.array(z.object({version:z.number().int().min(1).max(250),summary:z.string().min(1).max(500)}).strict()).min(1).max(250),
 }).strict();
 export type DocumentBlueprint=z.infer<typeof documentBlueprintSchema>;
 export type DocumentPage=DocumentBlueprint["pages"][number];

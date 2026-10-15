@@ -206,3 +206,40 @@ portable packaging; runtime retrieval makes guidance available through the MCP a
 without requiring an account-level plugin archive editor. compose_component returns
 native objects for bounded charts or text-free geometric icons, without storage or
 external actions. ChatGPT applies the returned objects through normal versioned edits.
+
+## Long requirement handling — additive 0.9.0
+
+User authorized optimization for long, specific briefs and 20+ slides. Preserve
+existing deck/canvas APIs and document storage compatibility. Optional document
+requirements state stores exact ordered source chunks (120000 characters total,
+<=12000/chunk), up to200 structured requirements and page/element/notes bindings.
+create_document can carry this initial state; append_document_requirements performs
+an owner-authorized atomic versioned append/upsert with baseVersion. Source chunks
+are append-only, stable IDs; conflicting duplicates reject rather than overwrite.
+Requirement IDs and sources are validated; deleting/revising a page may invalidate
+its bindings, never erase the requirement. Semantic satisfaction is model/human
+review; exact required copy is checked deterministically against target text/notes.
+
+get_document_context retrieves a compact resume/checklist, 1–5 pages of full native
+objects and only relevant requirements, or one bounded source chunk. Dense-page
+elementOffset/elementLimit windows report total and nextElementOffset explicitly;
+responses over300000 UTF-8 bytes reject with a smaller-window instruction. No implicit
+full raw-brief echo. Document MCP mutation/export/import results default to a compact
+summary (no complete blueprint, SVGs or original brief). Full existing UI data remains
+in private metadata; only requested/changed page previews render, bounded to5.
+get_document supports explicit full detail for compatibility; defaults to summary.
+
+review_document_requirements paginates audit items, separates exact-copy failures
+from pending semantic checks, and reports conflicts/unmapped targets without
+claiming factual or aesthetic verification. Export rejects unresolved registered
+requirements; drafts remain editable and downloadable notes preserve source/ledger.
+Document limits increase to4000 objects and250 revisions while keeping200/page,
+40 edits/batch,40 pages and <=1800000 serialized UTF-8 bytes for D1 row headroom.
+Long briefing context increases to40000 characters with explicit boundaries; longer
+material is saved through ordered chunks rather than silently truncated.
+
+The 1800000-byte document ceiling leaves headroom under D1’s 2000000-byte maximum
+string/BLOB/row limit: https://developers.cloudflare.com/d1/platform/limits/.
+New source chunks invalidate previous semantic satisfaction and reset extraction;
+identical replay does not. Extraction completeness and semantic satisfaction are
+caller-reported; only registered mandatory checks are export blockers.
