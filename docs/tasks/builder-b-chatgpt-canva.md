@@ -385,3 +385,38 @@ substitutions, then complete the pitch/rehearsal/backup items above.
   or publication. Hosted integration verification remains separate and pending.
 - Detailed evidence, screenshots, source mapping, EPERM recovery and native zoom/
   system-media emulation limits: docs/tasks/builder-b-reposetup-verification.md.
+
+### Revised work plan — static distribution website
+
+The latest supplied prompt now supersedes the React-homepage plan for future
+website work. Implementation completed locally under the revised static scope. Build a separate website/ static download/installation surface,
+preserve all existing application/plugin code and hosting identity, and verify
+real distribution metadata before enabling any Download GraphicRouter link.
+If no official artifact exists, keep an honest Download coming soon state.
+
+Full work order and acceptance checklist:
+docs/tasks/builder-b-static-website-plan.md. Production deployment, release
+publication and merges remain outside scope. Previous homepage evidence does
+not count as verification of the new standalone static delivery.
+
+### Standalone static website implementation
+
+- Added isolated website/ ready for ordinary static hosting, including paper/violet
+  hero, tablet chapters, feature cards, prepared Story/Revision/Export, download
+  availability guide, prompts, FAQ, native mobile menu and script-free basic.html.
+- Official GitHub releases API returned no releases. Root package is private.
+  No verified plugin download or public connection URL exists; availability stays
+  Download coming soon. Sample PPTX/notes are separate, explicitly labelled files.
+- Public config generates checked-in HTML. Optional authoring scripts check drift,
+  artifact URL safety and asset hashes; visitors need no build, Node, app or login.
+- 124 tests and TypeScript pass; production build passes. Static-only server tested
+  with app stopped: 16 resources match local bytes; API route 404; POST 405.
+- Browser checked all five specified sizes without horizontal overflow; mobile
+  menu/Escape, tabs, prepared revision/reset, copy success, FAQ, tablet chapters,
+  explicit reduced motion and zero-script basic view. Native zoom control did not
+  respond; equivalent narrow reflow was checked and is recorded as a limitation.
+- No application, engine, fixture, shared contract, dependency or hosting identity
+  changes in this phase. No merge, release publication or production deployment.
+- Evidence and exact remaining checks: builder-b-static-website-verification.md.
+  Website configuration/upload instructions: ../../website/README.md.
+
