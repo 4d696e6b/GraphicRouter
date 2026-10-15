@@ -481,18 +481,18 @@ html { background: #faf8ff; }
 }
 .homepageAmbient * { pointer-events: none; }
 .ambientAnchor { position: absolute; width: 560px; height: 480px; transform: translate(-50%,-50%); }
-.ambientAnchor1 { left: 2%; top: 280px; }
-.ambientAnchor2 { left: 98%; top: 410px; width: 620px; height: 540px; }
+.ambientAnchor1 { left: 14%; top: 310px; }
+.ambientAnchor2 { left: 86%; top: 430px; width: 620px; height: 540px; }
 .ambientAnchor3 { left: 56%; top: 860px; width: 420px; height: 340px; }
 .ambientPointer, .ambientField { width: 100%; height: 100%; }
 .ambientPointer { will-change: transform; }
 .ambientField {
   border-radius: 44% 56% 58% 42% / 52% 38% 62% 48%;
-  background: radial-gradient(ellipse at 40% 42%,#7c3aed14,transparent 72%);
+  background: radial-gradient(ellipse at 40% 42%,#7c3aed17,transparent 72%);
   animation: ambientFloat 9s ease-in-out infinite alternate; animation-play-state: paused;
 }
-.ambientAnchor2 .ambientField { background: radial-gradient(ellipse at 58% 38%,#ad7dea14,transparent 72%); animation-duration: 12s; animation-delay: -4s; }
-.ambientAnchor3 .ambientField { background: radial-gradient(ellipse at 38% 60%,#9670da0e,transparent 72%); animation-duration: 7s; animation-delay: -2s; }
+.ambientAnchor2 .ambientField { background: radial-gradient(ellipse at 58% 38%,#9658e917,transparent 72%); animation-duration: 12s; animation-delay: -4s; }
+.ambientAnchor3 .ambientField { background: radial-gradient(ellipse at 38% 60%,#9670da14,transparent 72%); animation-duration: 7s; animation-delay: -2s; }
 .homepageAmbient[data-playing=true] .ambientField { animation-play-state: running; }
 @keyframes ambientFloat {
   from { transform: translate3d(-6px,5px,0) scale(1,.985); }

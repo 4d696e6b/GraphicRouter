@@ -39,9 +39,9 @@ export function mountHomepageMotion(root, isReduced) {
   const ambient = document.createElement("div");
   ambient.className = "homepageAmbient"; ambient.setAttribute("aria-hidden", "true");
   const fields = [
-    { strength: 48, stiffness: 66, damping: 19 },
-    { strength: -64, stiffness: 48, damping: 17 },
-    { strength: 34, stiffness: 38, damping: 15 },
+    { strength: 64, stiffness: 66, damping: 19 },
+    { strength: -70, stiffness: 48, damping: 17 },
+    { strength: 46, stiffness: 38, damping: 15 },
   ].map((settings, i) => {
     const anchor = document.createElement("div"), move = document.createElement("div"), drift = document.createElement("div");
     anchor.className = `ambientAnchor ambientAnchor${i + 1}`;

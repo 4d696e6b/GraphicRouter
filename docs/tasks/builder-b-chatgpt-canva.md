@@ -610,3 +610,17 @@ not count as verification of the new standalone static delivery.
   Reference-frame screenshots were visually inspected. Preview remains port 5184.
 - Local static UI only: no hosted ChatGPT/Canva verification, release artifact,
   deployment, engine, fixture, shared-contract or application dependency changes.
+
+### Ambient response visibility correction
+
+- User reported that the background appeared stationary. Tracking produced live
+  transforms, but the two main fields were centred at 2%/98%, leaving much of
+  their colour beyond the viewport. Moved desktop centres to 14%/86%, increased
+  accents to 9%, and tuned displacement strengths to 64/-70/46px. Text exclusion,
+  behind-content stacking, touch/reduced-motion guards and spring timing retained.
+- The local preview server had stopped between turns. Restarted it as a hidden
+  background Node process with output logs, independent of the command session.
+- TypeScript and all 128 tests pass; static HTTP files match repository bytes.
+  Browser confirmed three live independent transforms at pointer extremes.
+  Evidence: outputs/static-website/ambient-fixed-left.jpg and
+  ambient-fixed-right.jpg. No hosted integration verification implied.
