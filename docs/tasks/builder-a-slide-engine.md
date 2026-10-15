@@ -693,7 +693,10 @@ separate real-use checks. No Canva import or generation was started by these tes
   edit/image/composition tests and auth/discovery/minimal-brief integration tests.
   Detailed edit/image instructions load on demand, not duplicated in discovery.
 - [x] Main production build passes.
-- [ ] Final Test checks/build/private deployment recorded below when complete. Test source opened at269e9808ad05e8ee241615eaf224b80b9c2f38d9
+- [x] Test checkout also passes254 tests and its production build. Private Site
+  version6 succeeded, source ecf6f4c11bcb1a35d37e4c83b6b10fa28d34a414, deployment
+  appgdep_6ad0ea4a4270819180170bae70897f18; MCP enabled, unchanged secret revision2.
+  https://graphicrouter-test.pacharapol-pim.chatgpt.site. Test source opened at269e9808ad05e8ee241615eaf224b80b9c2f38d9
   before edits; account still cannot access original Site. Keep its checkout clean.
 - [ ] Live same-file edit and private attachment placement remain unverified:
   the user has not supplied an actual target link/picture for those checks. No
@@ -706,3 +709,12 @@ Dependency requests: none. Provider tool descriptions and current official Canva
 MCP editing/commit/best-practice docs checked; no invented REST editing endpoint or
 broad hosted connector write proxy was added. See docs/CANVA-EDITING.md for exact
 scope, use examples, repro commands and real-use checks.
+
+- [x] Connected Test start_briefing routing smoke returned the4-question existing
+  edit form and plan_canva_edit/review_canva_edit/plan_image_input/compose_slide
+  guidance. This is not a provider read/edit/upload proof. The current chat still
+  exposes cached old tool names; open a fresh chat to rediscover all29 tools.
+- [x] PR: https://github.com/4d696e6b/GraphicRouter/pull/17. Contract, implementation
+  and evidence changes committed separately. Original Site checkout remains clean
+  at484047c0703a59dcac02d7fcbf4920e736e9b5bc; no original publication or audience
+  change. Browser handoff queued through the app; interactive QA still unavailable.
