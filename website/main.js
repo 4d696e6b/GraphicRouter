@@ -34,6 +34,7 @@ function mountPage() {
     revision.textContent = changed ? "Show the original ↺" : "Try the violet headline ↗";
   }, { signal });
   const study = document.querySelector(".compositionStudy"), layers = [...document.querySelectorAll("[data-layer]")];
+  if (study) document.querySelector("[data-layer-status]").textContent = "Workflow illustration · Select a layer to highlight it. This is not a live editor.";
   layers.forEach(button => button.addEventListener("click", () => {
     study.dataset.selectedLayer = button.dataset.layer;
     layers.forEach(layer => layer.setAttribute("aria-pressed", String(layer === button)));
