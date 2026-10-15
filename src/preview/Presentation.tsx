@@ -2,7 +2,7 @@
 import { useState } from "react";
 import type { DeckResult, PreviewStage, ToolName } from "../contracts";
 
-export interface PresentationData { result: DeckResult; previews: Record<PreviewStage, string[]> }
+export interface PresentationData { result: DeckResult; previews: Record<PreviewStage, string[]> | null; previewError?: string }
 export function Presentation({ data, invoke }: { data: PresentationData; invoke?: (name: ToolName) => Promise<void> }) {
   const [selected, select] = useState(0), [stage, setStage] = useState<PreviewStage>("finished");
   const [duration, setDuration] = useState<"core" | "expanded">("core"), [busy, setBusy] = useState(false), [error, setError] = useState("");
@@ -21,10 +21,11 @@ export function Presentation({ data, invoke }: { data: PresentationData; invoke?
     <div role="group" aria-label="Preview stage" style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "20px 0" }}>
       {(["layout", "content", "finished"] as const).map(s => <button key={s} style={btn} aria-pressed={s === stage} onClick={() => setStage(s)}>{s}</button>)}
     </div>
-    <img src={image(previews[stage][selected] ?? "")} alt={`${slide.id}: ${slide.takeaway} (${stage})`} style={{ width: "100%", aspectRatio: "16/9", borderRadius: 12 }} />
+    {previews ? <img src={image(previews[stage][selected] ?? "")} alt={`${slide.id}: ${slide.takeaway} (${stage})`} style={{ width: "100%", aspectRatio: "16/9", borderRadius: 12 }} />
+      : <p role="alert">{data.previewError ?? "Slide preview unavailable. Your saved presentation and notes are preserved."}</p>}
     <nav aria-label="Slides" style={{ display: "grid", gridTemplateColumns: "repeat(5,minmax(0,1fr))", gap: 8, marginTop: 12 }}>
       {b.slides.map((s, i) => <button key={s.id} onClick={() => select(i)} aria-label={`Select slide ${i + 1}`} aria-pressed={i === selected} style={{ ...btn, padding: 4, outline: i === selected ? "2px solid #7c3aed" : undefined }}>
-        <img src={image(previews[stage][i])} alt="" style={{ width: "100%", display: "block" }} /><span>{i + 1}</span>
+        {previews && <img src={image(previews[stage][i])} alt="" style={{ width: "100%", display: "block" }} />}<span>{i + 1}</span>
       </button>)}
     </nav>
     <section aria-label="Speaker notes" style={{ margin: "24px 0" }}>

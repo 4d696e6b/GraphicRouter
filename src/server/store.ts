@@ -7,7 +7,7 @@ export interface DeckStore {
   append(owner: string, baseVersion: number, blueprint: DeckBlueprint): Promise<void>;
   importState(id: string, version: number): Promise<CanvaImport>;
   claimImport(id: string, version: number): Promise<boolean>;
-  saveImport(id: string, version: number, state: CanvaImport): Promise<void>;
+  saveImport(id: string, version: number, state: CanvaImport): Promise<CanvaImport>;
 }
 
 /** D1 batch + triggers enforce immutable, contiguous versions atomically. */
@@ -48,6 +48,14 @@ export class D1DeckStore implements DeckStore {
     return result.meta.changes === 1;
   }
   async saveImport(id: string, version: number, state: CanvaImport) {
-    await this.db.prepare("UPDATE canva_imports SET state = ? WHERE deck_id = ? AND version = ?").bind(JSON.stringify(state), id, version).run();
+    // Polls can finish out of order. A completed job must never regress to an
+    // older pending/failure response. The unknown-outcome sentinel is the claim
+    // written immediately before the first import request; its writer may finish it.
+    await this.db.prepare(`UPDATE canva_imports SET state = ? WHERE deck_id = ? AND version = ?
+      AND (json_extract(state, '$.status') = 'pending'
+        OR (json_extract(state, '$.status') = 'failed'
+          AND json_extract(state, '$.code') = 'IMPORT_OUTCOME_UNKNOWN'
+          AND json_extract(state, '$.jobId') IS NULL))`).bind(JSON.stringify(state), id, version).run();
+    return this.importState(id, version);
   }
 }

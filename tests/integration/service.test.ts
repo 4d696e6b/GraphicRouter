@@ -102,6 +102,35 @@ describe("service using labelled engine double, real SQLite migrations", () => {
     await service.call("send_to_canva", input, owner);
     expect((await service.call("get_deck", input, owner)).canva.status).toBe("pending"); expect(canva.start).toHaveBeenCalledTimes(1);
   });
+  it.each(["succeeded", "failed"] as const)("a late pending poll cannot regress a %s import", async status => {
+    const { service, canva, store } = setup();
+    const { blueprint: b } = await service.call("create_deck", sampleDeck, owner), input = { deckId: b.deckId, version: 1 };
+    await service.call("send_to_canva", input, owner);
+    let finishLate!: (state: Awaited<ReturnType<CanvaPort["poll"]>>) => void;
+    let entered!: () => void;
+    const started = new Promise<void>(resolve => { entered = resolve; });
+    canva.poll.mockImplementationOnce(() => { entered(); return new Promise(resolve => { finishLate = resolve; }); });
+    const late = service.call("get_deck", input, owner);
+    await started;
+    const terminal = status === "succeeded"
+      ? { status: "succeeded" as const, jobId: "real-job-shaped-test", designId: "design", editUrl: "https://www.canva.com/design/test/edit" }
+      : { status: "failed" as const, jobId: "real-job-shaped-test", code: "CANVA_IMPORT_FAILED", message: "Test conversion failed" };
+    canva.poll.mockResolvedValueOnce(terminal);
+    expect((await service.call("get_deck", input, owner)).canva).toEqual(terminal);
+    finishLate({ status: "pending", jobId: "real-job-shaped-test" });
+    expect((await late).canva).toEqual(terminal);
+    expect(await store.importState(b.deckId, 1)).toEqual(terminal);
+    expect(canva.start).toHaveBeenCalledTimes(1);
+  });
+  it("R2 discovery failure does not hide an intact saved presentation", async () => {
+    const { service, files } = setup();
+    const { blueprint: b } = await service.call("create_deck", sampleDeck, owner);
+    files.get = async () => { throw new Error("R2 unavailable"); };
+    const result = await service.call("get_deck", { deckId: b.deckId, version: 1 }, owner);
+    expect(result.blueprint).toEqual(b);
+    expect(result.files).toBeUndefined();
+    expect((await service.preview(owner, b.deckId, 1, "finished")).slides).toHaveLength(5);
+  });
   it("production provider cannot accidentally emit test output", () => {
     expect(() => productionEngine.createBlueprint(sampleDeck, { deckId: crypto.randomUUID(), version: 1 })).toThrow("not integrated");
   });

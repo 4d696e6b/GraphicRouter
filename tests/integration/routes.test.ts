@@ -8,6 +8,8 @@ import { GET as file } from "../../app/api/decks/[deckId]/[version]/files/[kind]
 import { POST as mcp } from "../../app/mcp/route";
 import { POST as tool } from "../../app/api/tools/[name]/route";
 import { GET as connect } from "../../app/api/canva/connect/route";
+import { testEngine } from "./engine-double";
+import { sampleDeck } from "../../src/fixtures/sample-deck";
 
 beforeEach(() => {
   vi.resetAllMocks(); mocks.user.mockResolvedValue(null);
@@ -49,5 +51,17 @@ describe("HTTP authorization before storage/file access", () => {
     mocks.user.mockResolvedValue({ userId: "owner" }); mocks.canva.mockReturnValue(null);
     const response = await connect(new Request(`${url}/api/canva/connect`));
     expect(response.status).toBe(503); expect(await response.text()).toContain("upload it manually");
+  });
+  it("returns a successful committed export and download links when SVG rendering fails", async () => {
+    mocks.user.mockResolvedValue({ userId: "owner" });
+    const result = { blueprint: testEngine.createBlueprint(sampleDeck, { deckId, version: 1 }), previewUrl: `${url}/decks/${deckId}/1`, canva: { status: "not_started" }, files: { pptxUrl: `${url}/download/pptx`, notesUrl: `${url}/download/notes` } };
+    const call = vi.fn().mockResolvedValue(result), preview = vi.fn().mockRejectedValue(new Error("TEST secret render detail"));
+    mocks.service.mockReturnValue({ call, preview });
+    const response = await tool(new Request(`${url}/api/tools/export_deck`, { method: "POST", headers: { Origin: url, "Content-Type": "application/json" }, body: JSON.stringify({ deckId, version: 1 }) }), { params: Promise.resolve({ name: "export_deck" }) });
+    expect(response.status).toBe(200);
+    const data = await response.json();
+    expect(data).toMatchObject({ result, previews: null, previewError: expect.stringContaining("operation succeeded") });
+    expect(JSON.stringify(data)).not.toContain("secret render");
+    expect(call).toHaveBeenCalledTimes(1);
   });
 });

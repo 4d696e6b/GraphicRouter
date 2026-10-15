@@ -53,8 +53,7 @@ export class DeckService {
     if (name === "get_deck" && state.status === "pending") {
       try {
         const updated = await this.deps.canva.poll(owner, state.jobId);
-        await this.deps.store.saveImport(b.deckId, b.version, updated);
-        state = updated;
+        state = await this.deps.store.saveImport(b.deckId, b.version, updated);
       } catch { /* Keep the pending job on transient failures; never start a new job. */ }
     }
     if (name === "export_deck" || name === "send_to_canva") {
@@ -69,13 +68,17 @@ export class DeckService {
           } catch {
             state = { status: "failed", code: "IMPORT_OUTCOME_UNKNOWN", message: "Canva import did not confirm an outcome. Check Canva before retrying. Download the saved PPTX for manual upload." };
           }
-          await this.deps.store.saveImport(b.deckId, b.version, state);
+          state = await this.deps.store.saveImport(b.deckId, b.version, state);
         } else state = await this.deps.store.importState(b.deckId, b.version);
       }
       return { ...this.result(b, state), files };
     }
     const result = this.result(b, state);
-    if (await this.deps.files.get(this.key(b, "pptx")) && await this.deps.files.get(this.key(b, "notes"))) result.files = this.exportUrls(b);
+    // R2 downtime must not make an intact D1 blueprint/notes unavailable.
+    // Explicit exports and downloads still return actionable storage errors.
+    try {
+      if (await this.deps.files.get(this.key(b, "pptx")) && await this.deps.files.get(this.key(b, "notes"))) result.files = this.exportUrls(b);
+    } catch { /* Optional file discovery; the presentation remains readable. */ }
     return result;
   }
   private result(b: DeckBlueprint, canva: CanvaImport = { status: "not_started" }): DeckResult {
