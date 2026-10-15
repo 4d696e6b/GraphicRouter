@@ -191,3 +191,33 @@ Canva is deliberately unavailable. These checks do not exercise HTTP, hosted
 identity, actual R2, ChatGPT, or app OAuth; B's separately recorded local HTTP/Worker
 checks remain distinct. This is a reusable acceptance check for A's final pitch,
 not another service implementation.
+
+## Portable presentation recovery package
+
+After generating either local-workflow or service-pitch artifacts, run:
+
+```sh
+node tests/engine/package-backup.mjs artifacts/builder-a/local-workflow
+node tests/engine/package-backup.mjs artifacts/builder-a/service-pitch
+```
+
+This local utility uses the installed `sharp` module and Python 3 with Pillow,
+reportlab, and PyMuPDF (verified on the builder machine; no production dependency
+or shared package file was changed). It first checks PPTX hashes against the replay
+proof. It renders the actual SVGs, creates and inspects a five-page 16:9 raster PDF,
+and creates a four-frame GIF persistently labelled **precomputed engine replay**.
+The GIF is a scripted animation, not a screen recording or live integration proof.
+The ZIP includes PPTX, notes, offline HTML, PDF, replay, context, and per-file SHA-256
+hashes. Archive CRCs and hashes are verified. Re-run packaging after regenerating
+any source artifacts; otherwise the old ZIP reflects the earlier snapshot.
+
+Generated `graphicrouter-stage-backup.zip` files are in the corresponding artifact
+folder. The service-pitch package uses service-returned PPTX/notes. The local-workflow
+package also includes expanded-notes PPTX and exact create input. A PDF last-page
+render and the violet replay frame were visually inspected. A corrupted source PPTX
+was rejected before packaging. The PDF is a raster engine backup, not a Canva PDF
+export; editable objects remain in the PPTX.
+
+Final account-dependent acceptance remains open: hosted ChatGPT/widget use, app
+OAuth/import, Canva shape/line/font checks, actual speaking pace, and a recorded
+live demonstration. Do not present the GIF or offline HTML as that recording.

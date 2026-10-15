@@ -186,3 +186,21 @@ every PR; B handles platform/build integration.
 - Limits: direct service calls, local test owner, in-memory file adapter, real SQLite
   migrations. No HTTP, real R2, hosted identity, ChatGPT account call, or Canva OAuth.
   The recording, stage pacing, and remaining account checks still require follow-up.
+
+## Recovery package completion
+
+- PR #5 is merged at main `f1fe81a`; brought main into A's branch without rewriting
+  published commits. The service-pitch acceptance commit remains on A's branch.
+- Added reproducible local recovery packaging under tests/engine: five-page 16:9
+  raster PDF, a four-frame explicitly labelled precomputed replay, checksummed ZIP,
+  editable PPTX, notes, offline HTML, revision proof, and context limitations.
+- Both local-workflow and service-pitch packages generated. PDF page count/size,
+  GIF frame count, ZIP CRCs, and each file's SHA-256 verified. Source PPTX hash
+  mismatch rejects before creating outputs. PDF last page and replay revision frame
+  visually inspected. No claim of live recording or Canva PDF export.
+- Temporary combined integration snapshot was moved outside the project after
+  TypeScript included ignored artifacts in its recursive input scan. No config or
+  production code was changed to hide that local review artifact.
+- Remaining A checklist items require the live accounts/presenter: imported shape/
+  line/font check, complete stage freeze, actual speaking pace, and live recording.
+  These remain unchecked, rather than being inferred from the offline package.
