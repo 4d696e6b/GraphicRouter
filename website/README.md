@@ -1,163 +1,76 @@
-# GraphicRouter static download website
+# GraphicRouter product website
 
-**Upload this entire `website/` directory as-is.** Its checked-in `index.html`, CSS,
-JavaScript modules, artwork, SVG examples and sample files are ready to serve.
-There is no mandatory build step and no Node/Next/backend/database/authentication
-requirement for standalone hosting. The existing GraphicRouter app also serves a generated copy at `/product/index.html`; its home page redirects there. The app build/dev launcher copies only public website files into ignored `public/product/`. Edit `website/`, not the generated copy.
+Upload `website/` as-is to a static host; no backend, remote font, analytics or
+runtime model service is required. `basic.html` is the equivalent script-free
+view. The app also serves a generated public copy under `/product/`; `/` redirects
+there. Edit these authoring files, not `public/product/`.
 
-`basic.html` is an equivalent script-free view, generated from the same source with
-no script tags and the no-JavaScript fallbacks expanded. It is linked in the footer
-and keeps release/download information in sync with `index.html`.
+## Current art direction
 
-## Preview without the application
+The owner requested an original design rather than a reproduction of RepoSetup.
+The current page is an editorial design studio: asymmetrical paper-and-ink hero,
+violet type accents, an original HTML/CSS composition study, selectable layer
+highlights, a four-step human design process, format studies, prepared product
+examples, customer setup and FAQ. No tablet/hand artwork, camera scene, intro
+interstitial or pointer-following glow is loaded. There is no scroll interception
+or required animation. Local system/Georgia typography needs no font download.
 
-From the repository root, use a plain static server:
+The composition study is explicitly a workflow illustration, not an editor.
+Its layer buttons highlight authored native HTML elements. The engine sample
+panels are labelled prepared output; the violet control compares two previously
+exported SVGs and does not mutate a customer design. Actual editing is in the
+ChatGPT plugin, not the marketing page.
+
+Historical reference assets/modules remain in this directory for provenance,
+with their MIT notice, but the current page neither imports nor displays them.
+The app's explicit deployment allowlist also excludes those unused PNGs/modules.
+
+## Install inside ChatGPT
+
+All four **Use in ChatGPT** buttons point directly to the owner's Copy link:
+https://chatgpt.com/plugins/plugin_asdk_app_sites_801c42220f4c8191bc43e3442008fd98
+
+ChatGPT controls sign-in, account eligibility and Install/Connect/Try in chat.
+Opening the website does not install anything automatically. No ZIP installer
+is needed. `downloadUrl` remains null. The sample `.pptx` and notes are prepared
+examples, never plugin installers. `/install` provides help and a copyable starter
+prompt; source docs are in `docs/CLIENT-SETUP.md`. Public Site access and plugin
+availability are distinct; a different customer installation must be checked.
+
+## Author and verify
+
+`site.config.js` owns the exact connection URL, setup URL, product copy and FAQs.
+Do not put credentials in it. After changing it or the HTML template:
+
+```sh
+node scripts/generate-static-website.mjs
+node scripts/generate-static-website.mjs --check
+npm run check
+```
+
+To preview only the standalone site:
 
 ```sh
 python3 -m http.server 5184 --bind 127.0.0.1 --directory website
 ```
 
-Open `http://127.0.0.1:5184/`. For a local check under a hosting subdirectory, the
-optional `node scripts/serve-static-website.mjs` serves only this directory at
-`http://127.0.0.1:5184/graphicrouter/`. Neither command starts the application.
-Do not run both on the same port. On Windows, use `python` if `python3` is absent.
+The optional `scripts/serve-static-website.mjs` serves it under `/graphicrouter/`
+for relative-path checks. All linked local paths work beneath a hosting prefix.
+In the app, `scripts/prepare-product-website.mjs` runs at dev/build startup and
+copies only the explicit public allowlist. No config, README, application source
+or secret file is copied. Keep this source and both generated HTML views together.
 
-## Official plugin availability
+Tabs support arrow keys/Home/End, layer highlights are native pressed-state
+buttons, menus and FAQs use native details, copy failures leave selectable text,
+and essential content/CTAs/sample links work without JavaScript. Browser-history
+restoration remounts listeners. Reduced-motion preference disables transitions.
 
-The owner supplied the exact existing ChatGPT plugin link:
-https://chatgpt.com/plugins/plugin_asdk_app_sites_801c42220f4c8191bc43e3442008fd98
-All four **Use in ChatGPT** buttons use that link, authored directly into both
-HTML pages. ChatGPT handles installation/connection. No ZIP installer is required.
-`downloadUrl` remains null; the app package version is not a plugin-distribution
-version. `/install` in the hosted app provides setup help and a starter prompt.
-Site access and plugin availability remain separate checks; do not claim a visitor
-is installed or connected merely because they clicked a link.
+## Prepared samples
 
-The `.pptx` and `.txt` links in the Export example are explicitly labelled sample
-presentation/notes. They are prepared product illustrations, never installers.
-
-## Update release metadata and copy
-
-`site.config.js` is the single source for public release metadata, installation
-steps, main copy, capabilities and FAQs. Unknown download, version, size, supported
-host, connection and documentation values remain null. No credentials belong here.
-
-When a real official distribution is available:
-
-1. Independently verify the official artifact URL, actual package/file, version,
-   compatibility and host's real installation instructions. Do not create a plugin
-   package/release or expose a private endpoint to fill these fields.
-2. Set `downloadUrl`, relevant optional metadata, one to three real `installationSteps`,
-   and truthful availability/release copy. For a bundled official artifact, place
-   it in `assets/` and use an `assets/...` URL with a real filename. For a hosted
-   official release, use the direct HTTPS artifact URL. The generator adds a
-   `download` attribute only for bundled relative files.
-3. From the repository root run:
-
-   ```sh
-   node scripts/generate-static-website.mjs
-   node scripts/generate-static-website.mjs --check
-   ```
-
-4. Verify all four plugin CTAs in the delivered HTML and test the actual download.
-   They must resolve to the same official artifact, including without JavaScript.
-   Upload the updated directory. No on-visitor initialization renders the release
-   link: it is authored directly into HTML.
-
-For a hosted release, set `connectionUrl` to the exact plugin Copy link and
-`setupUrl` to the hosted setup guide. The same `connectionUrl` supplies the verified plugin link to that guide. Current buttons say **Use in ChatGPT**. A hosted
-connection is not a downloadable package. Never use a source archive, sample PPTX, empty file or
-fabricated installer as the plugin CTA.
-
-The generator requires the repository's existing development dependencies only
-when authoring. Config/HTML drift or changed example assets cause `--check` to fail.
-
-## Prepared examples
-
-The SVGs, sample PowerPoint and speaker notes were generated once from the existing
-`localWorkflowPitch` and real engine. Public runtime code imports neither the
-engine nor application services. Clicking/scrolling cannot create decks, save
-revisions, export on demand, connect accounts, start imports or poll jobs.
-
-To regenerate examples during development (not on the host):
-
-```sh
-node scripts/generate-static-website.mjs --examples
-node scripts/generate-static-website.mjs --check
-```
-
-This updates `assets/example-data.json`, static samples, their SHA-256 manifest and
-`index.html`. The revised example checks unrelated slide elements are preserved.
-All slide artwork retains 16:9 and Arial. Canva conversion, shapes/lines/fonts and
-application OAuth must be independently verified; sample export is not that proof.
-
-## Paths, accessibility, and provenance
-
-All local URLs are relative. Serve the directory under `/` or a subdirectory with
-a trailing slash, retaining its structure. There are no remote fonts, analytics,
-API calls or runtime dependencies. No-JavaScript visitors retain content, native
-mobile navigation/FAQ, availability and any configured download links. Static
-chapter explanations and prepared panels remain available without animations.
-
-Tabs support arrows, Home and End. Copy failures provide selectable text. System
-reduced-motion and the footer control disable the camera/loops, collapse the long
-track and expose all chapters. Native scrolling is never intercepted.
-
-Artwork/framing and selected styles/camera math adapt the MIT-licensed RepoSetup
-reference at `763b333ff8f7ab05ba5f0f70a61a91bcb2abd857`. Tablet PNGs are unchanged.
-The full notice is in `notices/RepoSetup-LICENSE.txt`; no reference logos or product
-claims are reused. GraphicRouter's application, contracts and private Site identity
-remain untouched. Deployment and release publication are outside this work.
-
-## Repository content sources
-
-The current capability copy reflects the updated product scope (including native
-infographics and documents up to 40 pages). Historical verification notes and the
-five-slide prepared examples describe their original scope. Sources include:
-
-- `docs/PRODUCT.md`: product goal, five roles/recipes, preview stages, 16:9/Arial
-  theme, 180/300-second notes, supported revisions and v1 exclusions.
-- `docs/CONTRACTS.md`: slide content limits, shared preview/export blueprint,
-  immutable versions, fit-safe layout changes and one-way Canva handoff.
-- `src/briefing/questions.ts`: topic, audience and outcome as briefing inputs.
-- `src/fixtures/local-workflow-pitch.ts` and the generated sample assets: actual
-  project story, controlled violet revision and local/account verification split.
-- `docs/tasks/builder-b-static-website-verification.md`: distribution availability
-  and checked local behavior. Historical initialization wording in the root README
-  is not treated as current implementation evidence.
-
-The three-section page explains the product first, shows prepared examples in one animated product section, and groups download availability, an optional prompt and three FAQs together.
-No external marketing facts, testimonials, pricing, usage numbers or unsupported
-integration promises were added.
-
-## Visual theme
-
-The current skin in `brand.css` derives from the existing `assets/mark.svg`:
-logo violet #7C3AED, darker violet hover #6023C8, plum text #241B32, lavender-white
-#FAF8FF, soft lavender #F1EBFC, and deep plum preview panels #21152F. The base
-stylesheet's inherited olive values were shifted to the same violet family.
-
-`styles.css` retains the established scene geometry, animation timing and card
-motion. `brand.css` controls typography, surfaces, spacing, component states and
-responsive polish. Header/footer use the original SVG logo. Typography is a local
-system stack; no font CDN, external assets or runtime dependency was introduced.
-Forced-colour mode restores solid heading text, and both system reduced-motion
-and the existing page control disable decorative feedback.
-
-The tablet's Choose → Generate → Customize illustration is a workflow concept
-requested in the latest design brief, not functionality supplied by the current
-presentation engine. It is explicitly labelled CONCEPT PREVIEW. All thumbnails,
-example prompt and generic editing UI are authored HTML/CSS/SVG in
-scripts/static-workflow-device.mjs and styled in brand.css; no design is analyzed,
-AI prompt generated, result transferred or Canva session opened on this website.
-Existing prepared presentation examples below the tablet are unchanged.
-
-Homepage motion lives in `homepage-motion.js` and the final section of `brand.css`.
-It adds a nonblocking 1.4-second intro and a viewport-following background glow, without changing
-content or template generation. The optional session key is
-`graphicrouter.intro.v1`; reload/history/anchor guards prevent routine replay.
-Escape or the first interaction dismisses the decorative intro immediately.
-The existing motion toggle also disables these effects. Reduced-motion users get
-static content; coarse pointers do not track. Short mobile viewports omit
-the small intro window. Script-free `basic.html` is unchanged. The earlier reverted
-character-proximity feature is not reintroduced by this module.
+The existing five-slide pitch, SVGs, PowerPoint and speaker notes come from the
+real engine's `localWorkflowPitch`. They illustrate that earlier five-slide
+workflow rather than limit current native documents to five pages. Regenerate
+with `node scripts/generate-static-website.mjs --examples`, then `--check`.
+The asset manifest verifies sample bytes and a focused violet revision preserves
+unrelated blueprint elements. Samples are not live account/Canva verification.
+See `docs/RELEASE-QUALITY.md` for remaining release/provider limits.

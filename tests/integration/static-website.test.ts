@@ -58,11 +58,12 @@ describe("standalone distribution surface", () => {
   it("retains essentials, native navigation and all examples in a script-free page", () => {
     expect(basic).not.toMatch(/<script\b/);
     expect(basic).toContain(config.headline[0]); expect(basic).toContain('id="download"');
-    expect(basic).toContain("CONCEPT PREVIEW");
-    for (const step of config.designWorkflow) expect(basic).toContain(step.title);
+    expect(basic).toContain("Workflow illustration");
+    expect(basic).not.toContain("tabletDevice");
+    expect(basic).not.toContain("homepage-motion.js");
     expect(basic).toContain('class="mobileMenu"'); expect(basic).toContain("Hosted ChatGPT plugin");
     expect(basic.match(/data-plugin-connect href=/g)).toHaveLength(4);
-    expect(basic).toContain("The product story in three chapters");
+    expect(basic).toContain("A designer’s process.");
     expect(basic).toContain(".showcasePanel[hidden]{display:grid!important}");
     expect(basic).toContain("Prepared after example:");
   });
