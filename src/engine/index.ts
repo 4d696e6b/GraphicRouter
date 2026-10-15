@@ -17,7 +17,7 @@ export const engine: SlideEngine = {
     const blueprint: DeckBlueprint = {
       schemaVersion: SCHEMA_VERSION, deckId, version, input: parsed, canvas: { ...CANVAS },
       theme: { background: "#FAF9F6", foreground: "#191724", muted: "#62606B", accent: parsed.accent },
-      slides: parsed.slides.map(composeSlide), changes: [], validationIssues: [],
+      slides: parsed.slides.map((slide, index) => composeSlide(slide, index, parsed.artDirection)), changes: [], validationIssues: [],
     };
     return checked(blueprint);
   },

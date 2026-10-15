@@ -20,6 +20,11 @@ export function Presentation({ data, invoke }: { data: PresentationData; invoke?
     <p style={{ color: "#6d28d9", fontSize: 12, letterSpacing: ".1em" }}>GRAPHICROUTER · VERSION {b.version}</p>
     <h1 style={{ fontSize: "clamp(24px, 5vw, 40px)", margin: "12px 0" }}>{b.input.title}</h1>
     <p>{b.slides.length} slides · {b.input.durationSeconds / 60}-minute pitch</p>
+    <section aria-label="Canva delivery" style={{ background: "#EDE9F5", borderRadius: 12, padding: "16px 20px", margin: "20px 0", lineHeight: 1.6 }}>
+      <strong>{result.canva.status === "succeeded" ? "Your editable Canva presentation is ready." : result.canva.status === "pending" ? "Creating your editable Canva presentation…" : result.canva.status === "connection_required" ? "Connect Canva to finish your presentation." : "Finish your presentation in Canva."}</strong>
+      {result.canva.status === "succeeded" ? <p><a href={result.canva.editUrl} target="_blank" rel="noreferrer">Open and edit in Canva →</a></p>
+        : <p style={{ marginBottom: 0 }}>{result.canva.status === "connection_required" ? "A Canva design link has not been confirmed yet. Your slides and PowerPoint fallback are saved." : "The preview is your editable slide plan. Canva is the final design destination; PowerPoint is also available as a portable fallback."}</p>}
+    </section>
     <div role="group" aria-label="Preview stage" style={{ display: "flex", gap: 8, flexWrap: "wrap", margin: "20px 0" }}>
       {(["layout", "content", "finished"] as const).map(s => <button key={s} style={btn} aria-pressed={s === stage} onClick={() => setStage(s)}>{s}</button>)}
     </div>
@@ -38,7 +43,7 @@ export function Presentation({ data, invoke }: { data: PresentationData; invoke?
     {b.changes.length > 0 && <section><h2>Changes in v{b.version}</h2><ul>{b.changes.map((c, i) => <li key={i}>{c.description}</li>)}</ul></section>}
     {b.validationIssues.length > 0 && <section><h2>Review before presenting</h2><ul>{b.validationIssues.map((issue, i) => <li key={i}>{issue.path}: {issue.message}</li>)}</ul></section>}
     <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-      {invoke && <><button disabled={busy} style={btn} onClick={() => run("export_deck")}>Prepare downloads</button><button disabled={busy} style={btn} onClick={() => run("send_to_canva")}>Send this version to Canva</button><button disabled={busy} style={btn} onClick={() => run("get_deck")}>Refresh import</button></>}
+      {invoke && <>{result.canva.status !== "succeeded" && <button disabled={busy} style={{ ...btn, background: "#7C3AED", color: "white", borderColor: "#7C3AED" }} onClick={() => run("send_to_canva")}>Create editable Canva deck</button>}<button disabled={busy} style={btn} onClick={() => run("export_deck")}>Prepare PowerPoint fallback</button><button disabled={busy} style={btn} onClick={() => run("get_deck")}>Refresh import</button></>}
       {result.files && <><a href={result.files.pptxUrl} target="_blank" rel="noreferrer">Download PowerPoint</a><a href={result.files.notesUrl} target="_blank" rel="noreferrer">Download notes</a></>}
       <a href={result.previewUrl} target="_blank" rel="noreferrer">Open presentation</a>
     </div>
