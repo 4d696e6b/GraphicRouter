@@ -5,6 +5,7 @@ import { engine, assets } from "./engine-provider";
 import { CanvaClient } from "../integrations/canva/client";
 import { fail } from "./errors";
 import { CanvaConnectionRequired } from "../integrations/canva/errors";
+import { R2FileStore } from "./files";
 
 export function database() {
   if (!env.DB) fail("NOT_IMPLEMENTED", "D1 binding DB is unavailable. Configure storage before using decks.");
@@ -26,9 +27,6 @@ export function service() {
   const bucket = env.BUCKET, db = database();
   return new DeckService({ store: new D1DeckStore(db), engine, assets, origin: new URL(env.SITE_ORIGIN).origin,
     canva: canvaClient(db) ?? disconnected,
-    files: {
-      async put(key, bytes, mime) { await bucket.put(key, new Uint8Array(bytes).buffer, { httpMetadata: { contentType: mime } }); },
-      async get(key) { const value = await bucket.get(key); return value ? new Uint8Array(await value.arrayBuffer()) : null; },
-    },
+    files: new R2FileStore(bucket),
   });
 }

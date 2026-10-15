@@ -161,6 +161,28 @@ describe("service using labelled engine double, real SQLite migrations", () => {
     expect(result.files).toBeUndefined();
     expect((await service.preview(owner, b.deckId, 1, "finished")).slides).toHaveLength(5);
   });
+  it("uses metadata for refresh/repeated export and keeps cached files untouched", async () => {
+    const { service, files, objects, engine } = setup();
+    files.exists = vi.fn(async key => objects.has(key));
+    const { blueprint: b } = await service.call("create_deck", sampleDeck, owner), input = { deckId: b.deckId, version: 1 };
+    await service.call("export_deck", input, owner);
+    const read = vi.spyOn(files, "get"), write = vi.spyOn(files, "put"), compile = vi.spyOn(engine, "compilePowerPoint");
+    expect((await service.call("get_deck", input, owner)).files).toBeDefined();
+    expect((await service.call("export_deck", input, owner)).files).toBeDefined();
+    expect(read).not.toHaveBeenCalled(); expect(write).not.toHaveBeenCalled(); expect(compile).not.toHaveBeenCalled();
+  });
+  it("an R2 read failure before upload leaves the import claim available for retry", async () => {
+    const { service, files, objects, store, canva } = setup();
+    files.exists = async key => objects.has(key);
+    const { blueprint: b } = await service.call("create_deck", sampleDeck, owner), input = { deckId: b.deckId, version: 1 };
+    const read = vi.spyOn(files, "get").mockRejectedValueOnce(new Error("Storage unavailable"));
+    await expect(service.call("send_to_canva", input, owner)).rejects.toMatchObject({ detail: { code: "EXPORT_FAILED", message: expect.stringContaining("no Canva import was started") } });
+    expect(await store.importState(b.deckId, 1)).toEqual({ status: "not_started" });
+    expect(canva.start).not.toHaveBeenCalled();
+    read.mockRestore();
+    expect((await service.call("send_to_canva", input, owner)).canva.status).toBe("pending");
+    expect(canva.start).toHaveBeenCalledTimes(1);
+  });
   it("production provider is the reviewed real engine, never the test double", () => {
     expect(productionEngine).toBe(realEngine);
     expect(productionEngine).not.toBe(testEngine);

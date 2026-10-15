@@ -7,6 +7,7 @@ import { CanvaConnectionRequired } from "../integrations/canva/errors";
 export interface FileStore {
   put(key: string, bytes: Uint8Array, mime: string): Promise<void>;
   get(key: string): Promise<Uint8Array | null>;
+  exists?(key: string): Promise<boolean>;
 }
 export interface CanvaPort {
   connected(owner: string): Promise<boolean>;
@@ -74,20 +75,26 @@ export class DeckService {
       const files = await this.export(b);
       if (name === "send_to_canva" && state.status === "not_started") {
         if (!await this.deps.canva.connected(owner)) state = this.connectionRequired();
-        else if (await this.deps.store.claimImport(b.deckId, b.version)) {
-          try {
-            const bytes = await this.deps.files.get(this.key(b, "pptx"));
-            if (!bytes) fail("EXPORT_FAILED", "Saved PowerPoint is unavailable. Export again.");
-            state = await this.deps.canva.start(owner, bytes, `${b.input.title.slice(0, 35)} · v${b.version}`);
-          } catch (error) {
-            if (error instanceof CanvaConnectionRequired) {
-              await this.deps.store.releaseUnstartedImport(b.deckId, b.version);
-              return { ...this.result(b, this.connectionRequired()), files };
+        else {
+          // Resolve bytes before claiming an external side effect. A storage read
+          // failure is retryable and proves that no import has been started.
+          let bytes: Uint8Array | null;
+          try { bytes = await this.deps.files.get(this.key(b, "pptx")); }
+          catch { fail("EXPORT_FAILED", "The saved PowerPoint could not be read. Retry export; no Canva import was started."); }
+          if (!bytes) fail("EXPORT_FAILED", "Saved PowerPoint is unavailable. Export again; no Canva import was started.");
+          if (await this.deps.store.claimImport(b.deckId, b.version)) {
+            try {
+              state = await this.deps.canva.start(owner, bytes, `${b.input.title.slice(0, 35)} · v${b.version}`);
+            } catch (error) {
+              if (error instanceof CanvaConnectionRequired) {
+                await this.deps.store.releaseUnstartedImport(b.deckId, b.version);
+                return { ...this.result(b, this.connectionRequired()), files };
+              }
+              state = { status: "failed", code: "IMPORT_OUTCOME_UNKNOWN", message: "Canva import did not confirm an outcome. Check Canva before retrying. Download the saved PPTX for manual upload." };
             }
-            state = { status: "failed", code: "IMPORT_OUTCOME_UNKNOWN", message: "Canva import did not confirm an outcome. Check Canva before retrying. Download the saved PPTX for manual upload." };
-          }
-          state = await this.deps.store.saveImport(b.deckId, b.version, state);
-        } else state = await this.deps.store.importState(b.deckId, b.version);
+            state = await this.deps.store.saveImport(b.deckId, b.version, state);
+          } else state = await this.deps.store.importState(b.deckId, b.version);
+        }
       }
       return { ...this.result(b, state), files };
     }
@@ -95,7 +102,7 @@ export class DeckService {
     // R2 downtime must not make an intact D1 blueprint/notes unavailable.
     // Explicit exports and downloads still return actionable storage errors.
     try {
-      if (await this.deps.files.get(this.key(b, "pptx")) && await this.deps.files.get(this.key(b, "notes"))) result.files = this.exportUrls(b);
+      if (await this.hasFile(this.key(b, "pptx")) && await this.hasFile(this.key(b, "notes"))) result.files = this.exportUrls(b);
     } catch { /* Optional file discovery; the presentation remains readable. */ }
     return result;
   }
@@ -103,6 +110,7 @@ export class DeckService {
     return { blueprint: b, previewUrl: `${this.deps.origin}/decks/${b.deckId}/${b.version}`, canva };
   }
   private connectionRequired(): CanvaImport { return { status: "connection_required", connectUrl: `${this.deps.origin}/api/canva/connect` }; }
+  private async hasFile(key: string) { return this.deps.files.exists ? this.deps.files.exists(key) : !!await this.deps.files.get(key); }
   key(b: DeckBlueprint, kind: "pptx" | "notes") { return `decks/${b.deckId}/v${b.version}/${kind}`; }
   private exportUrls(b: DeckBlueprint) {
     const root = `${this.deps.origin}/api/decks/${b.deckId}/${b.version}/files`;
@@ -111,13 +119,15 @@ export class DeckService {
   private async export(b: DeckBlueprint) {
     try {
       this.validate(b);
-      if (!await this.deps.files.get(this.key(b, "pptx"))) {
+      if (!await this.hasFile(this.key(b, "pptx"))) {
         const bytes = await this.deps.engine.compilePowerPoint(structuredClone(b), this.deps.assets);
         if (!bytes.length) fail("EXPORT_FAILED", "Engine returned an empty PowerPoint.");
         await this.deps.files.put(this.key(b, "pptx"), bytes, "application/vnd.openxmlformats-officedocument.presentationml.presentation");
       }
-      const notes = b.slides.map(s => `${s.id}\n\n180-second pitch\n${s.notes.core}\n\n300-second pitch\n${s.notes.expanded}`).join("\n\n---\n\n");
-      await this.deps.files.put(this.key(b, "notes"), new TextEncoder().encode(notes), "text/plain;charset=utf-8");
+      if (!await this.hasFile(this.key(b, "notes"))) {
+        const notes = b.slides.map(s => `${s.id}\n\n180-second pitch\n${s.notes.core}\n\n300-second pitch\n${s.notes.expanded}`).join("\n\n---\n\n");
+        await this.deps.files.put(this.key(b, "notes"), new TextEncoder().encode(notes), "text/plain;charset=utf-8");
+      }
       return this.exportUrls(b);
     } catch (error) {
       if (error instanceof ServiceError) throw error;
