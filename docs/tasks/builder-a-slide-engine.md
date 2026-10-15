@@ -154,9 +154,8 @@ every PR; B handles platform/build integration.
   service input at `artifacts/builder-a/local-workflow/create-deck.json`.
 - [x] Check all five rendered previews visually: no clipping. Verify exact revision
   preservation again. `npm run check`: 39 tests pass; production build passes.
-- [ ] B should create this exact input through the real service/MCP workflow and
-  confirm the resulting deck before final presentation freeze. Generated artifacts
-  here are direct engine outputs, not evidence of that service creation.
+- [x] Create this exact input through direct local DeckService calls in an isolated
+  combined review tree. Hosted MCP creation and final stage rehearsal remain pending.
 - Remaining account blockers and browser-control testing are unchanged.
 
 ## Builder B review correction
@@ -169,3 +168,91 @@ every PR; B handles platform/build integration.
 - `GRAPHICROUTER_ARTIFACTS=1 npm run check`: 39 tests pass; generated pitch/replay
   artifacts refreshed. This fixes the test/handoff proof, not the production engine
   revision path, whose preservation checks already pass. No B files changed.
+
+## Exact pitch service acceptance
+
+- Added A-owned `tests/engine/service-pitch.test.ts`: creates the exact updated pitch
+  through B's DeckService with real engine and SQLite migrations, validates all 15
+  preview SVGs, exports original/revised PPTX, and runs the full revision proof.
+- Confirmed stale writes and anonymous downloads reject, while stored v1 and v2
+  remain intact. No B source, contracts, dependencies, or configuration changed.
+- A-only check: 39 pass, one explicitly skipped because service files are absent.
+  Combined snapshot of B `a5dc616` plus current A directories: 86 tests pass and
+  production build passes. Snapshot is ignored under artifacts; no branch merge.
+- Reusable command in combined tree:
+  `GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/service-pitch.test.ts`.
+- Service-returned PPTX/notes and prepared replay copied into
+  `artifacts/builder-a/service-pitch/`, with verification context and hashes.
+- Limits: direct service calls, local test owner, in-memory file adapter, real SQLite
+  migrations. No HTTP, real R2, hosted identity, ChatGPT account call, or Canva OAuth.
+  The recording, stage pacing, and remaining account checks still require follow-up.
+
+## Recovery package completion
+
+- PR #5 is merged at main `f1fe81a`; brought main into A's branch without rewriting
+  published commits. The service-pitch acceptance commit remains on A's branch.
+- Added reproducible local recovery packaging under tests/engine: five-page 16:9
+  raster PDF, a four-frame explicitly labelled precomputed replay, checksummed ZIP,
+  editable PPTX, notes, offline HTML, revision proof, and context limitations.
+- Both local-workflow and service-pitch packages generated. PDF page count/size,
+  GIF frame count, ZIP CRCs, and each file's SHA-256 verified. Source PPTX hash
+  mismatch rejects before creating outputs. PDF last page and replay revision frame
+  visually inspected. No claim of live recording or Canva PDF export.
+- Temporary combined integration snapshot was moved outside the project after
+  TypeScript included ignored artifacts in its recursive input scan. No config or
+  production code was changed to hide that local review artifact.
+- Remaining A checklist items require the live accounts/presenter: imported shape/
+  line/font check, complete stage freeze, actual speaking pace, and live recording.
+  These remain unchecked, rather than being inferred from the offline package.
+
+## Full-project recheck — B aa16ed1
+
+- Reviewed B's latest pushed implementation, tool registration, runtime bindings,
+  preview, immutable storage, Canva client, setup notes, and acceptance evidence.
+- Rebuilt an isolated combined tree: 87 existing tests pass; production build
+  passes. First build hit ENOSPC during Sites artifact packaging; retry after disk
+  space became available completed successfully. No branch or B source was edited.
+- B now records the exact updated pitch created through local Worker/D1/R2 HTTP
+  and local MCP, plus offline-replay browser controls. These are stronger local
+  checks; identity is still simulated and hosted ChatGPT/app OAuth remain unverified.
+- **B follow-up, P2:** src/server/service.ts lines 64–72 catches all poll errors but
+  only handles CanvaConnectionRequired. Other failures (including the Canva client's
+  CANVA_IMPORT_FAILED for HTTP 403/429/500) disappear, returning success/pending with
+  no useful explanation. Reproduced with real DeckService/SQLite: seed existing
+  pending job, have canva.poll throw ServiceError CANVA_IMPORT_FAILED, call get_deck;
+  result silently returns the same pending job and omits the error message.
+- Suggested B correction: preserve the pending job in storage, but propagate an
+  actionable tool error for non-auth poll failures so the UI can show retry-refresh
+  guidance. Never erase/restart the import. Regression should assert that the same
+  job persists and no second start occurs while the caller sees the error.
+- Reproduction is a review-only test in the isolated snapshot, not a production
+  file or an A-owned service change. One reproduction test passed by confirming
+  the current incorrect silent behavior; it is not counted in the 87 green checks.
+- PR #3 remains open/draft; PR #6 open/mergeable. Shared main does not yet contain
+  B's service or A's latest acceptance/package utility. No merge/publication attempted.
+- Outstanding complete-product acceptance: resolve the poll-error gap; integrate the
+  two open PRs; restore existing Site access; configure app Canva credentials; verify
+  hosted tools/widget and real app import; inspect Canva shape/line/font fidelity;
+  rehearse actual three-minute pitch/live edit and record it; finish submission.
+- B's reported account blockers remain project_not_found for the preserved Site and
+  unavailable developer credentials. No claim those were fixed from GitHub access.
+
+## Worker A final handoff hardening
+
+- Reproduced an additional handoff-proof gap with a valid PPTX containing unrelated
+  slide-three speaker-note edits while supplying the correct revised blueprint.
+  The new negative assertion failed before the fix.
+- Proof now compares every native `ppt/` part as decompressed bytes (including
+  notes, media, relationships, masters, and untouched slides); only slide3.xml can
+  differ, and its complete content must equal the original with just the named
+  headline paint substituted. Version/title/timestamp properties outside ppt/ are
+  not treated as unrelated slide content. Blueprint preservation remains complete.
+- A-only check: 39 pass / one explicit service skip. Combined B aa16ed1 review:
+  87 tests pass and production build passes, with the new negative case included.
+- Refreshed original/violet decks, notes, proof, PDF/GIF/HTML and both ZIP backups.
+  Added src/fixtures/stage-runbook.md to each checksummed ZIP: timed cue sheet,
+  exact edit request, version handling, asynchronous import boundary, and honest
+  recovery language. Core is 273 spoken words, planning target 150 seconds plus
+  30-second demo; actual speaking pace is not yet verified.
+- No Worker B files, contracts, dependencies, or account configuration changed.
+  The live account/editor/rehearsal checks remain explicitly open.

@@ -2,7 +2,8 @@ import { createHash } from "node:crypto";
 import type { Asset, DeckBlueprint } from "../../src/contracts";
 import { engine } from "../../src/engine";
 import { escapeXml } from "../../src/engine/svg";
-import { readPptx } from "./read-pptx";
+import { resolvePaint } from "../../src/engine/paint";
+import { readPptx, readPptxBytes } from "./read-pptx";
 
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 const digest = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
@@ -31,11 +32,23 @@ export function rehearsalProof(before: DeckBlueprint, after: DeckBlueprint, orig
   const slide3 = revisedZip.get("ppt/slides/slide3.xml");
   const headlineShape = slide3?.match(/<p:sp>[\s\S]*?<\/p:sp>/g)?.find((shape) => shape.includes('name="slide3.headline"'));
   if (!headlineShape?.includes('val="7C3AED"')) throw new Error("The revised PowerPoint does not contain the expected named headline and colour.");
+  const originalSlide3 = originalZip.get("ppt/slides/slide3.xml");
+  const originalHeadline = originalSlide3?.match(/<p:sp>[\s\S]*?<\/p:sp>/g)?.find((shape) => shape.includes('name="slide3.headline"'));
+  const oldHex = resolvePaint(oldTarget!.color, before.theme).slice(1).toUpperCase();
+  const expectedHeadline = originalHeadline?.replaceAll(`<a:srgbClr val="${oldHex}"/>`, '<a:srgbClr val="7C3AED"/>');
+  const nativeKeys = [...originalZip.keys()].filter(key => key.startsWith("ppt/"));
+  const sameNativeKeys = same(nativeKeys.sort(), [...revisedZip.keys()].filter(key => key.startsWith("ppt/")).sort());
+  const originalNative = readPptxBytes(originalPptx), revisedNative = readPptxBytes(revisedPptx);
+  const unchangedNativeParts = nativeKeys.filter(key => key !== "ppt/slides/slide3.xml" && Buffer.from(originalNative.get(key)!).equals(Buffer.from(revisedNative.get(key) ?? [])));
+  if (!sameNativeKeys || unchangedNativeParts.length !== nativeKeys.length - 1 || !originalHeadline || !expectedHeadline || headlineShape !== expectedHeadline || slide3 !== originalSlide3?.replace(originalHeadline, expectedHeadline)) {
+    throw new Error("The prepared replay contains an unrelated PowerPoint change, including notes or other content. Re-export from the verified blueprint.");
+  }
   return {
     kind: "precomputed-engine-replay" as const,
     limitation: "Prepared engine outputs, not a live ChatGPT/Canva call or proof of imported shape editability.",
     deckId: before.deckId, versions: { original: before.version, revised: after.version },
     changedElementIds, unchangedSlideIds, unchangedPptxPages,
+    unchangedNativePartCount: unchangedNativeParts.length,
     originalBlueprintSha256: digest(before), revisedBlueprintSha256: digest(after),
     originalPptxSha256: createHash("sha256").update(originalPptx).digest("hex"),
     revisedPptxSha256: createHash("sha256").update(revisedPptx).digest("hex"),

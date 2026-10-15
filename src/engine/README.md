@@ -98,8 +98,9 @@ the current admin policy prevented both Canva and localhost access.
 recorded evidence at `f23b071`: real-engine local service flow with simulated local
 identity and separate manual Canva text/image checks. The original engine-stage
 fixture stays available. Hosted ChatGPT, app OAuth, shape/line editing, and font
-matching remain explicitly unverified. This pitch has not been created through the
-service yet; its slides/PPTX/replay are generated directly through the engine.
+matching remain explicitly unverified. The exact updated pitch has passed direct
+local DeckService creation/export checks described below; its hosted account
+workflow remains unverified.
 
 Run `GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/local-workflow-pitch.test.ts`.
 Outputs under `artifacts/builder-a/local-workflow/` include the exact `create-deck.json`
@@ -121,8 +122,8 @@ export { assets } from "../engine/assets";
 There are no shared-contract or dependency changes to coordinate. Builder B should
 preserve the real create/revise/preview/export checks through `DeckService` and
 `EngineError` diagnostics; its latest evidence records these locally. This does not
-claim installed-account checks have run. The new pitch input still needs its own
-service creation and verification before presentation freeze.
+claim installed-account checks have run. The new pitch input still needs its hosted
+workflow and stage rehearsal before presentation freeze.
 
 Builder B's unavailable Sites access and missing Canva app credentials still block
 its production path. The successful imports below used this chat's existing Canva
@@ -169,3 +170,67 @@ node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js de
 In a second terminal, request `http://127.0.0.1:5197`. The response reports slide count,
 PPTX byte count/signature, and validation errors. This is a test-only Worker, not an
 MCP endpoint or deployed website. Stop it after verification.
+
+## Exact updated pitch through the local service
+
+`tests/engine/service-pitch.test.ts` runs once B's service and test database helper
+are present. A's standalone branch explicitly skips this one test. It was run in an
+isolated archive of B's `a5dc616` with the current A-owned directories overlaid:
+**86 tests and the combined production build pass**. No B code was edited or merged.
+The test creates the exact `localWorkflowPitch` using DeckService, real engine, and
+SQLite migrations; compares all 15 service SVG previews to engine output; exports
+both PPTX versions; verifies complete blueprint/untouched-slide preservation; and
+checks stale-edit and anonymous-download rejection.
+
+Run `GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/service-pitch.test.ts` in the
+combined tree. It writes `artifacts/builder-a/service-pitch/` with service-returned
+PPTX files, notes, revision proof, and a prepared offline replay. Review outputs have
+also been copied to that path in A's checkout with `verification-context.json`.
+The file adapter is an in-memory Map and identity is an explicit local test owner.
+Canva is deliberately unavailable. These checks do not exercise HTTP, hosted
+identity, actual R2, ChatGPT, or app OAuth; B's separately recorded local HTTP/Worker
+checks remain distinct. This is a reusable acceptance check for A's final pitch,
+not another service implementation.
+
+## Portable presentation recovery package
+
+After generating either local-workflow or service-pitch artifacts, run:
+
+```sh
+node tests/engine/package-backup.mjs artifacts/builder-a/local-workflow
+node tests/engine/package-backup.mjs artifacts/builder-a/service-pitch
+```
+
+This local utility uses the installed `sharp` module and Python 3 with Pillow,
+reportlab, and PyMuPDF (verified on the builder machine; no production dependency
+or shared package file was changed). It first checks PPTX hashes against the replay
+proof. It renders the actual SVGs, creates and inspects a five-page 16:9 raster PDF,
+and creates a four-frame GIF persistently labelled **precomputed engine replay**.
+The GIF is a scripted animation, not a screen recording or live integration proof.
+The ZIP includes PPTX, notes, offline HTML, PDF, replay, context, and per-file SHA-256
+hashes. Archive CRCs and hashes are verified. Re-run packaging after regenerating
+any source artifacts; otherwise the old ZIP reflects the earlier snapshot.
+
+Generated `graphicrouter-stage-backup.zip` files are in the corresponding artifact
+folder. The service-pitch package uses service-returned PPTX/notes. The local-workflow
+package also includes expanded-notes PPTX and exact create input. A PDF last-page
+render and the violet replay frame were visually inspected. A corrupted source PPTX
+was rejected before packaging. The PDF is a raster engine backup, not a Canva PDF
+export; editable objects remain in the PPTX.
+
+Final account-dependent acceptance remains open: hosted ChatGPT/widget use, app
+OAuth/import, Canva shape/line/font checks, actual speaking pace, and a recorded
+live demonstration. Do not present the GIF or offline HTML as that recording.
+
+The final recovery proof now checks byte-for-byte equality of all decompressed
+native `ppt/` parts other than slide 3, including notes and media. Slide 3 must equal
+the original XML with only the named headline's text paint changed. Unrelated native
+notes fail even when the supplied blueprint itself is correct. The proof records
+`unchangedNativePartCount`; exported version/title/timestamp metadata outside ppt/
+may differ. This is evidence about the native export, not Canva conversion.
+
+Each recovery ZIP also contains `stage-runbook.md`: three-minute timing targets,
+exact edit/version steps, what to show in Canva, and language for switching to an
+accurately labelled local demo or precomputed replay. Its 273-word core plan leaves
+30 seconds for the demo. Real presenter pace and the complete live path still need
+rehearsal before declaring presentation freeze.
