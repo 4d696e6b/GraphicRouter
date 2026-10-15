@@ -124,3 +124,17 @@ The product copy uses only material contained in this project:
 The three-section page explains the product first, shows prepared examples in one animated product section, and groups download availability, an optional prompt and three FAQs together.
 No external marketing facts, testimonials, pricing, usage numbers or unsupported
 integration promises were added.
+
+## Visual theme
+
+The current skin in `brand.css` derives from the existing `assets/mark.svg`:
+logo violet #7C3AED, darker violet hover #6023C8, plum text #241B32, lavender-white
+#FAF8FF, soft lavender #F1EBFC, and deep plum preview panels #21152F. The base
+stylesheet's inherited olive values were shifted to the same violet family.
+
+`styles.css` retains the established scene geometry, animation timing and card
+motion. `brand.css` controls typography, surfaces, spacing, component states and
+responsive polish. Header/footer use the original SVG logo. Typography is a local
+system stack; no font CDN, external assets or runtime dependency was introduced.
+Forced-colour mode restores solid heading text, and both system reduced-motion
+and the existing page control disable decorative feedback.

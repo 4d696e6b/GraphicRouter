@@ -120,3 +120,12 @@ responding on port 5173 during this later probe; it was not stopped or modified.
 The site itself was served only from website/ on port 5184. The script-free page
 was opened in the browser: zero script tags, three main sections and all prepared
 panels visible. Browser warning/error log was empty.
+
+## Logo-led brand redesign
+
+See B's checklist for visual direction, palette, responsive and interaction checks.
+The local HTTP probe now covers 17 static resources including brand.css; all bytes
+match checked-in files, application API path is 404 and POST is 405. A separate
+application remains on port 5173 and was not modified. The updated website is on
+http://127.0.0.1:5184/graphicrouter/. Official download availability and account
+verification limits remain unchanged. No deployment or merge was performed.

@@ -448,3 +448,29 @@ not count as verification of the new standalone static delivery.
   native scroll forward/back passed. See static website verification addendum.
 - Official artifact remains unavailable. No package fabricated, backend changed,
   production deployment, merge or live ChatGPT/Canva success claimed.
+
+### Logo-led visual redesign
+
+- Analysed assets/mark.svg: violet #7C3AED and white. Replaced inherited olive
+  theme styling with violet, lavender-white, plum text and deep plum panels.
+- Added website/brand.css for consistent tokens, typography, floating sticky
+  navigation, constrained reading width, card surfaces, primary/hover/active/
+  disabled/focus states, FAQ/prompt styling and responsive spacing. Header/footer
+  use the existing SVG logo. No public content, feature or JS behavior removed.
+- Preserved original artwork, prepared slide assets, scene geometry, timing and
+  keyboard/tab/menu/copy logic. No backend, application or hosting changes.
+- TypeScript + 124 tests, build and static consistency/hash checks pass. Five
+  viewport sizes pass without horizontal overflow; hero CTA remains visible.
+- Browser checks: mobile menu/Escape focus, arrow/End tab keys, violet change/reset,
+  export links, FAQ, copy success status, reduced-motion summaries, forward/reverse
+  tablet chapters, and zero-script view. Actual clipboard content and system
+  preference toggling were not verified. Normal motion reached chapter 1/.592 and
+  reversed to chapter 0/.000. Browser warning/error log empty.
+- Core solid colour contrast ratios checked: primary white/violet 5.70:1,
+  hover 8.17:1, body/plain background 6.02:1, panel body 9.68:1,
+  unavailable 5.71:1. Dark-area focus uses pale violet; forced-colour heading
+  fallback is provided. These are scoped pair checks, not a full accessibility
+  audit or a claim that image/gradient content was exhaustively measured.
+- Evidence: outputs/static-website/brand-desktop.png, brand-mobile.png,
+  brand-1280x720.png, brand-768x1024.png, brand-360x800.png, brand-showcase.png,
+  brand-download.png and brand-animation.png. Preview remains port 5184.
