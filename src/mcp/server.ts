@@ -13,6 +13,7 @@ import type { CanvasService } from "../server/canvas-service";
 import { canvasData } from "../preview/data";
 import { reviewCanvaDesignSchema } from "../contracts/design-review";
 import { reviewCanvaDesign } from "../engine/editability-review";
+import { editabilityPolicy } from "../briefing/editability-policy";
 
 const uri = "ui://graphicrouter/presentation.html";
 const descriptions = {
@@ -127,7 +128,7 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
       const data = parsed.data;
       const briefingId = crypto.randomUUID();
       return {
-        content: [{ type: "text" as const, text: "GraphicRouter's adaptive design dialog is open. Ask complexity first, then choose new Canva design, an existing Canva source, or GraphicRouter blank canvas. Wait for submission and continue its selected route with the completed brief, without another interview. New Canva design creation needs no Brand Template search. Respect an existing source requirement and any explicit fallback permission; visually review before delivery. If no dialog is visible, offer briefingUrl." }],
+        content: [{ type: "text" as const, text: `GraphicRouter's adaptive design dialog is open. Ask complexity first, then choose native blank-canvas objects, an inspected existing Canva source, or a Canva-generated draft. Native composition is recommended for separate editable text. Wait for submission and continue the selected route without another interview. New Canva generation needs no Brand Template search. Respect strict sources and explicit fallback permission. If no dialog is visible, offer briefingUrl.\n\n${editabilityPolicy}` }],
         structuredContent: { kind: "briefing", briefingId, status: "awaiting_answers", questionCount: getQuestions(data.answers).length, briefingUrl: `${origin}/briefing`, ...data },
         _meta: { briefing: data, briefingId },
       };
