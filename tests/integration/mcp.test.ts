@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { handleMcp } from "../../src/mcp/server";
-import { TOOL_NAMES } from "../../src/contracts";
+import { TOOL_NAMES, CANVAS_TOOL_NAMES } from "../../src/contracts";
 import { ServiceError } from "../../src/server/errors";
 import { DeckService } from "../../src/server/service";
 import { D1DeckStore } from "../../src/server/store";
@@ -19,7 +19,7 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
     expect(init.result.serverInfo).toMatchObject({ name: "GraphicRouter" });
     const list = await rpc("tools/list");
     const tools = list.result.tools as { name: string; inputSchema: unknown; description: string }[];
-    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, "start_briefing"]);
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "start_briefing"]);
     expect(tools[0].description).toContain("Never invent evidence"); expect(tools[0].inputSchema).toMatchObject({ type: "object", required: expect.arrayContaining(["slides", "brief"]) });
   });
   it("exposes the briefing before creation through initialization and tool discovery", async () => {
@@ -29,11 +29,11 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
     // Hosts may surface server instructions or rely on tool descriptions.
     for (const instructions of [init.result.instructions, tools.find(t => t.name === "create_deck")?.description]) {
       expect(instructions).toEqual(expect.any(String));
-      for (const topic of ["Before calling create_deck", "call start_briefing immediately", "one question per message", "Audience and outcome", "Story and evidence", "Presentation setting", "Visual direction", "Visual material", "never ask again", "quick draft", "brief.unknowns", "without another confirmation", "current Studio system", "do not restart the interview"]) {
+      for (const topic of ["call start_briefing immediately", "one question per message", "create_canvas", "edit_canvas", "structure", "content", "polish", "ChatGPT chooses the composition", "brief.unknowns", "registered PNG/JPEG", "not hidden chain-of-thought", "apply only that request"]) {
         expect(instructions).toContain(topic);
       }
     }
-    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, "start_briefing"]);
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "start_briefing"]);
   });
   it("opens the briefing without calling the deck service and retains supplied context", async () => {
     const answers = { topic: "A supplied topic", audience: "Judges" };

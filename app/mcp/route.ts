@@ -1,6 +1,6 @@
 import { getChatGPTUser } from "@/app/chatgpt-auth";
 import { handleMcp } from "@/src/mcp/server";
-import { service } from "@/src/server/runtime";
+import { service, canvasService } from "@/src/server/runtime";
 import { errorResponse, privateHeaders } from "@/src/server/http";
 import { fail } from "@/src/server/errors";
 
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     try { body = await request.clone().json() as { method?: unknown } | null; }
     catch { fail("VALIDATION_FAILED", "MCP requests must contain valid JSON."); }
     if (body?.method === "tools/call" && !user) fail("UNAUTHORIZED", "Sign in with ChatGPT to use presentation tools.");
-    const response = await handleMcp(request, user?.userId ?? null, service);
+    const response = await handleMcp(request, user?.userId ?? null, service, canvasService);
     Object.entries(privateHeaders).forEach(([key, value]) => response.headers.set(key, value));
     return response;
   } catch (error) { return errorResponse(error); }
