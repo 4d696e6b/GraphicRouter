@@ -175,3 +175,34 @@ Browser tool routes stream JSON up to 128000 bytes; MCP accepts up to 1000000 by
 Overflow and invalid UTF-8/JSON return validation failures before service access.
 The import adapter rejects a poll response whose job ID differs from the stored
 job; the existing job remains available for retry without another import.
+
+## Design skills and multi-page documents — additive 0.8.0
+
+User authorized all eight proposed skills and their necessary rendering support.
+Existing deck (schema 1) and canvas (schema 2) tools remain compatible. New schema 3
+`document` stores 1–40 ordered pages at one shared canvas size, a shared theme,
+supplied brief, format (presentation/carousel/tall_infographic), design intent,
+page IDs/titles/messages/sections/notes/elements and bounded immutable revision log.
+Each page supports the existing 200 native objects; a document has at most 1000
+objects and 100 versions. Empty pages are draft placeholders, never exportable.
+
+create_document starts blank page shells from the model's storyboard; edit_document
+atomically applies at most 40 page/content/element edits, stable IDs and stale-write
+checks; get_document reads/polls; export_document compiles all pages into one native
+PPTX plus speaker/design notes; send_document_to_canva starts one import per version.
+inspect_document renders a chosen saved page/crop and returns an image and story
+review. Browser routes/files/preview require owner identity. Source PNGs and native
+object counts never prove imported Canva fidelity. Tall pages are bounded to 4000px
+per side; split longer content into ordered sections rather than silently shrinking.
+All pages in one PPTX have identical dimensions. Format adaptation creates a new
+composition/document from reviewed source content; no automatic lossless conversion
+or two-way Canva synchronization is promised.
+
+plan_design returns a bounded workflow selection, skills and capability limits from
+explicit format/purpose/content relationship; it writes no content or invented
+facts. get_design_skill loads one of eight design workflows or their shared quality
+review and examples. Markdown skill files are generated from a checked catalog for
+portable packaging; runtime retrieval makes guidance available through the MCP app
+without requiring an account-level plugin archive editor. compose_component returns
+native objects for bounded charts or text-free geometric icons, without storage or
+external actions. ChatGPT applies the returned objects through normal versioned edits.

@@ -1,0 +1,36 @@
+[
+  {
+    "request": "Compare two delivery options using the same four supplied criteria.",
+    "blueprint": {
+      "framework": "comparison",
+      "readingPath": "headline → aligned criteria → conclusion → sources",
+      "nativeElements": [
+        "headline",
+        "criterion labels",
+        "option labels",
+        "paired values",
+        "dividers",
+        "takeaway"
+      ]
+    },
+    "reason": "Aligned criteria let readers compare without searching across unrelated cards.",
+    "avoid": "Separate decorative panels with incomparable scales."
+  },
+  {
+    "request": "Explain five ordered maintenance actions to a novice.",
+    "blueprint": {
+      "framework": "process",
+      "readingPath": "goal → steps 1–5 → final safety reminder",
+      "nativeElements": [
+        "goal",
+        "step numbers",
+        "action headings",
+        "explanations",
+        "connectors",
+        "source labels"
+      ]
+    },
+    "reason": "Sequence and meaningful visuals support action.",
+    "avoid": "Invented actions or generic symbols that obscure the procedure."
+  }
+]

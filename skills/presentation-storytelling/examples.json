@@ -1,0 +1,17 @@
+[
+  {
+    "request": "Pitch a working prototype in three minutes with no customer metrics.",
+    "blueprint": {
+      "outline": [
+        "concrete problem",
+        "prototype answer",
+        "how it works",
+        "verified demonstration",
+        "next step"
+      ],
+      "notes": "Time the demonstration separately; unknown business evidence remains unknown."
+    },
+    "reason": "A real demonstration provides proof without fabricated traction.",
+    "avoid": "Invented customer logos, percentages or market validation."
+  }
+]

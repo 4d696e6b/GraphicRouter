@@ -1,3 +1,6 @@
+import { skillsRoutingInstructions } from "../design-skills/routing";
+import { registerDesignTools } from "./design-tools";
+import type { DocumentService } from "../server/document-service";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 import { registerAppResource, RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
@@ -25,8 +28,8 @@ Create exactly five slides from the completed brief using supplied facts only. S
   export_deck: "Export the exact stored blueprint to native PowerPoint and both note durations. Export alone does not complete a requested Canva presentation: call send_to_canva, then get_deck while its existing job is pending, and return the actual Canva editUrl on success. Return authenticated download links. If Canva is unavailable, download PPTX and manually upload to Canva; verify text, shapes, image remain independently editable.",
   send_to_canva: "Import this deck version's binary PowerPoint into Canva. Requires Canva authorization. Reuses an existing job for this version. Each version creates a new Canva design; edits made there never sync back. Pending import must not block presenting the saved deck.",
 };
-export function createMcpServer(owner: string | null, getService: () => DeckService, origin = "", getCanvasService?: () => CanvasService) {
-  const server = new McpServer({ name: "GraphicRouter", version: "0.7.0" }, { instructions: plannerInstructions });
+export function createMcpServer(owner: string | null, getService: () => DeckService, origin = "", getCanvasService?: () => CanvasService, getDocumentService?: () => DocumentService) {
+  const server = new McpServer({ name: "GraphicRouter", version: "0.8.0" }, { instructions: plannerInstructions });
   registerAppResource(server, "Presentation", uri, {}, async () => ({ contents: [{ uri, mimeType: RESOURCE_MIME_TYPE,
     text: `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0"><div id="root" role="status">Waiting for a saved presentation…</div><script>${widgetJs.replace(/<\/script/gi, "<\\/script")}</script></body></html>`,
     _meta: { ui: { prefersBorder: true, csp: { connectDomains: [], resourceDomains: [] } } },
@@ -128,7 +131,7 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
       const data = parsed.data;
       const briefingId = crypto.randomUUID();
       return {
-        content: [{ type: "text" as const, text: `GraphicRouter's adaptive design dialog is open. Ask complexity first, then choose native blank-canvas objects, an inspected existing Canva source, or a Canva-generated draft. Native composition is recommended for separate editable text. Wait for submission and continue the selected route without another interview. New Canva generation needs no Brand Template search. Respect strict sources and explicit fallback permission. If no dialog is visible, offer briefingUrl.\n\n${editabilityPolicy}` }],
+        content: [{ type: "text" as const, text: `GraphicRouter's adaptive design dialog is open. Ask complexity first, then choose native blank-canvas objects, an inspected existing Canva source, or a Canva-generated draft. Native composition is recommended for separate editable text. Wait for submission and continue the selected route without another interview. New Canva generation needs no Brand Template search. Respect strict sources and explicit fallback permission. If no dialog is visible, offer briefingUrl.\n\n${editabilityPolicy}\n\n${skillsRoutingInstructions}` }],
         structuredContent: { kind: "briefing", briefingId, status: "awaiting_answers", questionCount: getQuestions(data.answers).length, briefingUrl: `${origin}/briefing`, ...data },
         _meta: { briefing: data, briefingId },
       };
@@ -137,10 +140,11 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
       return { isError: true, content: [{ type: "text" as const, text: JSON.stringify(detail) }], structuredContent: { error: detail } };
     }
   });
+  registerDesignTools(server, owner, uri, getDocumentService);
   return server;
 }
-export async function handleMcp(request: Request, owner: string | null, getService: () => DeckService, getCanvasService?: () => CanvasService) {
-  const server = createMcpServer(owner, getService, new URL(request.url).origin, getCanvasService);
+export async function handleMcp(request: Request, owner: string | null, getService: () => DeckService, getCanvasService?: () => CanvasService, getDocumentService?: () => DocumentService) {
+  const server = createMcpServer(owner, getService, new URL(request.url).origin, getCanvasService, getDocumentService);
   const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
   await server.connect(transport);
   try { return await transport.handleRequest(request); }

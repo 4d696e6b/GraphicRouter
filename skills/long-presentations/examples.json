@@ -1,0 +1,18 @@
+[
+  {
+    "request": "Make a 15-page project review using supplied milestones and results.",
+    "blueprint": {
+      "chapters": [
+        "executive decision",
+        "context",
+        "completed work",
+        "evidence and limitations",
+        "options and recommendation",
+        "appendix"
+      ],
+      "pageAllocation": "Allocate actual pages from supplied content; 15 is a requested bound, not evidence."
+    },
+    "reason": "Chapters give the audience context and a clear decision route.",
+    "avoid": "Three copies of the same five-slide pitch."
+  }
+]

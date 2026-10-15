@@ -1,0 +1,14 @@
+[
+  {
+    "request": "A calm technical comparison for a professional audience.",
+    "blueprint": {
+      "style": "restrained editorial",
+      "grid": "aligned labels and values",
+      "type": "Arial with a clear title/body/data scale",
+      "palette": "neutral canvas plus one semantic accent",
+      "imagery": "only diagrams that explain the comparison"
+    },
+    "reason": "Precise alignment supports comparison and confidence.",
+    "avoid": "Oversized decorative circles, random colours and dense footers."
+  }
+]

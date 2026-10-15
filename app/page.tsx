@@ -20,6 +20,11 @@ export default async function Home() {
         </ol>
         <p>Each Canva import creates a separate design. Canva edits do not sync back. Manual PowerPoint upload remains the fallback once export is available.</p>
       </section>
+      <section aria-label="Specialist design workflows" style={{margin:"40px 0",lineHeight:1.8}}>
+        <h2 style={{fontSize:24}}>A workflow for your message.</h2>
+        <p>Infographic frameworks · Presentation storytelling · Long presentations · Tall infographics and carousels · Art direction · Illustration and assets · Data storytelling · Format and brand adaptation.</p>
+        <p>ChatGPT selects the relevant guidance from your brief. Native documents support up to 40 pages with separate text, shapes and notes. Every workflow includes source and Canva review; generated drafts still need their actual layers checked.</p>
+      </section>
       <a href={user ? chatGPTSignOutPath() : chatGPTSignInPath("/")} target="_top" style={{ color: "#6D28D9", fontWeight: 700 }}>{user ? "Sign out" : "Sign in with ChatGPT"} →</a>
     </main>
   );

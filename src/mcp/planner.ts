@@ -1,3 +1,4 @@
+import { skillsRoutingInstructions } from "../design-skills/routing";
 import { canvaCreateWorkflow, canvaSourceWorkflow } from "../briefing/canva-workflow";
 import { editabilityPolicy } from "../briefing/editability-policy";
 /** Public design guidance for ChatGPT; no extra model service or hidden reasoning. */
@@ -26,4 +27,4 @@ Each batch allows at most40 operations; use the returned version as the next bas
 
 For explicit five-slide work, use create_deck with GraphicRouter Studio, supported recipes and both note durations, then revise_deck/export_deck/send_to_canva/get_deck. It does not provide arbitrary placement. Canva edits never synchronize back to the freeform or legacy blueprint.`;
 
-export const plannerInstructions = `${intakeInstructions}\n\n${templateInstructions}\n\n${designInstructions}\n\n${editabilityPolicy}`;
+export const plannerInstructions = `${intakeInstructions}\n\n${templateInstructions}\n\n${designInstructions}\n\n${editabilityPolicy}\n\n${skillsRoutingInstructions}`;

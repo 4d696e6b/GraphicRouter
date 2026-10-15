@@ -1,0 +1,227 @@
+[
+  {
+    "id": "infographic-frameworks",
+    "title": "Infographic frameworks",
+    "description": "Choose an information structure for an infographic: comparison, process, timeline, hierarchy, annotated explanation, statistical story or geographic context.",
+    "instructions": "Select structure from the relationship in the supplied content, not the subject's keyword or a favourite template. Process shows actions and their order; comparison aligns the same criteria on a common scale; timeline requires real dates/order; hierarchy shows parent-child relationships; annotation connects a label to a meaningful location; statistical story explains a supported finding. Geographic claims need actual geographic evidence and assets; do not fabricate a map from decorative blobs.\nPlan one focal message and a reading path. State why the structure suits the audience in one or two public sentences. Use information-bearing geometry: aligned comparison axes, numbered steps, connectors and useful grouping. Do not make every concept an identical card or force an unrelated icon into an instructional illustration. A handwashing action requires a recognisable gesture; a circle marked with a number alone does not explain it.\nFor quick work, choose one suitable direction. Balanced work can compare two small structure studies. Detailed work may compare up to three when there is a meaningful tradeoff. Preserve the user's chosen Canva/source/native route. Blank native work uses create_canvas and edit_canvas; multi-page work uses create_document and edit_document. Inspect the rendered page and critical detail crops before export; apply only useful refinements. Use compose_component for supported numeric charts and geometric icons, not a substitute for detailed illustration. Read quality-review before final delivery.",
+    "examples": [
+      {
+        "request": "Compare two delivery options using the same four supplied criteria.",
+        "blueprint": {
+          "framework": "comparison",
+          "readingPath": "headline \u2192 aligned criteria \u2192 conclusion \u2192 sources",
+          "nativeElements": [
+            "headline",
+            "criterion labels",
+            "option labels",
+            "paired values",
+            "dividers",
+            "takeaway"
+          ]
+        },
+        "reason": "Aligned criteria let readers compare without searching across unrelated cards.",
+        "avoid": "Separate decorative panels with incomparable scales."
+      },
+      {
+        "request": "Explain five ordered maintenance actions to a novice.",
+        "blueprint": {
+          "framework": "process",
+          "readingPath": "goal \u2192 steps 1\u20135 \u2192 final safety reminder",
+          "nativeElements": [
+            "goal",
+            "step numbers",
+            "action headings",
+            "explanations",
+            "connectors",
+            "source labels"
+          ]
+        },
+        "reason": "Sequence and meaningful visuals support action.",
+        "avoid": "Invented actions or generic symbols that obscure the procedure."
+      }
+    ]
+  },
+  {
+    "id": "presentation-storytelling",
+    "title": "Presentation storytelling",
+    "description": "Plan pitches, lessons, proposals, reports and research talks with audience-appropriate claims, evidence, visuals and speaker notes.",
+    "instructions": "Begin with the audience's decision or learning objective and the available speaking time. Reuse supplied answers; ask only for missing information that changes the story. Distinguish what exists today from proposals, forecasts and unknowns. Do not invent traction or evidence to fill a pitch pattern.\nChoose a narrative appropriate to the purpose. A proposal can move from situation and stakes to options, evidence and recommendation. A lesson can establish a mental model, demonstrate it, offer an example and check understanding. A research talk can frame the question, method, findings and limitations. A pitch can show problem, answer, workflow, proof and ask; this is an option, not a compulsory template.\nWrite a storyboard before composition: page ID, title, single message, evidence source, visual explanation, transition, section and speaker notes. Claim-style titles are useful when evidence supports them; do not overstate conclusions. Put spoken detail in notes rather than shrinking body text. If timing is estimated from word count, label it an estimate and rehearse the actual delivery.\nUse create_document for a flexible 1\u201340-page native presentation. All pages share a canvas size and theme; elements and notes remain independently editable. Use legacy create_deck only for the existing fixed five-slide workflow. Compose pages in bounded edits, inspect individual pages and the storyboard, then export_document and send_document_to_canva. Import success needs separate Canva layer/fidelity review. Read art-direction and quality-review. Do not generate an image of an entire slide as the final editable deliverable.",
+    "examples": [
+      {
+        "request": "Pitch a working prototype in three minutes with no customer metrics.",
+        "blueprint": {
+          "outline": [
+            "concrete problem",
+            "prototype answer",
+            "how it works",
+            "verified demonstration",
+            "next step"
+          ],
+          "notes": "Time the demonstration separately; unknown business evidence remains unknown."
+        },
+        "reason": "A real demonstration provides proof without fabricated traction.",
+        "avoid": "Invented customer logos, percentages or market validation."
+      }
+    ]
+  },
+  {
+    "id": "long-presentations",
+    "title": "Long presentations and chapters",
+    "description": "Structure longer decks with sections, pacing, navigation, visual variation, executive summaries and appendices.",
+    "instructions": "Use after presentation-storytelling when the requested deck needs multiple sections or more than five pages. Confirm supplied page/time constraints; do not equate more slides with a better story. Native documents support at most 40 pages, 200 elements per page and 1000 total. Propose a split if the content exceeds these bounds, without silently dropping material.\nCreate an ordered chapter map. Each section answers a distinct audience question and ends with a supported conclusion or transition. Allocate time to the decisions and difficult explanations, not equally across slides. Separate the core speaking route from appendix material. Keep explicit stable IDs and section names so a later page reorder does not change references.\nUse a consistent system for section dividers, navigation, page numbering and recurring labels, while varying compositions according to content. Review a storyboard/contact sheet: repeated messages, long runs of dense pages, abrupt transitions, unexplained terms, inconsistent vocabulary and evidence gaps. A claim cannot become stronger merely through repetition.\ncreate_document starts all storyboard page shells. edit_document can add/remove/reorder pages, update page messages/sections/notes and edit page objects. Reorder requires each current page ID exactly once. Keep related but independent notes; changing one headline must not rewrite the deck. Remove unused blank pages before export. Inspect source pages individually and inspect all imported Canva pages before claiming full editability. For very long projects build and review chapters incrementally; do not repeatedly return all large previews to the model.",
+    "examples": [
+      {
+        "request": "Make a 15-page project review using supplied milestones and results.",
+        "blueprint": {
+          "chapters": [
+            "executive decision",
+            "context",
+            "completed work",
+            "evidence and limitations",
+            "options and recommendation",
+            "appendix"
+          ],
+          "pageAllocation": "Allocate actual pages from supplied content; 15 is a requested bound, not evidence."
+        },
+        "reason": "Chapters give the audience context and a clear decision route.",
+        "avoid": "Three copies of the same five-slide pitch."
+      }
+    ]
+  },
+  {
+    "id": "tall-and-carousel",
+    "title": "Tall infographics and carousels",
+    "description": "Compose continuous vertical explanations or separate swipeable pages with readable density and deliberate pagination.",
+    "instructions": "Distinguish a tall page from a carousel or presentation. A tall infographic has one continuous reading path; a carousel has separate pages and should remain understandable at each stopping point. Do not silently switch between these outputs. Native tall dimensions are bounded to 4000 pixels per side; use crops to inspect text at real viewing size. Content beyond that limit needs an explicitly agreed split, not smaller and smaller type.\nFor a tall graphic plan header, meaningful section hierarchy, rhythm, transitions, conclusion and sources. Avoid seams that look like unrelated posters. For a carousel establish the hook, purposeful progression and closing action. Do not manufacture suspense or hide essential qualifications on a later page. Repeat just enough orientation for a viewer joining midway.\nUse create_canvas for one tall page or create_document format tall_infographic for linked sections; create_document format carousel supports 1\u201340 same-sized pages. All pages in one export share dimensions. Keep the same type scale and palette across pages. Preserve source notes and exact figures even when simplifying visible copy. Restructure or split dense content before shrinking it.\nReview every page at target phone width, then check progression as a storyboard. Test critical labels with inspect_canvas or inspect_document detail crops. Ensure the final call to action is meaningful for the audience, not generic filler. Keep all headings, numbers and labels as native text objects. Read infographic-frameworks, art-direction and quality-review.",
+    "examples": [
+      {
+        "request": "Turn six supplied study tips into a mobile carousel.",
+        "blueprint": {
+          "format": "carousel",
+          "readingPath": "purposeful opening \u2192 grouped practical tips \u2192 usable recap",
+          "nativeElements": [
+            "page heading",
+            "tip label",
+            "explanation",
+            "progress marker",
+            "source when needed"
+          ]
+        },
+        "reason": "Discrete pages need readable stopping points and consistent navigation.",
+        "avoid": "One tall bitmap sliced into pages or text too small for a phone."
+      }
+    ]
+  },
+  {
+    "id": "art-direction",
+    "title": "Art direction and visual systems",
+    "description": "Establish a coherent visual direction, grid, palette, typography, spacing, hierarchy and image treatment before composing pages.",
+    "instructions": "Derive the direction from audience, purpose, medium and supplied brand rules. Name the desired mood in concrete design terms: editorial contrast, calm instructional clarity, playful geometry, technical precision. A vague request for premium is not a design system. When useful compare two genuinely different directions through small studies; do not add a concept-selection interview to a quick task.\nSpecify a shared canvas, margins/grid, spacing unit, type scale, palette roles, focal treatment and illustration language. Current native typography is measured English Arial, not arbitrary fonts. Enforce supplied brand colours when possible, but check text/background contrast and make supported alternatives explicit. Native palette tokens are background/foreground/muted/accent; explicit colours may supplement them deliberately.\nMake hierarchy visible through proportion, placement, spacing and contrast. Let the meaning choose the layout. Use an open composition when cards add no information; negative space is useful. Avoid making every object equally prominent. Decoration cannot compensate for unclear content or unreadable text.\nCreate a small native specimen with title/body/value/shape samples when a complex project benefits from it; use edit_canvas or a document page and inspect actual output. Preserve a selected direction through revisions and across subjects. Do not regenerate a whole design to change one label. Review at realistic phone/projection size; inspect Canva font substitution and reflow separately after import. Read quality-review before final delivery.",
+    "examples": [
+      {
+        "request": "A calm technical comparison for a professional audience.",
+        "blueprint": {
+          "style": "restrained editorial",
+          "grid": "aligned labels and values",
+          "type": "Arial with a clear title/body/data scale",
+          "palette": "neutral canvas plus one semantic accent",
+          "imagery": "only diagrams that explain the comparison"
+        },
+        "reason": "Precise alignment supports comparison and confidence.",
+        "avoid": "Oversized decorative circles, random colours and dense footers."
+      }
+    ]
+  },
+  {
+    "id": "illustration-assets",
+    "title": "Illustration and asset composition",
+    "description": "Select meaningful consistent visuals, build supported native geometric icons and preserve separate text and image layers.",
+    "instructions": "Choose imagery by explanatory purpose: a gesture, location, mechanism, object, relationship or evidence. Establish one visual language across a project. Decorative icons are optional; they must not masquerade as an instructional demonstration or scientific diagram.\ncompose_component provides text-free native geometric icons such as check, arrow-right, target, clock, person, document and steps. These remain editable shapes/lines. They are intentionally simple; do not promise detailed hands, anatomy, maps or arbitrary vector illustrations from this library. The current exporter accepts only registered PNG/JPEG assets; it has no arbitrary remote upload or custom-font ingestion. Never invent asset IDs.\nFor richer imagery, preserve the user's selected route and use accessible Canva source assets or supported connected asset tools. Inspect the actual asset, relevant rights/usage information, cropping and text content before use. Record source/rights as known, unknown or user supplied; do not label unknown licensing cleared. Avoid extra generation credits without the user's existing authorization. Do not automatically regenerate failed drafts.\nEvery heading, number, label and caption stays native text. Illustrations/backgrounds must be text-free. Image lettering cannot be repaired by covering it and adding another text box. A selected image being movable is not evidence that its letters are editable. Replace/rebuild a contaminated section with clean assets and native text, then inspect again. Asset accessibility text should describe its informative purpose. Read quality-review and use review_canva_design on the actual supplied Canva snapshot.",
+    "examples": [
+      {
+        "request": "Show the stages of an approval workflow.",
+        "blueprint": {
+          "assets": [
+            "native document icon",
+            "native person icon",
+            "native check icon"
+          ],
+          "textLayers": [
+            "stage names",
+            "stage descriptions",
+            "status labels"
+          ],
+          "meaning": "Icons support the process; connectors and text explain actual responsibility."
+        },
+        "reason": "Simple native components fit abstract workflow concepts.",
+        "avoid": "Claiming these icons can accurately demonstrate handwashing gestures."
+      }
+    ]
+  },
+  {
+    "id": "data-storytelling",
+    "title": "Data storytelling and evidence",
+    "description": "Choose and compose honest data graphics from supplied values with preserved units, scales, dates, uncertainty and exact source links.",
+    "instructions": "Start with the question the data can answer. Record values, units, denominator, period, categories, source and uncertainty before visual choices. Browse primary sources when verification is needed and available; a pasted URL or schema pass is not verification. Missing data stays unknown. Never turn forecasts into actuals or mix prices/units/time periods without an explicit explanation.\nUse aligned bars for magnitude, line/step-line graphics for ordered change, and a table when exact lookup matters more than pattern. Part-to-whole requires a real common total. Avoid decorative 3D, inconsistent bar baselines or comparing areas that encode unrelated scales. Explain truncated axes and uncertainty visibly.\ncompose_component computes supported charts as editable text/shape/line objects. Bar charts accept nonnegative values with a common zero baseline. Line output uses the documented native connector style and must be labelled accurately; do not infer trends from category order or conceal negative values. Use the returned notes and inspect actual labels. Components return objects, not saved designs: add them via edit_canvas or edit_document with unique IDs and available layers.\nValues and labels must be separate from backgrounds and chart marks. Keep short native source labels with exact verified links in Canva; companion notes retain full URLs. Native custom hyperlink export is not currently part of the canvas text schema, so do not promise that feature from PPTX alone. Preserve data and a meaningful text summary in companion notes. Inspect chart scales and the imported result. Read quality-review before delivery.",
+    "examples": [
+      {
+        "request": "Compare supplied values A=20 and B=40 in the same unit.",
+        "blueprint": {
+          "chart": "zero-baseline bars",
+          "ratio": "B bar length must be twice A",
+          "nativeElements": [
+            "A label",
+            "B label",
+            "20 value",
+            "40 value",
+            "unit",
+            "two independent bar shapes"
+          ]
+        },
+        "reason": "Geometry is calculated from input values rather than estimated visually.",
+        "avoid": "Invented numbers, unrelated scales or a rendered chart screenshot as the only editable object."
+      }
+    ]
+  },
+  {
+    "id": "format-and-brand",
+    "title": "Format adaptation and brand consistency",
+    "description": "Recompose approved content for slides, posters, square graphics or carousels while preserving message, brand and factual meaning.",
+    "instructions": "Inspect the source content and visual system before adapting it. Preserve exact figures, units, qualifications, source links and mandatory wording. Reuse approved vocabulary and colour roles; distinguish must-keep brand rules from optional references. Do not claim to have inspected an inaccessible source.\nAdaptation is recomposition, not uniform scaling. A poster may explain spatial relationships, a slide needs one stage-readable message, and a carousel needs useful progression. Change information grouping, density, line breaks and reading order for the new medium. Keep excluded or expanded detail in notes or an explicitly requested appendix; do not silently discard facts or legal text.\nNative adaptation creates a new canvas/document from inspected source material with stable semantic element names within the new result. It does not mutate the original, provide a lossless arbitrary import converter or synchronize manual Canva changes back. Canvas dimensions are 320\u20134000 per side and document pages share one size; source glyph/font/asset constraints still apply. A required unsupported font/language/logo must be resolved with a supported connected Canva route or disclosed before promising delivery.\nRecord a compact content map: source claim \u2192 target page/element \u2192 supporting source, plus any intentional editorial change. Review completeness as well as appearance. Apply the same visual system across target outputs but allow layout variety. Inspect representative reading sizes and all final native text/Canva layers. Read art-direction, the relevant format skill, and quality-review.",
+    "examples": [
+      {
+        "request": "Adapt an approved technical poster into a six-slide talk.",
+        "blueprint": {
+          "mapping": "Each source claim is assigned to a slide or companion notes",
+          "visualSystem": "Retain approved palette and terminology; rebuild for 16:9",
+          "sourcePreserved": true
+        },
+        "reason": "Talk pacing differs from self-guided poster reading.",
+        "avoid": "Stretching the poster across six images or claiming arbitrary import synchronization."
+      }
+    ]
+  },
+  {
+    "id": "quality-review",
+    "title": "Shared design quality review",
+    "description": "Inspect source and Canva output for readability, visual hierarchy, factual copy, links, separate text layers and focused revisions before delivery.",
+    "instructions": "Review actual rendered output rather than declaring success from tool completion or geometry. Inspect full pages/storyboard first, then crops of small critical labels, charts and source footers at realistic viewing size. Evaluate meaning, hierarchy, contrast, density, spacing, alignment, consistency and useful imagery. Automated warnings guide judgement; they are not a beauty score.\nUse inspect_canvas or inspect_document for saved native source images. Tie each material issue to a stable element ID, make a bounded targeted revision, then inspect the latest output after the last edit. Normal work needs useful revisions, not a mandatory number of cosmetic passes. Preserve the working version and unrelated elements if a revision fails.\nValidate exact required wording, values, units, dates and sources against supplied or actually verified evidence. Inspect chart geometry and legend correspondence. A corrected label elsewhere does not repair the wrong target. Prefer short source labels with actual hyperlinks where supported; do not ask a generator to draw URLs.\nSource and imported Canva checks are separate. Inspect actual native richtexts and image fills, full previews and detail crops. Every heading, number, label and source must be a distinct editable text object. For suspicious image lettering, use a separate disposable background-only audit and cancel only that audit. Never commit diagnostic deletion or discard another pending draft. If lettering remains baked into pixels or cannot be inspected, do not call the design fully editable. Rebuild with clean assets/native text; never hide old copy under replacement words.\nreview_canva_design checks a bounded caller-supplied snapshot, not Canva itself, OCR or factual evidence. blocked/needs_visual_review is not ready. A ready result is for user review, not a commit permission. Show the latest preview and follow Canva's required explicit approval before saving. Verify saved output separately; disclose unverified steps. Do not spend more generation credits or retry uncertain imports automatically.",
+    "examples": [
+      {
+        "request": "The output shows the same value twice and a malformed source URL.",
+        "blueprint": {
+          "checks": [
+            "read actual native text IDs",
+            "inspect image-only layers in a cancelled audit",
+            "compare exact URL",
+            "remove/rebuild the obsolete copy",
+            "inspect latest full preview and detail crop"
+          ],
+          "delivery": "Retain draft status until verified; obtain required Canva save approval."
+        },
+        "reason": "Moving or covering one duplicate may leave baked lettering underneath.",
+        "avoid": "Claiming corrected or saved from an earlier preview."
+      }
+    ]
+  }
+]

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { buildBriefingMessage, briefingIssues, getQuestions, infographicDimensions, nextBriefingQuestion, questions, startingPointHelp, workflowMode, type Answers, type BriefingData, type BriefingQuestion } from "../briefing/questions";
+import { buildBriefingMessage, briefingIssues, getQuestions, infographicDimensions, documentFormat, nextBriefingQuestion, questions, startingPointHelp, workflowMode, type Answers, type BriefingData, type BriefingQuestion } from "../briefing/questions";
 import { canvaSourceFallbackOption } from "../briefing/canva-workflow";
 
 export function Briefing({ initial, submit }: { initial: BriefingData; submit?: (message: string) => Promise<void> }) {
@@ -23,6 +23,7 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
   const isCustomSize = q.id === "format" && value.startsWith("Infographic — custom");
   const customSize = value.match(/(\d+)\s*[x×]\s*(\d+)/);
   const dimensions = infographicDimensions(answers.format?.trim() || "Infographic — portrait");
+  const multi = documentFormat(answers.format ?? "");
   const isDeck = answers.format?.trim() === "Five-slide presentation";
   const route = workflowMode(answers.template);
   const useTemplate = route === "canva_native", createInCanva = route === "canva_create", chooseTemplate = route === "choose";
@@ -61,7 +62,7 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
     : useTemplate
     ? `Inspect your accessible Canva template/design and adapt a copy. ${answers.templateSource?.trim() === canvaSourceFallbackOption ? "If no source fits, you have allowed a new Canva design using the same brief." : "If a required source is unavailable, we will ask before changing that requirement."} The Canva copy is the source of truth.`
     : chooseTemplate ? "First compare inspected, accessible Canva options with a blank-canvas direction. Choose once in the chat before we start the final design."
-      : isDeck ? "Five editable slides · Arial · 16:9 · Canva." : dimensions ? `One blank ${dimensions.width} × ${dimensions.height} canvas → structure → content → visual review → Canva. This route uses GraphicRouter’s simpler text-and-shape toolkit; it does not use Canva’s full illustration or font library.` : "Choose a supported canvas size or the five-slide presentation.";
+      : multi ? `Native ${multi.format.replace(/_/g," ")} · ${multi.width} × ${multi.height} · ordered pages, separate objects and companion notes.` : isDeck ? "Five editable slides · Arial · 16:9 · Canva." : dimensions ? `One blank ${dimensions.width} × ${dimensions.height} canvas → structure → content → visual review → Canva. This route uses GraphicRouter’s simpler text-and-shape toolkit; it does not use Canva’s full illustration or font library.` : "Choose a supported canvas size or the five-slide presentation.";
   return <main style={{ fontFamily: "Arial, sans-serif", color: "#211c2e", background: "#f5f2fb", padding: "clamp(12px,3vw,28px)", maxWidth: 820, margin: "auto" }}>
     <section role="dialog" aria-labelledby="briefing-title" style={{ background: "#fffefa", border: "1px solid #e2dcec", borderRadius: 24, padding: "clamp(20px,4vw,36px)", boxShadow: "0 12px 40px #33204c0d" }}>
       <p style={{ color: "#6d28d9", fontSize: 12, letterSpacing: ".12em", fontWeight: 700 }}>GRAPHICROUTER · DESIGN BRIEF</p>
@@ -100,7 +101,7 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
       </form>}
       {error && <p role="alert" style={{ color: "#9d2945", lineHeight: 1.7 }}>{error}</p>}
       {handoff && !sent && <section style={{ marginTop: 20 }}><label htmlFor="brief-handoff">Copy this complete brief into your GraphicRouter chat if automatic handoff is unavailable.</label><textarea id="brief-handoff" readOnly value={handoff} rows={8} onFocus={e => e.currentTarget.select()} style={{ width: "100%", boxSizing: "border-box", marginTop: 10, font: "inherit" }} /></section>}
-      <p style={{ fontSize: 12, color: "#766c80", lineHeight: 1.6, marginTop: 24 }}>One question at a time. Quick: up to 7 · Balanced: up to 10 · Detailed: up to 15. Prefilled answers are reused, optional questions can be skipped, and changing direction preserves your answers. Answers stay in this open view until you submit; closing or reloading can lose unsent details.</p>
+      <p style={{ fontSize: 12, color: "#766c80", lineHeight: 1.6, marginTop: 24 }}>One question at a time. Quick: 6 core questions · Balanced: 9 · Detailed: 14. Source and page-length details appear only when relevant. Prefilled answers are reused, optional questions can be skipped, and changing direction preserves your answers. Answers stay in this open view until you submit; closing or reloading can lose unsent details.</p>
     </section>
   </main>;
 }

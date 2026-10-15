@@ -1,0 +1,19 @@
+[
+  {
+    "request": "Compare supplied values A=20 and B=40 in the same unit.",
+    "blueprint": {
+      "chart": "zero-baseline bars",
+      "ratio": "B bar length must be twice A",
+      "nativeElements": [
+        "A label",
+        "B label",
+        "20 value",
+        "40 value",
+        "unit",
+        "two independent bar shapes"
+      ]
+    },
+    "reason": "Geometry is calculated from input values rather than estimated visually.",
+    "avoid": "Invented numbers, unrelated scales or a rendered chart screenshot as the only editable object."
+  }
+]

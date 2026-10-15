@@ -1,3 +1,5 @@
+import { DocumentService } from "./document-service";
+import type { DocumentBlueprint } from "../contracts";
 import { env } from "cloudflare:workers";
 import { D1DeckStore } from "./store";
 import { DeckService, type CanvaPort } from "./service";
@@ -39,4 +41,11 @@ export function canvasService() {
   const db = database();
   return new CanvasService({ store: new D1DeckStore<CanvasBlueprint>(db), files: new R2FileStore(env.BUCKET), engine: canvasEngine, assets,
     origin: new URL(env.SITE_ORIGIN).origin, canva: canvaClient(db) ?? disconnected, raster: renderInspectionPng });
+}
+
+export function documentService() {
+  if (!env.SITE_ORIGIN || !env.BUCKET) fail("NOT_IMPLEMENTED", "Document storage/origin configuration is unavailable.");
+  const db = database();
+  return new DocumentService({store:new D1DeckStore<DocumentBlueprint>(db),files:new R2FileStore(env.BUCKET),assets,
+    origin:new URL(env.SITE_ORIGIN).origin,canva:canvaClient(db)??disconnected,raster:renderInspectionPng});
 }

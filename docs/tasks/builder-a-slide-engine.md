@@ -529,3 +529,82 @@ and saved fidelity need real page-by-page inspection. Existing English/Arial,
 simple-geometry and registered-asset limits remain; no universal beauty guarantee.
 The user's existing faulty Canva draft has not been automatically repaired/saved,
 and no new generation credits were consumed during this review.
+
+## Eight specialist skills and multi-page implementation — 2026-10-15
+
+User authorized implementing all eight proposed workflows plus shared quality
+review. Current work spans contracts, engine, briefing, MCP, previews, service,
+portable skill files and relevant tests; the unrelated Builder B homepage branch
+is excluded. The contract was documented before implementation/integration.
+
+- [x] Added eight authored design skills and shared quality-review, with contextual
+  triggers, concrete examples, route preservation, source/evidence rules and
+  explicit engine limits. plan_design chooses from explicit task inputs;
+  get_design_skill loads only needed guidance. Optional native studies supply
+  actual separate editable objects, not screenshots as final source.
+- [x] Generated nine valid portable SKILL.md folders and example files from the
+  runtime catalog. All nine pass skill-creator quick_validate.py. Catalog/file
+  consistency and routing cases pass tests. No account archive-editor tool is
+  available here; the working MCP skill loader provides these workflows. No
+  separate host-packaged skill installation is claimed.
+- [x] Implemented schema3 native documents: 1–40 pages, shared size/theme,
+  messages/sections/notes, atomic page/object edits, add/remove/reorder, prior
+  version preservation, 1000 total objects and exact existing element constraints.
+  Legacy schema1/schema2 and five-slide engine contracts are unchanged.
+- [x] Added create/edit/get/export/send_document_to_canva plus inspect_document,
+  owner-scoped storage/downloads, bounded browser routes, PNG page/crop inspection,
+  embedded storyboard/page notes and source-layer counts. Every page uses the same
+  object renderer/PPTX compiler; no page bitmap replaces native text.
+- [x] Added proportional zero-baseline bars, signed step-line charts and seven
+  text-free native geometric icons via compose_component. Objects fit <=40 edits;
+  labels/values stay separate. Step connections are explicitly disclosed because
+  the existing line primitive cannot draw a descending diagonal.
+- [x] Flexible presentation/carousel/tall choices in the adaptive brief, with one
+  optional length/time question only when relevant. Completed handoff and tool
+  call results expose the skill router and correct document path despite cached
+  descriptions. Existing creation route is preserved; no extra full interview.
+- [x] npm run check passes TypeScript and 218 tests in 37 files. Production build
+  passes. Coverage includes real 40-page PPTX object/notes export, one-headline
+  change preserving seven other pages/XML, limits, atomic failures, owner isolation,
+  stale concurrency, one-import claims, polling/auth recovery, uncertain outcomes,
+  HTTP bounds, private downloads, skill retrieval and rendering actual studies.
+- [x] Inspected actual PNGs of comparison, process and editorial studies. Ignored
+  artifacts/skills contains source JSON, PNG and PPTX. These are labelled illustrative
+  references; their numbers are not user evidence or Canva fidelity proof.
+- [x] Local browser QA: completed quick native presentation brief through review
+  with 8 pages/5-minute note; checked actual handoff to document tools and retained
+  answers. In a clearly labelled simulated-action UI fixture, selected page3,
+  observed correct message/notes/image and verified a failed action retains it.
+  Screenshot: artifacts/skills/storyboard-ui.png. Browser fixture is not a hosted
+  account or actual Canva import check.
+- [ ] Local dev HTTP document write cannot complete: unauthenticated attempt was
+  correctly rejected; after supported local sign-in the dev runtime returned
+  unavailable document storage/origin configuration. No document/import was created.
+  Real SQL service tests and native compilation pass; do not call this a local
+  Worker storage end-to-end success or bypass authorization to hide the blocker.
+- [x] Original owner-private GraphicRouter published as version 6, source
+  484047c0703a59dcac02d7fcbf4920e736e9b5bc, deployment
+  appgdep_6ad0d4eb43c08191bc1e0074e7750336, MCP enabled, existing secret revision 3.
+  https://graphicrouter.blue-hare-8389.chatgpt.site. Packaging recovered after
+  disk exhaustion by stopping owned previews and removing only task-owned
+  reproducible dependency debug maps/cache. No user data or secrets were removed.
+- [x] Connected start_briefing returned plan_design/get_design_skill, document
+  routing and the separate-text requirement. Current chat still has the old
+  catalog/schema: its wrapper dropped new complexity/template/length keys, so the
+  server correctly asked the two missing routing questions. New-chat/plugin
+  discovery is required; newly added tool invocation through this cached host
+  catalogue is unverified. RPC/schema/auth and all 22 server tool registrations
+  are tested locally. No hosted document, Canva generation or import was started.
+
+Current account can access original GraphicRouter (owner-private) again, but Test
+Site returns project_not_found. Opened original source at bbc4215420377ef0555f96b50fd2eee1ea8a1d25
+before applying changes. Preserve its project/plugin IDs, audience and runtime
+secrets; keep the inaccessible Test Site untouched. The prior adaptive intake,
+inspection and native-text hardening changes are included when synchronizing the
+GitHub implementation into this older original source checkout.
+
+Limits remain: measured English Arial, registered images/simple shapes; no
+arbitrary upload/font ingestion, detailed native illustrations, universal beauty
+score, automatic lossless format conversion, OCR certification, two-way Canva sync
+or external commit lock. Actual Canva import/layer fidelity and host model skill
+selection require separate real-use verification. No generation credits consumed.

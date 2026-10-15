@@ -172,9 +172,14 @@ export const canvasEngine: CanvasEngine = {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeXml(`${blueprint.title} — ${stage}`)}"><title>${escapeXml(blueprint.title)}</title><rect width="${width}" height="${height}" fill="${theme.background}"/>${body}</svg>`;
   },
 
-  async compile(blueprint, assets) {
-    assertNoErrors(validate(blueprint));
-    const registry = registryFor(blueprint, assets);
+  async compile(blueprint, assets) { return compileCanvasPages([{ blueprint }], assets); },
+};
+
+/** Same object renderer/exporter for single canvases and bounded page documents. */
+export async function compileCanvasPages(pages: { blueprint: CanvasBlueprint; notes?: string }[], assets: Asset[]): Promise<Uint8Array> {
+  if (!pages.length || pages.length > 40) fail("PAGE_LIMIT", "pages", "Export between 1 and 40 pages.");
+    for (const page of pages) { assertNoErrors(validate(page.blueprint)); registryFor(page.blueprint, assets); }
+    const blueprint = pages[0].blueprint;
     try {
       const pptx = new PptxGenJS();
       pptx.defineLayout({ name: "GRAPHICROUTER_CANVAS", width: inches(blueprint.canvas.width), height: inches(blueprint.canvas.height) });
@@ -184,9 +189,12 @@ export const canvasEngine: CanvasEngine = {
       pptx.title = `${blueprint.title} — v${blueprint.version}`;
       pptx.subject = blueprint.brief.purpose;
       pptx.theme = { headFontFace: "Arial", bodyFontFace: "Arial" };
+      for (const page of pages) {
+      const blueprint = page.blueprint, registry = registryFor(blueprint, assets);
+      if (blueprint.canvas.width !== pages[0].blueprint.canvas.width || blueprint.canvas.height !== pages[0].blueprint.canvas.height) fail("MIXED_PAGE_SIZE", "pages", "All pages in one PowerPoint must share dimensions.");
       const slide = pptx.addSlide();
       slide.background = { color: blueprint.theme.background.slice(1) };
-      slide.addNotes(`Design direction: ${blueprint.designIntent}\n${blueprint.construction.at(-1)!.summary}`);
+      slide.addNotes(page.notes ?? `Design direction: ${blueprint.designIntent}\n${blueprint.construction.at(-1)!.summary}`);
       for (const element of [...blueprint.elements].sort((a, b) => a.zIndex - b.zIndex)) {
         const position = { x: inches(element.x), y: inches(element.y), w: inches(element.width), h: inches(element.height), objectName: element.id };
         if (element.type === "text") {
@@ -201,6 +209,7 @@ export const canvasEngine: CanvasEngine = {
           slide.addImage({ ...position, x: inches(box.x), y: inches(box.y), w: inches(box.width), h: inches(box.height), data: imageDataUri(image.asset), altText: element.alt });
         }
       }
+      }
       const bytes = await pptx.write({ outputType: "uint8array", compression: true });
       if (!(bytes instanceof Uint8Array)) throw new Error("The PPTX writer returned an unsupported output type.");
       return bytes;
@@ -208,5 +217,4 @@ export const canvasEngine: CanvasEngine = {
       if (error instanceof EngineError) throw error;
       throw new EngineError("The PowerPoint writer could not finish this canvas export. The stored blueprint is unchanged.", [], "EXPORT_FAILED");
     }
-  },
-};
+}
