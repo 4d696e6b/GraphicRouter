@@ -1,0 +1,4 @@
+# Keep generated HTML and hashed text assets byte-stable across Windows/static hosts.
+* text eol=lf
+*.png -text
+*.pptx -text
