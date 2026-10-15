@@ -823,3 +823,9 @@ Customer installation limitation: signed-out incognito reaches ChatGPT but shows
 Try in chat. This does not establish a non-owner signed-in account's eligibility;
 public Site access and its authenticated content guards were verified separately.
 No credentials/account state were changed to conceal this remaining check.
+
+The owner's ChatGPT Manage page also reports Review status DEVELOPMENT/dev mode.
+No public plugin-release control is exposed through the connected tools. Site
+access is public; cross-account ChatGPT installation remains a distinct unverified
+platform step, not something the website can silently grant. No account permissions
+or marketplace submission were changed.

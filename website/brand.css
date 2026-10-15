@@ -1,2 +1,168 @@
 /* GraphicRouter's own editorial studio direction: paper, ink, violet, citrus. */
-:root{--paper:#F8F6F0;--ink:#25212C;--muted:#766F7D;--line:#DDD8D0;--accent:#7143D4;--soft:#EEE9F4;--deep:#282132;color-scheme:light;background:var(--paper);color:var(--ink);font-family:Arial,"Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased}.site{background:var(--paper)}::selection{background:#DAC9FA;color:#282132}a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid #9671E0;outline-offset:5px}em{font-family:Georgia,"Times New Roman",serif;font-weight:400}.heroCopy h1 em,.sectionIntro h2 em,.formatHeader h2 em,.startHeading h2 em,.faqSection h2 em{color:var(--accent)}.primary{background:var(--accent);color:#fff;transition:background .18s,transform .18s}.primary:hover{background:#5831AD;transform:translateY(-2px)}.primary:active{transform:translateY(0)}.textButton:hover,.navigation a:hover,.footer a:hover{color:var(--accent)}.heroDescription,.heroFootnote{color:var(--muted)}.littleRoute{color:var(--accent)}.studyBar,.layerDock{background:#FEFDF9;border:1px solid #DFD9D4}.studyWorkspace{background-color:#EAE6E1;background-image:radial-gradient(#BEB6C1 0.7px,transparent 0.7px);border-inline:1px solid #DFD9D4}.workspaceRuler{color:#9A909F}.poster{background:#E7E9CA;color:#303522}.posterOrbit{color:#596149}.posterHeadline em{color:#6B4BA7}.posterHeadline{outline:1px solid var(--accent)}.posterHeadline .handle,.posterHeadline small{display:block}.compositionStudy[data-selected-layer="shape"] .posterHeadline,.compositionStudy[data-selected-layer="body"] .posterHeadline{outline-color:transparent}.compositionStudy:not([data-selected-layer="headline"]) .posterHeadline .handle,.compositionStudy:not([data-selected-layer="headline"]) .posterHeadline small{display:none}.compositionStudy[data-selected-layer="shape"] .posterOrbit,.compositionStudy[data-selected-layer="body"] .posterBottom>p{outline:1.5px solid var(--accent);outline-offset:5px}.posterSeal{background:#F0A989;color:#382E27;border-color:#382E2755}.layerButtons button[aria-pressed=true]{background:#EBE1FB;color:#6437BC;border-color:#D0B9F1}.layerButtons button:hover{border-color:#9577C2}.principle em{color:var(--accent)}.formatSection{background:#EEEBE5}.infographicArt{background:#DEDDED}.presentationArt{background:#D4DCBB}.longArt{background:#F2D5C9}.examples{background:var(--deep);color:#F5F0EB}.examples .eyebrow,.exampleHeading>p{color:#AFA4BD}.examples h2 em,.exampleCopy h3 em{color:#D3BAFE}.showcaseTabs button{color:#BCB2C9}.showcaseTabs button[aria-selected=true]{color:#F7F2FF;border-bottom-color:#D1B4FF}.showcaseTabs button:hover{color:white}.exampleCopy>p:not(.eyebrow){color:#BEB3CA}.sampleOutline p{color:#E7DFF0}.outlineButton:hover{background:#ffffff10;border-color:#D1B4FF}.sampleLinks a:hover{color:#D1B4FF}.closing{background:#E8E0F3}.closingSpark{color:var(--accent)}.closing em{color:var(--accent)}details>summary:hover{color:var(--accent)}.examples details>summary:hover{color:#D1B4FF}
+:root {
+  --paper:#F8F6F0;
+  --ink:#25212C;
+  --muted:#766F7D;
+  --line:#DDD8D0;
+  --accent:#7143D4;
+  --soft:#EEE9F4;
+  --deep:#282132;
+  color-scheme:light;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:Arial,"Helvetica Neue",sans-serif;
+  -webkit-font-smoothing:antialiased
+}
+.site {
+  background:var(--paper)
+}
+::selection {
+  background:#DAC9FA;
+  color:#282132
+}
+a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visible {
+  outline:2px solid #9671E0;
+  outline-offset:5px
+}
+em {
+  font-family:Georgia,"Times New Roman",serif;
+  font-weight:400
+}
+.heroCopy h1 em,.sectionIntro h2 em,.formatHeader h2 em,.startHeading h2 em,.faqSection h2 em {
+  color:var(--accent)
+}
+.primary {
+  background:var(--accent);
+  color:#fff;
+  transition:background .18s,transform .18s
+}
+.primary:hover {
+  background:#5831AD;
+  transform:translateY(-2px)
+}
+.primary:active {
+  transform:translateY(0)
+}
+.textButton:hover,.navigation a:hover,.footer a:hover {
+  color:var(--accent)
+}
+.heroDescription,.heroFootnote {
+  color:var(--muted)
+}
+.littleRoute {
+  color:var(--accent)
+}
+.studyBar,.layerDock {
+  background:#FEFDF9;
+  border:1px solid #DFD9D4
+}
+.studyWorkspace {
+  background-color:#EAE6E1;
+  background-image:radial-gradient(#BEB6C1 0.7px,transparent 0.7px);
+  border-inline:1px solid #DFD9D4
+}
+.workspaceRuler {
+  color:#9A909F
+}
+.poster {
+  background:#E7E9CA;
+  color:#303522
+}
+.posterOrbit {
+  color:#596149
+}
+.posterHeadline em {
+  color:#6B4BA7
+}
+.posterHeadline {
+  outline:1px solid var(--accent)
+}
+.posterHeadline .handle,.posterHeadline small {
+  display:block
+}
+.compositionStudy[data-selected-layer="shape"] .posterHeadline,.compositionStudy[data-selected-layer="body"] .posterHeadline {
+  outline-color:transparent
+}
+.compositionStudy:not([data-selected-layer="headline"]) .posterHeadline .handle,.compositionStudy:not([data-selected-layer="headline"]) .posterHeadline small {
+  display:none
+}
+.compositionStudy[data-selected-layer="shape"] .posterOrbit,.compositionStudy[data-selected-layer="body"] .posterBottom>p {
+  outline:1.5px solid var(--accent);
+  outline-offset:5px
+}
+.posterSeal {
+  background:#F0A989;
+  color:#382E27;
+  border-color:#382E2755
+}
+.layerButtons button[aria-pressed=true] {
+  background:#EBE1FB;
+  color:#6437BC;
+  border-color:#D0B9F1
+}
+.layerButtons button:hover {
+  border-color:#9577C2
+}
+.principle em {
+  color:var(--accent)
+}
+.formatSection {
+  background:#EEEBE5
+}
+.infographicArt {
+  background:#DEDDED
+}
+.presentationArt {
+  background:#D4DCBB
+}
+.longArt {
+  background:#F2D5C9
+}
+.examples {
+  background:var(--deep);
+  color:#F5F0EB
+}
+.examples .eyebrow,.exampleHeading>p {
+  color:#AFA4BD
+}
+.examples h2 em,.exampleCopy h3 em {
+  color:#D3BAFE
+}
+.showcaseTabs button {
+  color:#BCB2C9
+}
+.showcaseTabs button[aria-selected=true] {
+  color:#F7F2FF;
+  border-bottom-color:#D1B4FF
+}
+.showcaseTabs button:hover {
+  color:white
+}
+.exampleCopy>p:not(.eyebrow) {
+  color:#BEB3CA
+}
+.sampleOutline p {
+  color:#E7DFF0
+}
+.outlineButton:hover {
+  background:#ffffff10;
+  border-color:#D1B4FF
+}
+.sampleLinks a:hover {
+  color:#D1B4FF
+}
+.closing {
+  background:#E8E0F3
+}
+.closingSpark {
+  color:var(--accent)
+}
+.closing em {
+  color:var(--accent)
+}
+details>summary:hover {
+  color:var(--accent)
+}
+.examples details>summary:hover {
+  color:#D1B4FF
+}

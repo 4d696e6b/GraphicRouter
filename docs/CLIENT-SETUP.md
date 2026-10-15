@@ -39,3 +39,9 @@ an eligible different account actually completes it.
 No public marketplace submission, automatic installation, paid checkout or
 plugin-package artifact was created. Existing live Canva fidelity/editability
 and release advisory limitations in `docs/RELEASE-QUALITY.md` still apply.
+
+The current ChatGPT settings page reports this app as **Development** (dev mode).
+The owner's plugin page opens successfully with Try in chat. A signed-out check
+returned “We couldn't load this plugin right now”; a separate eligible signed-in
+customer installation is not yet verified. Do not equate the public Site access
+setting with approval of a development app for every ChatGPT account.
