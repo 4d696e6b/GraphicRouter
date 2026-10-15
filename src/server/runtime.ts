@@ -4,6 +4,7 @@ import { DeckService, type CanvaPort } from "./service";
 import { engine, assets } from "./engine-provider";
 import { CanvaClient } from "../integrations/canva/client";
 import { fail } from "./errors";
+import { CanvaConnectionRequired } from "../integrations/canva/errors";
 
 export function database() {
   if (!env.DB) fail("NOT_IMPLEMENTED", "D1 binding DB is unavailable. Configure storage before using decks.");
@@ -17,7 +18,7 @@ export function canvaClient(db = database()) {
 const disconnected: CanvaPort = {
   connected: async () => false,
   start: async () => fail("CANVA_IMPORT_FAILED", "Configure Canva OAuth before importing. Download the PowerPoint for manual upload."),
-  poll: async () => fail("CANVA_IMPORT_FAILED", "Restore the Canva configuration to refresh the existing job."),
+  poll: async () => { throw new CanvaConnectionRequired("Restore the Canva configuration to refresh the existing job."); },
 };
 export function service() {
   if (!env.SITE_ORIGIN) fail("NOT_IMPLEMENTED", "Configure SITE_ORIGIN with the canonical private Site URL.");

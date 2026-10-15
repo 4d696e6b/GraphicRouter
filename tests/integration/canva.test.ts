@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { CanvaClient } from "../../src/integrations/canva/client";
 import { TokenCipher, hash } from "../../src/integrations/canva/crypto";
 import { testDatabase } from "./database";
+import { CanvaConnectionRequired } from "../../src/integrations/canva/errors";
 
 const config = { clientId: "TEST-ONLY-client", clientSecret: "TEST-ONLY-secret", redirectUri: "https://example.test/api/canva/callback", tokenKey: btoa("x".repeat(32)) };
 const tokenResponse = () => Response.json({ access_token: "TEST-ONLY-access", refresh_token: "TEST-ONLY-refresh", expires_in: 3600 });
@@ -79,5 +80,33 @@ describe("Canva OAuth/binary client against mocked HTTP, not a live integration"
     await expect(client.poll("owner", "job")).rejects.toThrow("valid editable");
     fetcher.mockResolvedValueOnce(new Response("secret details", { status: 401 }));
     await expect(client.poll("owner", "job")).rejects.toThrow("Reconnect");
+  });
+  it("classifies a missing connection before sending any import request", async () => {
+    const { client, fetcher } = setup();
+    await expect(client.start("owner", new Uint8Array([80, 75]), "Test")).rejects.toBeInstanceOf(CanvaConnectionRequired);
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+  it("classifies an interrupted token refresh as preflight without sending import bytes", async () => {
+    const { client, fetcher } = setup(), start = await client.begin("owner");
+    fetcher.mockResolvedValueOnce(Response.json({ access_token: "TEST-expired", refresh_token: "TEST-refresh", expires_in: 1 }));
+    await client.complete("owner", start.state, start.state, "code");
+    fetcher.mockRejectedValueOnce(new Error("Token refresh transport failed"));
+    await expect(client.start("owner", new Uint8Array([80, 75]), "Test")).rejects.toBeInstanceOf(CanvaConnectionRequired);
+    expect(fetcher.mock.calls.every(([url]) => String(url).endsWith("oauth/token"))).toBe(true);
+  });
+  it("distinguishes a rejected import from an ambiguous transport outcome", async () => {
+    const { client, fetcher } = setup(), start = await client.begin("owner");
+    await client.complete("owner", start.state, start.state, "code");
+    fetcher.mockResolvedValueOnce(new Response(null, { status: 401 }));
+    await expect(client.start("owner", new Uint8Array([80, 75]), "Test")).rejects.toBeInstanceOf(CanvaConnectionRequired);
+    fetcher.mockRejectedValueOnce(new Error("Import response was lost"));
+    await expect(client.start("owner", new Uint8Array([80, 75]), "Test")).rejects.not.toBeInstanceOf(CanvaConnectionRequired);
+  });
+  it("returns an actionable terminal failure for a missing existing job", async () => {
+    const { client, fetcher } = setup(), start = await client.begin("owner");
+    await client.complete("owner", start.state, start.state, "code");
+    fetcher.mockResolvedValueOnce(new Response(null, { status: 404 }));
+    expect(await client.poll("owner", "missing-job")).toMatchObject({ status: "failed", jobId: "missing-job", message: expect.stringContaining("no longer find") });
+    expect(fetcher.mock.calls.at(-1)?.[1]?.method).not.toBe("POST");
   });
 });

@@ -2,6 +2,7 @@ import { createDeckSchema, deckVersionSchema, reviseDeckSchema, type Asset, type
 import type { DeckStore } from "./store";
 import { fail, ServiceError } from "./errors";
 import { EngineError } from "../engine/errors";
+import { CanvaConnectionRequired } from "../integrations/canva/errors";
 
 export interface FileStore {
   put(key: string, bytes: Uint8Array, mime: string): Promise<void>;
@@ -63,18 +64,26 @@ export class DeckService {
       try {
         const updated = await this.deps.canva.poll(owner, state.jobId);
         state = await this.deps.store.saveImport(b.deckId, b.version, updated);
-      } catch { /* Keep the pending job on transient failures; never start a new job. */ }
+      } catch (error) {
+        // Keep the job persisted as pending while displaying a reconnect action.
+        // After authorization, refresh continues this exact job rather than importing again.
+        if (error instanceof CanvaConnectionRequired) state = this.connectionRequired();
+      }
     }
     if (name === "export_deck" || name === "send_to_canva") {
       const files = await this.export(b);
       if (name === "send_to_canva" && state.status === "not_started") {
-        if (!await this.deps.canva.connected(owner)) state = { status: "connection_required", connectUrl: `${this.deps.origin}/api/canva/connect` };
+        if (!await this.deps.canva.connected(owner)) state = this.connectionRequired();
         else if (await this.deps.store.claimImport(b.deckId, b.version)) {
           try {
             const bytes = await this.deps.files.get(this.key(b, "pptx"));
             if (!bytes) fail("EXPORT_FAILED", "Saved PowerPoint is unavailable. Export again.");
             state = await this.deps.canva.start(owner, bytes, `${b.input.title.slice(0, 35)} · v${b.version}`);
-          } catch {
+          } catch (error) {
+            if (error instanceof CanvaConnectionRequired) {
+              await this.deps.store.releaseUnstartedImport(b.deckId, b.version);
+              return { ...this.result(b, this.connectionRequired()), files };
+            }
             state = { status: "failed", code: "IMPORT_OUTCOME_UNKNOWN", message: "Canva import did not confirm an outcome. Check Canva before retrying. Download the saved PPTX for manual upload." };
           }
           state = await this.deps.store.saveImport(b.deckId, b.version, state);
@@ -93,6 +102,7 @@ export class DeckService {
   private result(b: DeckBlueprint, canva: CanvaImport = { status: "not_started" }): DeckResult {
     return { blueprint: b, previewUrl: `${this.deps.origin}/decks/${b.deckId}/${b.version}`, canva };
   }
+  private connectionRequired(): CanvaImport { return { status: "connection_required", connectUrl: `${this.deps.origin}/api/canva/connect` }; }
   key(b: DeckBlueprint, kind: "pptx" | "notes") { return `decks/${b.deckId}/v${b.version}/${kind}`; }
   private exportUrls(b: DeckBlueprint) {
     const root = `${this.deps.origin}/api/decks/${b.deckId}/${b.version}/files`;

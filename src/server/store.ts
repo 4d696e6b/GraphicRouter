@@ -7,6 +7,7 @@ export interface DeckStore {
   append(owner: string, baseVersion: number, blueprint: DeckBlueprint): Promise<void>;
   importState(id: string, version: number): Promise<CanvaImport>;
   claimImport(id: string, version: number): Promise<boolean>;
+  releaseUnstartedImport(id: string, version: number): Promise<void>;
   saveImport(id: string, version: number, state: CanvaImport): Promise<CanvaImport>;
 }
 
@@ -57,5 +58,13 @@ export class D1DeckStore implements DeckStore {
           AND json_extract(state, '$.code') = 'IMPORT_OUTCOME_UNKNOWN'
           AND json_extract(state, '$.jobId') IS NULL))`).bind(JSON.stringify(state), id, version).run();
     return this.importState(id, version);
+  }
+  async releaseUnstartedImport(id: string, version: number) {
+    // Never remove a known pending/finished job. This is used only after a proven
+    // preflight failure or explicit authentication rejection of a new import.
+    await this.db.prepare(`DELETE FROM canva_imports WHERE deck_id = ? AND version = ?
+      AND json_extract(state, '$.status') = 'failed'
+      AND json_extract(state, '$.code') = 'IMPORT_OUTCOME_UNKNOWN'
+      AND json_extract(state, '$.jobId') IS NULL`).bind(id, version).run();
   }
 }

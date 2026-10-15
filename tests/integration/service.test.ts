@@ -6,6 +6,7 @@ import { testEngine } from "./engine-double";
 import { sampleDeck } from "../../src/fixtures/sample-deck";
 import { engine as productionEngine } from "../../src/server/engine-provider";
 import { engine as realEngine } from "../../src/engine";
+import { CanvaConnectionRequired } from "../../src/integrations/canva/errors";
 
 function setup() {
   const { db, sql } = testDatabase(), store = new D1DeckStore(db), objects = new Map<string, Uint8Array>();
@@ -96,6 +97,34 @@ describe("service using labelled engine double, real SQLite migrations", () => {
     const result = await service.call("send_to_canva", input, owner);
     expect(result.canva).toMatchObject({ status: "failed", code: "IMPORT_OUTCOME_UNKNOWN" }); expect(result.files).toBeDefined();
     await service.call("send_to_canva", input, owner); expect(canva.start).toHaveBeenCalledTimes(1);
+  });
+  it("releases only an unstarted import after auth failure so reconnect can resume", async () => {
+    const { service, canva, store } = setup();
+    const { blueprint: b } = await service.call("create_deck", sampleDeck, owner), input = { deckId: b.deckId, version: 1 };
+    canva.start.mockRejectedValueOnce(new CanvaConnectionRequired());
+    const first = await service.call("send_to_canva", input, owner);
+    expect(first.canva).toMatchObject({ status: "connection_required", connectUrl: "https://example.test/api/canva/connect" });
+    expect(first.files).toBeDefined();
+    expect(await store.importState(b.deckId, 1)).toEqual({ status: "not_started" });
+    const retried = await service.call("send_to_canva", input, owner);
+    expect(retried.canva).toEqual({ status: "pending", jobId: "real-job-shaped-test" });
+    expect(canva.start).toHaveBeenCalledTimes(2); // First call failed before sending bytes.
+    await store.releaseUnstartedImport(b.deckId, 1);
+    expect(await store.importState(b.deckId, 1)).toEqual({ status: "pending", jobId: "real-job-shaped-test" });
+  });
+  it("poll authorization failure offers reconnect without losing or restarting the pending job", async () => {
+    const { service, canva, store } = setup();
+    const { blueprint: b } = await service.call("create_deck", sampleDeck, owner), input = { deckId: b.deckId, version: 1 };
+    await service.call("send_to_canva", input, owner);
+    canva.poll.mockRejectedValueOnce(new CanvaConnectionRequired());
+    const needsAuth = await service.call("get_deck", input, owner);
+    expect(needsAuth.canva.status).toBe("connection_required"); expect(needsAuth.files).toBeDefined();
+    expect(await store.importState(b.deckId, 1)).toEqual({ status: "pending", jobId: "real-job-shaped-test" });
+    expect((await service.call("get_deck", input, owner)).canva.status).toBe("succeeded");
+    expect(canva.poll.mock.calls.every(([, id]) => id === "real-job-shaped-test")).toBe(true);
+    expect(canva.start).toHaveBeenCalledTimes(1);
+    await store.releaseUnstartedImport(b.deckId, 1);
+    expect((await store.importState(b.deckId, 1)).status).toBe("succeeded");
   });
   it("transient polling failure preserves the pending job", async () => {
     const { service, canva } = setup(); canva.poll.mockRejectedValue(new Error("timeout"));

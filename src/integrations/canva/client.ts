@@ -3,6 +3,7 @@ import type { CanvaImport } from "../../contracts";
 import type { CanvaPort } from "../../server/service";
 import { fail } from "../../server/errors";
 import { base64, hash, randomSecret, TokenCipher } from "./crypto";
+import { CanvaConnectionRequired } from "./errors";
 
 export interface CanvaConfig { clientId: string; clientSecret: string; redirectUri: string; tokenKey: string }
 const tokenSchema = z.object({ access_token: z.string().min(1), refresh_token: z.string().min(1), expires_in: z.number().positive() });
@@ -58,9 +59,16 @@ export class CanvaClient implements CanvaPort {
     await this.saveTokens(owner, refreshed);
     return refreshed.access_token;
   }
-  private async request(owner: string, path: string, init: RequestInit = {}): Promise<CanvaImport> {
-    const response = await this.fetcher(`https://api.canva.com/rest/v1/${path}`, { ...init, headers: { ...init.headers, Authorization: `Bearer ${await this.access(owner)}` }, signal: AbortSignal.timeout(20_000) });
-    if (!response.ok) fail("CANVA_IMPORT_FAILED", response.status === 401 ? "Canva connection expired. Reconnect Canva." : "Canva request failed. Download the saved PowerPoint for manual upload.");
+  private async request(owner: string, path: string, init: RequestInit = {}, jobId?: string): Promise<CanvaImport> {
+    let token: string;
+    try { token = await this.access(owner); }
+    catch { throw new CanvaConnectionRequired(); }
+    // Do not classify transport errors here as safe-to-retry: the POST may have
+    // reached Canva even if its response never arrived.
+    const response = await this.fetcher(`https://api.canva.com/rest/v1/${path}`, { ...init, headers: { ...init.headers, Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(20_000) });
+    if (response.status === 401) throw new CanvaConnectionRequired("Canva connection expired. Reconnect Canva.");
+    if (response.status === 404 && jobId) return { status: "failed", jobId, code: "CANVA_IMPORT_FAILED", message: "Canva can no longer find this import job. Check your Canva designs or use the saved PowerPoint for manual upload. A new import will not start automatically." };
+    if (!response.ok) fail("CANVA_IMPORT_FAILED", "Canva request failed. Download the saved PowerPoint for manual upload.");
     const { job } = jobSchema.parse(await response.json());
     if (job.status === "in_progress") return { status: "pending", jobId: job.id };
     if (job.status === "failed") return { status: "failed", jobId: job.id, code: "CANVA_IMPORT_FAILED", message: "Canva could not convert this PowerPoint. Download it for manual upload; keep your prior design." };
@@ -71,5 +79,5 @@ export class CanvaClient implements CanvaPort {
   start(owner: string, bytes: Uint8Array, title: string) {
     return this.request(owner, "imports", { method: "POST", headers: { "Content-Type": "application/octet-stream", "Import-Metadata": JSON.stringify({ title_base64: base64(new TextEncoder().encode(Array.from(title).slice(0, 50).join(""))), mime_type: "application/vnd.openxmlformats-officedocument.presentationml.presentation" }) }, body: new Uint8Array(bytes).buffer });
   }
-  poll(owner: string, jobId: string) { return this.request(owner, `imports/${encodeURIComponent(jobId)}`); }
+  poll(owner: string, jobId: string) { return this.request(owner, `imports/${encodeURIComponent(jobId)}`, {}, jobId); }
 }
