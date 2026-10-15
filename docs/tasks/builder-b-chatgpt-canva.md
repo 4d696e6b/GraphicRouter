@@ -366,3 +366,22 @@ substitutions, then complete the pitch/rehearsal/backup items above.
 - Combined current-main check: 100 tests pass; production build passes. Browser
   followed Open the design brief and confirmed question 1 of 20 renders. Desktop
   screenshot refreshed after the merge. Hosted-access blockers are unchanged.
+
+### RepoSetup visual-reference implementation
+
+- Implemented the supplied RepoSetup-reference plan using the exact reference
+  source snapshot and live site, retaining React/TypeScript/Sites and existing
+  project identity. Centred hero, scroll-driven tablet chapters/rails/camera,
+  capability strip, feature cards, dark tabbed showcase, guide, prompts, FAQ,
+  availability, dark closing and footer now use factual GraphicRouter content.
+- Header includes working local search, Ctrl/Cmd+K, Escape/focus recovery and mobile
+  navigation. Showcase supports keyboard tabs and real prepared engine views.
+  Reduced/no-JavaScript paths expose all chapters without long scroll/animation.
+- Final check: 112 tests and TypeScript pass; production build passes. Built local
+  Worker browser QA covers all five requested sizes, menu/search/tab/copy/FAQ,
+  precise prepared revision/reset, reverse scrolling, and /briefing navigation.
+- MIT notices retained for unchanged tablet art and adapted scene/CSS. No engine,
+  fixture, shared contract, identity, dependency, auth or service changes. No merge
+  or publication. Hosted integration verification remains separate and pending.
+- Detailed evidence, screenshots, source mapping, EPERM recovery and native zoom/
+  system-media emulation limits: docs/tasks/builder-b-reposetup-verification.md.
