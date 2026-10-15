@@ -4,6 +4,7 @@ import type { DeckBlueprint, SlideElement, ValidationIssue } from "../contracts"
 import { EngineError, assertNoErrors } from "./errors";
 import { contrastRatio, resolvePaint } from "./paint";
 import { layoutText } from "./text";
+import { composeSlide } from "./layouts";
 
 const paint = z.union([z.object({ token: z.enum(["background", "foreground", "muted", "accent"]) }).strict(), z.object({ hex: hexColorSchema }).strict()]);
 const geometry = {
@@ -69,6 +70,19 @@ export function validateBlueprint(blueprint: DeckBlueprint): ValidationIssue[] {
     const input = b.input.slides[index], path = `slides.${index}`;
     if (slide.id !== input.id || slide.role !== input.role || slide.layout !== input.layout || slide.takeaway !== input.takeaway || slide.notes.core !== input.notes.core || slide.notes.expanded !== input.notes.expanded) {
       issue("SOURCE_MISMATCH", path, "Slide metadata must agree with its stored input.");
+    }
+    try {
+      const recipe = composeSlide(input, index);
+      const expectedElements = new Map(recipe.elements.map((element) => [element.id, element]));
+      for (const element of slide.elements) {
+        const expected = expectedElements.get(element.id);
+        if (!expected) issue("UNEXPECTED_ELEMENT", element.id, "This element has no source in the selected recipe and could be lost during reflow. Restore a source-backed blueprint before revising or exporting.");
+        else if (element.type !== expected.type) issue("SOURCE_MISMATCH", element.id, "The source recipe requires a different element type.");
+      }
+      for (const expected of recipe.elements) if (!slide.elements.some((element) => element.id === expected.id)) issue("SOURCE_MISMATCH", expected.id, "A required recipe element is missing from the stored blueprint.");
+    } catch (error) {
+      if (error instanceof EngineError) issues.push(...error.issues);
+      else throw error;
     }
     const expected: Record<string, string> = { [`${input.id}.headline`]: input.headline, [`${input.id}.takeaway`]: input.takeaway };
     input.blocks.forEach((block, i) => { expected[`${input.id}.block${i + 1}.heading`] = block.heading; expected[`${input.id}.block${i + 1}.body`] = block.body; });
