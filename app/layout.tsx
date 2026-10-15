@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "GraphicRouter — direct your presentation",
-  description: "Plan a five-slide story in ChatGPT, preview each composition, and hand off an editable PowerPoint to Canva.",
+  title: "GraphicRouter — ideas ready for Canva",
+  description: "Plan editable infographics and presentations in ChatGPT. Inspect the composition, direct focused changes, and continue in Canva.",
   icons: { icon: "/favicon.svg" },
 };
 

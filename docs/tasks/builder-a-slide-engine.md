@@ -758,3 +758,36 @@ scope, use examples, repro commands and real-use checks.
 This checkpoint supports continued owner-private testing; public/marketplace
 publication remains conditional on the documented real-use and upstream dependency
 release gates. No audience or account permissions were expanded.
+
+## Customer website and ChatGPT connection integration — 2026-10-15
+
+- [x] Fetched and reviewed Builder B PR10 (`d883bc0`), merged its completed
+  standalone website/history and retained its violet design, motion, attribution,
+  prepared examples, real sample downloads and script-free view. Resolved only
+  the obsolete homepage conflict; latest service/engine/contracts are retained.
+- [x] All four static CTAs use the owner's exact verified plugin Copy link:
+  https://chatgpt.com/plugins/plugin_asdk_app_sites_801c42220f4c8191bc43e3442008fd98.
+  No fictitious installer/package or source archive is offered as the plugin.
+  Current infographic/40-page capabilities replace obsolete v1-only FAQ copy.
+- [x] App home redirects to the public-asset copy of the standalone page. Added
+  `/install` help, exact plugin link, a copyable starter prompt and account/Canva
+  guidance. Dev/build copies only an explicit public file allowlist; secrets,
+  authoring config and application sources are excluded. Both HTML views work
+  at a subdirectory without runtime API calls or JavaScript-dependent CTAs.
+- [x] TypeScript and287 tests/46 files pass; production build passes. Compiled
+  Worker HTTP200: home→product, script-free view, setup, briefing, CSS/JS and real
+  sample PPTX. Author config/README/.env return404. Anonymous deck, canvas and
+  document tool calls return401; existing cross-user ownership tests pass.
+- [x] Native Chrome: desktop/375px product page, actual CTA→correct installed
+  GraphicRouter plugin page (`Try in chat`), setup page and starter-prompt copy
+  succeed. Phone-width review uses an ignored iframe harness, not a new host.
+  This verifies the owner's plugin page; a fresh customer's installation is not
+  claimed as tested. No Canva design/import/upload/edit or generation was run.
+- [x] The original Site is owner-accessible again; opened its current source at
+ 484047c0703a59dcac02d7fcbf4920e736e9b5bc before editing. Test is unavailable.
+  Owner selected “Everyone with the link” after explicit audience explanation;
+  original Site visibility may change to public, while user-owned data remains
+  authenticated/isolated. No marketplace submission is authorized or claimed.
+- [ ] Exact hosted source build/publication, audience read-back and live HTTP
+  verification will be recorded after their actual completion. Existing release
+  advisory/provider verification limits remain in docs/RELEASE-QUALITY.md.

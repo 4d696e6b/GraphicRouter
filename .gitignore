@@ -60,3 +60,6 @@ next-env.d.ts
 !.env.example
 *.tsbuildinfo
 /artifacts/
+
+# Generated deployment copy of the standalone product website.
+/public/product/

@@ -143,3 +143,16 @@ this owning chat after registry/advisory verification, including build dependenc
 that ship runtime RSC code. Preserve the Sites/Vinext integration, use one installer,
 retest builds and record remaining upstream advisories rather than claiming a clean
 security release from npm's production-only classification.
+
+## User-directed product website integration — 2026-10-15
+
+The user explicitly authorized pulling Builder B's information/download website
+(PR10) and connecting customers to the existing GraphicRouter plugin. This owning
+chat may integrate that completed branch, update its stale availability copy,
+serve its standalone website from the existing app and add setup help. The user
+provided the exact plugin Copy link and selected “Everyone with the link” after
+being told this makes the website and sign-in-protected tools publicly reachable.
+This authorizes changing the original Site audience to public for this release;
+it does not authorize changing user-owned data access or publishing a marketplace
+listing. Keep both Site identities, credentials and per-user authorization intact.
+Original Site is accessible in this account again; Test returns project_not_found.
