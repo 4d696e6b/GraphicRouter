@@ -278,3 +278,23 @@ every PR; B handles platform/build integration.
 - Actual Canva result: https://www.canva.com/d/P_YCbT66Mmc10ti . This used the connected
   Canva plugin's file import; the service's own Canva client ID/secret are still absent.
   Remaining imported shape/line/font fidelity and full stage rehearsal are unverified.
+
+
+## User-directed presentation briefing — 2026-10-15
+
+- [x] Added an adaptive conversation before create_deck: audience/action,
+  message/verified evidence, setting/language/time, visual direction/brand/references
+  and useful visual material. Maximum three questions per message; reuse supplied
+  answers and honor explicit quick-draft/designer-choice requests.
+- [x] Added composition review guidance for hierarchy, contrast, spacing, concise
+  copy and narrative. Preserve current supported fonts/layouts/assets and never
+  promise arbitrary uploads or exact brand/reference reproduction.
+- [x] Exposed policy in both MCP initialize instructions and create_deck metadata;
+  preserved all five schemas, existing storage and narrow revision behavior.
+- [x] npm run check: TypeScript and 93 tests pass. npm run build passes. New transport
+  regression verifies both host discovery paths contain the pre-creation briefing.
+- [x] Documented six conversation checks in src/mcp/README.md.
+- [ ] Live model conversation checks remain unverified: metadata tests cannot prove
+  that ChatGPT asks the right follow-ups or certify subjective slide beauty.
+- Scope includes MCP instructions under the user's request to update this plugin;
+  no shared contracts, dependencies, credentials or builder service logic changed.
