@@ -508,7 +508,19 @@ recorded in docs/CONTRACTS.md before shared integration.
   reporting unmatched/missing exact links, unchecked image text and incomplete
   visual review. Local ignored evidence: artifacts/stability/canva-audit-input.json
   and canva-audit-report.json. Copy checks are not verification of API price facts.
-- [ ] Publication and live tool-discovery evidence will be appended after release.
+- [x] Published only the owner-private GraphicRouter Test Site, version 4, at
+  https://graphicrouter-test.pacharapol-pim.chatgpt.site. Deployment succeeded
+  with MCP enabled and the existing secret revision 2. Source commit:
+  166412750a5487024facbe98c6def91f591d4302; deployment:
+  appgdep_6ad0a69ca088819196ff4e0faa62ea49. Original Site was not deployed.
+- [x] Connected start_briefing call after publication returned the new native-text,
+  no-bitmap-overlay and review_canva_design policy, without a deck/file/import write.
+  Policy is included in current call results as well as discovery/completed briefs
+  because this chat's tool descriptions are cached. The newly added tool itself
+  has not yet appeared in this chat's cached catalogue; use a new chat/refresh the
+  plugin connection to discover it. Its RPC/schema/auth behavior is covered by
+  local integration tests; no live invocation of that newly discovered name is
+  claimed. No native Canva edits were committed by this release check.
 
 Limitations: the host can bypass advisory review through separate Canva tools;
 this checkpoint cannot enforce their commit lock or independently authenticate a
