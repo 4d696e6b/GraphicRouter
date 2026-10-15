@@ -51,7 +51,7 @@ export class DeckService {
     }
     if (name === "revise_deck") {
       const input = reviseDeckSchema.parse(raw);
-      const current = await this.deps.store.read(owner, input.deckId, input.baseVersion);
+      const current = await this.readDeck(owner, input.deckId, input.baseVersion);
       const next = this.compose(() => this.deps.engine.reviseBlueprint(structuredClone(current), input.operations));
       if (next.deckId !== current.deckId || next.version !== input.baseVersion + 1) fail("VALIDATION_FAILED", "Engine returned an invalid deck version.");
       this.validate(next);
@@ -59,7 +59,7 @@ export class DeckService {
       return this.result(next);
     }
     const input = deckVersionSchema.parse(raw);
-    const b = await this.deps.store.read(owner, input.deckId, input.version);
+    const b = await this.readDeck(owner, input.deckId, input.version);
     let state = await this.deps.store.importState(b.deckId, b.version);
     if (name === "get_deck" && state.status === "pending") {
       const jobId = state.jobId;
@@ -109,6 +109,11 @@ export class DeckService {
     } catch { /* Optional file discovery; the presentation remains readable. */ }
     return result;
   }
+  private async readDeck(owner: string, id: string, version: number) {
+    const b = await this.deps.store.read(owner, id, version);
+    if (b.schemaVersion !== 1) fail("NOT_FOUND", "This is not a legacy presentation. Use get_canvas for infographic canvases.");
+    return b;
+  }
   private result(b: DeckBlueprint, canva: CanvaImport = { status: "not_started" }): DeckResult {
     return { blueprint: b, previewUrl: `${this.deps.origin}/decks/${b.deckId}/${b.version}`, canva };
   }
@@ -141,14 +146,14 @@ export class DeckService {
   async download(owner: string | null, id: string, version: number, kind: string) {
     if (!owner) fail("UNAUTHORIZED", "Sign in to download this deck.");
     if (kind !== "pptx" && kind !== "notes") fail("NOT_FOUND", "File not found.");
-    const b = await this.deps.store.read(owner, id, version);
+    const b = await this.readDeck(owner, id, version);
     const bytes = await this.deps.files.get(this.key(b, kind));
     if (!bytes) fail("NOT_FOUND", "Export this version before downloading.");
     return bytes;
   }
   async preview(owner: string | null, id: string, version: number, stage: PreviewStage) {
     if (!owner) fail("UNAUTHORIZED", "Sign in to preview this deck.");
-    const b = await this.deps.store.read(owner, id, version);
+    const b = await this.readDeck(owner, id, version);
     return { blueprint: b, slides: b.slides.map(slide => this.deps.engine.renderSlideSvg(structuredClone(slide), b.theme, stage, this.deps.assets)) };
   }
 }

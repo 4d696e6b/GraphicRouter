@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ServiceError } from "../../src/server/errors";
 
-const mocks = vi.hoisted(() => ({ user: vi.fn(), service: vi.fn(), canva: vi.fn() }));
+const mocks = vi.hoisted(() => ({ user: vi.fn(), service: vi.fn(), canvasService: vi.fn(), canva: vi.fn() }));
 vi.mock("../../app/chatgpt-auth", () => ({ getChatGPTUser: mocks.user, chatGPTSignInPath: () => "/signin-with-chatgpt" }));
-vi.mock("../../src/server/runtime", () => ({ service: mocks.service, canvaClient: mocks.canva }));
+vi.mock("../../src/server/runtime", () => ({ service: mocks.service, canvasService: mocks.canvasService, canvaClient: mocks.canva }));
 import { GET as file } from "../../app/api/decks/[deckId]/[version]/files/[kind]/route";
 import { POST as mcp } from "../../app/mcp/route";
 import { POST as tool } from "../../app/api/tools/[name]/route";

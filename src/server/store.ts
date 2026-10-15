@@ -1,10 +1,11 @@
 import type { CanvaImport, DeckBlueprint } from "../contracts";
 import { fail } from "./errors";
 
-export interface DeckStore {
-  create(owner: string, blueprint: DeckBlueprint): Promise<void>;
-  read(owner: string, id: string, version: number): Promise<DeckBlueprint>;
-  append(owner: string, baseVersion: number, blueprint: DeckBlueprint): Promise<void>;
+export interface VersionedDocument { deckId: string; version: number }
+export interface DeckStore<T extends VersionedDocument = DeckBlueprint> {
+  create(owner: string, blueprint: T): Promise<void>;
+  read(owner: string, id: string, version: number): Promise<T>;
+  append(owner: string, baseVersion: number, blueprint: T): Promise<void>;
   importState(id: string, version: number): Promise<CanvaImport>;
   claimImport(id: string, version: number): Promise<boolean>;
   releaseUnstartedImport(id: string, version: number): Promise<void>;
@@ -12,23 +13,23 @@ export interface DeckStore {
 }
 
 /** D1 batch + triggers enforce immutable, contiguous versions atomically. */
-export class D1DeckStore implements DeckStore {
+export class D1DeckStore<T extends VersionedDocument = DeckBlueprint> implements DeckStore<T> {
   constructor(private db: D1DatabaseSession) {}
-  async create(owner: string, b: DeckBlueprint) {
+  async create(owner: string, b: T) {
     await this.db.batch([
       this.db.prepare("INSERT INTO decks (id, owner, latest_version, created_at) VALUES (?, ?, 0, ?)").bind(b.deckId, owner, Date.now()),
       this.insert(b),
     ]);
   }
-  private insert(b: DeckBlueprint) {
+  private insert(b: T) {
     return this.db.prepare("INSERT INTO deck_versions (deck_id, version, blueprint, created_at) VALUES (?, ?, ?, ?)").bind(b.deckId, b.version, JSON.stringify(b), Date.now());
   }
   async read(owner: string, id: string, version: number) {
     const row = await this.db.prepare("SELECT v.blueprint FROM deck_versions v JOIN decks d ON d.id = v.deck_id WHERE d.owner = ? AND d.id = ? AND v.version = ?").bind(owner, id, version).first<{ blueprint: string }>();
     if (!row) fail("NOT_FOUND", "Deck version not found for this user.");
-    return JSON.parse(row.blueprint) as DeckBlueprint;
+    return JSON.parse(row.blueprint) as T;
   }
-  async append(owner: string, baseVersion: number, b: DeckBlueprint) {
+  async append(owner: string, baseVersion: number, b: T) {
     const current = await this.db.prepare("SELECT latest_version FROM decks WHERE id = ? AND owner = ?").bind(b.deckId, owner).first<{ latest_version: number }>();
     if (!current) fail("NOT_FOUND", "Deck not found for this user.");
     if (current.latest_version !== baseVersion) fail("VERSION_CONFLICT", "Read the current version before revising.", current.latest_version);

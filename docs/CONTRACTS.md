@@ -80,3 +80,33 @@ Never put tokens, secrets, or another user's data in a model/widget response.
 Agree the change between the two builders, update this document and contract tests
 on a small shared commit, and merge that commit to `main` before both branches
 consume it. Do not hide a breaking shape change in a feature implementation.
+
+
+## Freeform infographic extension (user-directed scope correction)
+
+The user clarified that GraphicRouter must use ChatGPT to compose an infographic
+from a blank canvas, adding editable objects according to the brief. This replaces
+the template-only restriction for new graphics. The legacy five-slide APIs and
+stored schemaVersion 1 decks remain unchanged.
+
+New additive contracts live in src/contracts/canvas.ts. CanvasBlueprint is
+schemaVersion 2, kind canvas, with deckId/version identifiers (reusing the immutable
+storage mechanism), title, brief, dimensions, theme, designIntent, ordered elements,
+changes, construction log and validationIssues. No five-slide surrogate is created.
+Create starts blank. Edit applies typed add/replace/remove element operations in
+order; every successful batch creates one immutable version. Stable IDs and unique
+layers identify objects. Rendering and native export read these same stored objects.
+
+The canvas engine exports create/edit/validate/render/compile. New MCP names are
+create_canvas, edit_canvas, get_canvas, export_canvas, send_canvas_to_canva. Both
+get/export/import take deckId/version; edit takes baseVersion and typed operations.
+These are additive and do not alter TOOL_NAMES or the existing SlideEngine handoff.
+The generic JSON version store accepts documents with deckId/version. Canvas and
+legacy service paths check document kind on reads to prevent format confusion.
+
+Creation accepts bounded dimensions, a supplied-fact brief, explicit palette and
+short public design decisions. Supported objects initially remain Arial text,
+rectangles, ellipses, straight lines and registered PNG/JPEG assets. Unsupported
+fonts/glyphs/assets fail visibly. Intentional shape overlap is allowed; text fit,
+bounds, IDs, layers and colours are validated. No arbitrary code or raw SVG enters
+storage. Native import is asynchronous, owner-scoped and immutable per version.
