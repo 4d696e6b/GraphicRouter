@@ -327,3 +327,45 @@ every PR; B handles platform/build integration.
 - Updated scope was requested by the user after the prose-only interview proved
   insufficient. The extra tool is an intake entry point; all original engine and
   deck-tool interfaces remain compatible.
+
+
+## User-directed blank-canvas infographic implementation — 2026-10-15
+
+The user clarified that ChatGPT must compose an infographic from a blank canvas,
+then add editable objects according to the project requirements. This supersedes
+the earlier template-only five-slide restriction. The original deck path is retained.
+
+- [x] Added documented schemaVersion2 canvas contracts and pure canvasEngine; no
+  recipe/layout selection occurs. Creation is genuinely blank; typed ordered edits
+  choose coordinates, sizes, typography, palette and layers. Prior versions remain
+  immutable; replacement retains stable IDs and unrelated elements.
+- [x] Custom320–4000px dimensions, max200 objects, max40 operations/pass and100versions.
+  Native text/rectangle/ellipse/line/registered PNG-JPEG, shared measured Arial text,
+  safe SVG and one-page native PPTX. Geometry, fit, glyphs, bounds and assets validate;
+  contrast/text overlap produce visible review warnings. No arbitrary code/raw SVG.
+- [x] Added create_canvas/edit_canvas/get_canvas/export_canvas/send_canvas_to_canva,
+  authenticated generic version storage, owner/file/type boundaries, immutable file
+  URLs and claim/poll recovery. Original five deck schemas and all old fixtures pass.
+- [x] Added variable-aspect canvas UI, three preview stages, object-reveal frames,
+  version construction log and individual-element change summary. API preview errors
+  after a committed write return the saved result and Refresh guidance.
+- [x] Briefing supports one-page portrait/square/landscape/custom,20 questions about
+  content/medium/density/design; no longer forces infographics into five slides.
+  Full handoff explicitly requests blank→native structure/content/polish→Canva.
+- [x] npm run check passes:148 tests in21 files and TypeScript. Production build
+  passes with new canvas tool/file/page routes. Bounded read-only integration audit
+  found no concrete P1/P2 issue; auth/stale/write/preview/import recovery reviewed.
+- [x] Reproduced two distinct authored examples using the same template-free engine.
+  Command: GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/freeform-proof.test.ts.
+  Files: artifacts/freeform/{portrait,landscape}/{blank.svg,structure.svg,finished.svg,
+  graphicrouter.pptx,blueprint.json,tool-inputs.json}. Rendered SVGs via local PyMuPDF
+  and inspected portrait/landscape preview.png. No overlap/contrast validation issues.
+  Native PPTX readback verifies one page and individually named objects.
+- [ ] Live new-format Canva fidelity/editability and installed-host canvas UI/model
+  continuation remain unverified. A separate connected-Canva upload spike rejected
+  the PPTX as Unsupported file format ZIP; no design was created. The app binary
+  adapter was not called by that spike, so no app-import failure is inferred.
+- Limits: currently measured English/Arial, simple geometry and registered images;
+  no custom fonts, arbitrary asset ingestion, rotation, gradients or complex vector
+  illustration. Composition freedom is not a promise of every graphic capability.
+  Subjective quality still needs human review at actual reading size.

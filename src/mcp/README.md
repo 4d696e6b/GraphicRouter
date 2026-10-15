@@ -1,62 +1,42 @@
-# GraphicRouter presentation planner
+# GraphicRouter design workspace
 
-The five existing deck tools remain unchanged. The additional read-only
-`start_briefing` MCP tool opens the existing app resource in briefing mode before
-any deck exists. It does not call DeckService or create storage/import records.
+The MCP endpoint exposes a freeform infographic path plus the compatible legacy
+presentation tools. ChatGPT supplies design decisions and typed element arguments;
+there is no second model service or fixed canvas template.
 
-`src/briefing/questions.ts` defines 20 bounded questions and the answer contract:
-format; topic; audience; outcome; key message; audience knowledge; problem;
-solution/process; evidence/sources; required content; exclusions; delivery setting;
-time; language; mood; accent; brand; references; visual material; closing action.
-Only format, topic, audience and outcome are required. Known answers can be
-prefilled; optional questions can be skipped, or the user can review early.
+- start_briefing: a transient20question dialog with optional skips, context prefills,
+  portrait/square/landscape/custom size, reading medium, density and visual direction.
+- create_canvas: create a genuinely empty board with dimensions, theme and brief.
+- edit_canvas: add/replace/remove objects in ordered structure/content/polish passes.
+- get_canvas: read an immutable version and refresh only its existing import job.
+- export_canvas: native single-page PowerPoint and design notes.
+- send_canvas_to_canva: owner-authorized binary import with stored job deduplication.
 
-`Briefing.tsx` renders one labelled question at a time inside a dialog card, with
-progress, suggestions, free text, back/skip/review and individual answer editing.
-Unsent answers live only in that open view, never browser storage. Closing or
-reloading can lose them. No credential fields or arbitrary uploads are offered.
+The original create/get/revise/export_deck and send_to_canva tools remain for
+explicit five-slide presentation work. Canvas schemaVersion2 and deck schemaVersion1
+are checked by their services; crossing the paths fails clearly. The JSON version
+store, owner boundaries, stale-write triggers, files and Canva OAuth are reused.
+No database migration or dependency was added.
 
-The user's Create button sends all answers and original context to the current
-chat in one user message via the installed MCP Apps bridge. That message asks for
-GraphicRouter create_deck followed by Canva import; it does not itself create a
-deck. No automatic handoff retry occurs. Host rejection/transport failure keeps
-answers visible and offers the complete message for manual copy-back.
+The planner starts from the content and medium, selects size/palette/hierarchy/
+reading path, places individual objects, inspects the returned blueprint and stage
+previews, and revises before handoff. Native text, simple geometry and registered
+images are supported; arbitrary code/SVG, unsupported fonts/glyphs and asset IDs
+are rejected. English Arial is the measured toolkit. A successful import is not
+proof of Canva visual fidelity or independent editing.
 
-`/briefing` offers the same dialog without a host bridge: it prepares the message
-for the user to paste into a chat with GraphicRouter selected. It does not submit
-background model requests or expose another user's deck data.
+The briefing is a UI card/dialog, not a browser alert or an additional model.
+It holds unsent answers only while open. The user's final click sends all answers
+back to the same chat in one user message, directing the appropriate GraphicRouter
+workflow. /briefing offers manual copy-back if the host bridge is unavailable.
+Host rejection retains the brief with copy-back text and never retries silently.
 
-`planner.ts` is exposed through both MCP initialization and create_deck metadata.
-For incomplete new briefs it requests start_briefing immediately and waits for
-submission. Unsupported single-page graphics remain an explicit format boundary;
-there is no silent fallback to image generation. Completed briefs and narrow
-revisions do not restart the interview. The five-slide/Arial/16:9 Studio renderer
-and its available assets remain the supported design surface.
+## Live acceptance
 
-## Conversation acceptance checks
-
-- Sparse request: select GraphicRouter and say “Open the presentation question
-  dialog.” Expected: start_briefing is called immediately, rather than just a
-  prose questionnaire. One question is shown in the app card.
-- Prefill: provide known topic/audience/brand. Expected: preserve those answers,
-  begin at an unanswered question and include them in the final review.
-- Format boundary: choose a single-page infographic. Expected: visible explanation
-  and a supported five-slide option; no image generator is substituted.
-- Required fields: review early with missing topic/audience/outcome. Expected:
-  submission returns to the first missing answer with a clear error.
-- Optional questions: skip or review early after the essentials. Expected: a usable
-  brief with factual gaps explicit; no invented metrics or mandatory 20-turn chat.
-- Handoff: complete/review/submit. Expected: a full user briefing message in this
-  chat, followed by GraphicRouter create_deck/send_to_canva/get_deck and a real
-  Canva editor link. No second questionnaire or raster infographic.
-- Rejected handoff: disconnect/reject messaging. Expected: answers and a complete
-  manual copy-back message remain available; no automatic retry.
-- Focused edit: request only slide3.headline violet. Expected: the existing revision
-  workflow, with no new intake or unrelated redesign.
-
-Automated checks cover transport discovery/authentication/input bounds, message
-completeness, format/required-field validation, HTML escaping, host send/rejection
-and the existing engine/service workflow. They do not certify actual host UI
-rendering, model compliance or subjective Canva appearance. Those require the
-conversation checks above. Browser automation was unavailable during this change
-because its security-policy verification failed; no policy bypass was attempted.
+In a fresh chat, select GraphicRouter and request a one-page infographic. Verify
+that the dialog opens when context is missing; that submission calls create_canvas
+then edit_canvas; that a real blank board precedes native objects; and that Canva
+returns an editor link. Inspect editable text/shapes/lines/images and imported
+portrait/square dimensions. Review composition quality at actual reading size.
+Existing narrow edits must avoid restarting intake. Model compliance and live
+host UI behavior cannot be established by transport tests alone.

@@ -268,3 +268,23 @@ https://www.canva.com/d/P_YCbT66Mmc10ti (design DAHYDU0fM4U, five editable pages
 slide 3's selected headline colour successfully; the transaction was cancelled to
 preserve the original. This proves that selected text formatting operation through
 the Canva connector, not the application's OAuth import or full shape/font fidelity.
+
+
+## Freeform infographic engine
+
+src/engine/canvas.ts exports canvasEngine against src/contracts/canvas.ts. It is
+independent of composeSlide and all recipe files: create starts blank; edit applies
+ordered typed object operations; render and compile read those objects unchanged.
+Custom320–4000px dimensions are converted at120px/in for a single-page native PPTX.
+Shared text measurement, paints and registered-image helpers preserve geometry.
+
+The engine validates geometry, unique IDs/layers, fit, supported glyphs and bounded
+construction history. Text overlap/contrast produce review warnings; intentional
+shape overlap is allowed. Prefix rendering reveals native objects in zIndex order.
+Each edit clones the prior version; replacement preserves stable identity.
+
+Reproduce two distinct authored examples (not engine templates):
+GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/freeform-proof.test.ts
+Outputs under ignored artifacts/freeform include blank/structure/finished SVG,
+blueprint, exact input objects and native PPTX for portrait and landscape canvases.
+The preview PNGs are local SVG renders; Canva fidelity is a separate live check.

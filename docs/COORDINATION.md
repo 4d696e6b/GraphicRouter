@@ -67,3 +67,13 @@ production paths. Replace the test double with A's engine at the hour-8 integrat
 Owned work is scoped, `npm run check` passes, shared interfaces remain compatible,
 and the task checklist distinguishes tested behavior from pending account checks.
 No production deployment or Canva success is claimed based only on a mock.
+
+
+## User-directed freeform scope correction
+
+The user's current request supersedes the earlier fixed-layout/exclude-freeform
+restrictions. This chat coordinates an additive canvas contract and implementation
+across engine, interface and service tests. The schema was written first; scoped
+agents consumed it without editing shared contracts. Legacy deck APIs/storage stay
+compatible. Source/hosting identity and credentials are preserved. No message was
+sent to the other user-owned builder chat; deployment remains in this owning chat.
