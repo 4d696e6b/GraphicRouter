@@ -67,8 +67,8 @@ export class DeckService {
         const updated = await this.deps.canva.poll(owner, jobId);
         state = await this.deps.store.saveImport(b.deckId, b.version, updated);
       } catch (error) {
-        // Keep the job persisted as pending while displaying a reconnect action.
-        // After authorization, refresh continues this exact job rather than importing again.
+        // Keep the job pending in storage; refresh failures are temporary display state.
+        // Reconnect or refresh continues this exact job without restarting the import.
         if (error instanceof CanvaConnectionRequired) state = this.connectionRequired();
         else state = { status: "failed", jobId, code: "CANVA_POLL_FAILED",
           message: `Could not refresh Canva import status. Job ${jobId} is preserved. Select Refresh import or call get_deck again to retry this job; no new import was started. Your saved presentation and downloads remain available.` };

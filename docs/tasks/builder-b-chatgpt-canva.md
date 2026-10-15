@@ -52,7 +52,7 @@ Do not implement A's engine or claim account-level verification from mocks.
 - [x] Plan the narrative in ChatGPT tool instructions from provided facts only.
 - [x] Store immutable owner-scoped decks/versions in D1; allocate IDs server-side.
 - [x] Reject stale baseVersion atomically and preserve the prior working version.
-- [x] Implement R2 PPTX/notes storage and authorize download/preview routes (adapter tested; actual PPTX awaits A).
+- [x] Implement R2 PPTX/notes storage and authorize download/preview routes (real local Worker/R2 PPTX and notes verified).
 - [x] Add DB/BUCKET bindings, generated migrations, and environment declarations.
 - [x] Keep tokens server-side; protect OAuth state and encrypt persisted token data.
 - [x] Merge A's usable engine through main and integrate the real engine/assets.
@@ -301,3 +301,41 @@ substitutions, then complete the pitch/rehearsal/backup items above.
   and one import start. Typecheck and all 87 current tests pass locally.
 - Existing Site lookup retried: project_not_found (404) for the preserved ID. No
   replacement was registered; app OAuth/hosted ChatGPT verification remain blocked.
+
+### PR #6 integration and refreshed local evidence
+
+- Reviewed PR #6 at c8f238d and its subsequent 89abac7 hardening commit. The latter
+  adds exact native PPTX-part preservation and a timed stage runbook. No shared
+  contract or B-owned implementation changes were required. Merged through main
+  as da51aa2, then consumed main on this branch as 3a5f401.
+- Final check: TypeScript and 89 tests pass. Production build passes. Poll recovery
+  coverage includes plain transport and typed Canva errors, retained pending job,
+  explicit Refresh guidance, repeated Send without duplicate start, and same-job retry.
+- Repeated real local Worker/D1/R2 HTTP workflow using localWorkflowPitch:
+  deck 9a88b844-7e5e-4971-be7e-690109d7f35c; all 15 SVGs, concurrent exports,
+  precise violet revision, immutable previous blueprint/PPTX, protected downloads,
+  anonymous 401, invalid-target 400 with useful issue path, and local MCP get_deck
+  200 pass. Identity uses the documented local simulation, not a hosted account.
+- Applied A's new rehearsalProof to the actual Worker-downloaded files: only
+  slide3.headline changed; slides 1/2/4/5 and all 49 other native ppt/ parts remain
+  byte-identical, including notes and media. Proof and inputs/outputs are saved in
+  ignored outputs/real-service/9a88b844-7e5e-4971-be7e-690109d7f35c/.
+- Browser checked actual v2 slide 3 and Send to Canva: shows connection required,
+  saved preview/notes/downloads remain usable, and console warnings/errors are empty.
+  Screenshot: outputs/local-pitch-violet.png. Async imports do not gate presenting.
+- Generated service-pitch recovery package. Default Python lacked fitz; installed
+  Pillow/reportlab/PyMuPDF only in ignored outputs/backup-python, without changing
+  A's utilities or project dependencies. Packager verifies five PDF pages, four
+  explicitly precomputed GIF frames, ZIP integrity and nine file hashes.
+  Package: artifacts/builder-a/service-pitch/graphicrouter-stage-backup.zip.
+- Coordination for A: no engine changes requested. Stage runbook timing is a plan;
+  actual speaking pace, full live demonstration and recording remain pending.
+- Account verification remains incomplete: existing Site lookup still returns
+  project_not_found / 404. Restore this exact project's owning account/workspace
+  access. Then configure CANVA_CLIENT_ID, CANVA_CLIENT_SECRET and CANVA_TOKEN_KEY
+  using server-side secret storage, with the exact hosted callback and required
+  scopes in src/server/SETUP.md. Do not paste credentials into chat or Git.
+- PR #3 remains draft per its checklist until hosted checks: actual installed
+  ChatGPT tools/widget, application OAuth/backend import, Canva editor shape/line/
+  font fidelity, timed live rehearsal and recording. Earlier separate manual Canva
+  text/image verification does not satisfy these application-account checks.

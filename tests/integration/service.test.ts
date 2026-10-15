@@ -6,6 +6,7 @@ import { testEngine } from "./engine-double";
 import { sampleDeck } from "../../src/fixtures/sample-deck";
 import { engine as productionEngine } from "../../src/server/engine-provider";
 import { engine as realEngine } from "../../src/engine";
+import { ServiceError } from "../../src/server/errors";
 import { CanvaConnectionRequired } from "../../src/integrations/canva/errors";
 
 function setup() {
@@ -120,14 +121,15 @@ describe("service using labelled engine double, real SQLite migrations", () => {
     const needsAuth = await service.call("get_deck", input, owner);
     expect(needsAuth.canva.status).toBe("connection_required"); expect(needsAuth.files).toBeDefined();
     expect(await store.importState(b.deckId, 1)).toEqual({ status: "pending", jobId: "real-job-shaped-test" });
+    expect((await service.call("send_to_canva", input, owner)).canva).toEqual({ status: "pending", jobId: "real-job-shaped-test" });
     expect((await service.call("get_deck", input, owner)).canva.status).toBe("succeeded");
     expect(canva.poll.mock.calls.every(([, id]) => id === "real-job-shaped-test")).toBe(true);
     expect(canva.start).toHaveBeenCalledTimes(1);
     await store.releaseUnstartedImport(b.deckId, 1);
     expect((await store.importState(b.deckId, 1)).status).toBe("succeeded");
   });
-  it("transient polling failure is visible while preserving the pending job and preventing duplicate starts", async () => {
-    const { service, canva, store } = setup(); canva.poll.mockRejectedValueOnce(new Error("private upstream timeout detail"));
+  it.each([new Error("private upstream timeout detail"), new ServiceError({ code: "CANVA_IMPORT_FAILED", message: "private upstream HTTP 429 detail" })])("polling failure is visible while preserving the pending job and preventing duplicate starts (%s)", async error => {
+    const { service, canva, store } = setup(); canva.poll.mockRejectedValueOnce(error);
     const { blueprint: b } = await service.call("create_deck", sampleDeck, owner), input = { deckId: b.deckId, version: 1 };
     await service.call("send_to_canva", input, owner);
     const result = await service.call("get_deck", input, owner);
@@ -135,6 +137,7 @@ describe("service using labelled engine double, real SQLite migrations", () => {
     expect(JSON.stringify(result)).not.toContain("private upstream");
     expect(result.blueprint).toEqual(b); expect(result.files).toBeDefined();
     expect(await store.importState(b.deckId, 1)).toEqual({ status: "pending", jobId: "real-job-shaped-test" });
+    expect((await service.call("send_to_canva", input, owner)).canva).toEqual({ status: "pending", jobId: "real-job-shaped-test" });
     expect((await service.call("get_deck", input, owner)).canva.status).toBe("succeeded");
     expect(canva.poll.mock.calls.every(([, id]) => id === "real-job-shaped-test")).toBe(true);
     expect(canva.start).toHaveBeenCalledTimes(1);
