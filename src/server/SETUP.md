@@ -1,23 +1,27 @@
 # Builder B integration setup
 
-This branch implements the service and adapters. It does **not** yet generate real
-slides: `engine-provider.ts` deliberately returns `NOT_IMPLEMENTED`. The only engine
-double lives in `tests/integration/engine-double.ts`; its bytes are not a PowerPoint.
+This branch integrates Builder A's real engine with the service and adapters. The
+real create/preview/revise/export path passes service tests and a local Cloudflare
+D1/R2 HTTP run. Test doubles remain in integration tests only. Hosted ChatGPT and
+the application's Canva OAuth/import path are not yet verified.
 
 ## Engine handoff
 
-After Builder A's usable engine is merged into main, merge `origin/main` into this
-branch, then replace the provider exports with:
+PR #4 was reviewed, tested, and merged into main at `b8336d0`. This branch consumed
+that main commit and `engine-provider.ts` now exports:
 
 ```ts
 export { engine } from "../engine";
 export { assets } from "../engine/assets";
 ```
 
-Keep `SlideEngine` and all five shared input schemas unchanged. The service allocates
-deck IDs and versions. Test the real engine through create/export and the
-`slide3.headline` revision; compare every unrelated element and the previous version.
-Update the homepage's integration status only after those checks actually pass.
+`SlideEngine` and all five shared input schemas are unchanged. The service allocates
+deck IDs and versions. Real-engine service tests cover all three preview stages,
+native PPTX export, the `slide3.headline` revision, unchanged unrelated elements and
+prior versions, and unchanged XML for the other four slides. EngineError messages
+and issue paths are preserved in the existing ToolError.message field, without
+changing shared contracts. The homepage accurately labels local verification and
+the outstanding hosted/app-authorization checks.
 
 ## Runtime and local checks
 
@@ -49,7 +53,7 @@ the deck head in the same SQLite transaction.
 
 ## Server configuration
 
-Set key names from `.env.example` in ignored local configuration and Sites runtime
+Set key names from `.env.example` in ignored `.dev.vars` for local Workers and Sites runtime
 secret storage. Never put values in hosting.json, tool output, source, or logs.
 
 - `SITE_ORIGIN`: canonical private Site origin; local value http://127.0.0.1:5173.
@@ -97,22 +101,24 @@ structured service errors and preserves the previous presentation during failure
 
 1. Restore access to the **existing** private Site in the correct account/workspace;
    do not create a replacement or substitute a project ID.
-2. Integrate A's engine/assets and pass the real create/revise/export tests.
+2. Re-run the integrated engine/assets create/revise/export tests after any changes.
 3. Configure server runtime values. Use the Sites source helper to open/synchronize
    its source separately from GitHub; build/package and deploy privately only after
    the real end-to-end path works.
 4. Get that Site with `include_mcp_connection: true`, install/connect its canonical
    plugin, and call a tool inside the actual ChatGPT account. Capture the tool name,
    deck ID/version, and result without identity headers or secrets.
-5. Import A's native two-slide PPTX fixture. In Canva edit one text box, one shape,
-   and the image independently; record the design link, font substitutions, callbacks,
-   and conversion limitations. Restore the intended slide content after testing.
+5. Complete the Canva shape/line editing and font-fidelity checks. B imported A's
+   native two-slide fixture into design `DAHYDOWfV8s`, independently changed its
+   headline and moved its logo in a draft, then cancelled the draft. This manual
+   connector check is separate from application OAuth. The browser editor currently
+   requires a separate login. Record the remaining font/conversion limitations.
 6. Generate the actual pitch, rehearse the three-minute live edit, save local files,
    and record a clearly labelled backup. Do not wait for pending import during the demo.
 
 If automatic import remains blocked at hour 6, lock **Download PPTX → manual Canva
-upload** as the demo fallback, after checking the actual exported file. No working
-PowerPoint fallback is claimed before A's engine is integrated.
+upload** as the demo fallback. Native PPTX generation and authenticated downloads
+are now verified locally; the two-slide manual Canva import is also verified.
 
 ## Official references checked 2026-10-15
 

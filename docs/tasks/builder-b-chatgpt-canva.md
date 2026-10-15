@@ -3,7 +3,7 @@
 Branch: `feat/chatgpt-canva`. Start from the common initialization commit.
 Tracking: https://github.com/4d696e6b/GraphicRouter/issues/2
 
-Status: **local integration implemented and tested; draft handoff, blocked on the real engine and account access**.
+Status: **real engine integrated and locally verified; manual Canva text/image editing verified; hosted account/OAuth checks pending**.
 
 ## Paste this into your Codex chat
 
@@ -55,17 +55,18 @@ Do not implement A's engine or claim account-level verification from mocks.
 - [x] Implement R2 PPTX/notes storage and authorize download/preview routes (adapter tested; actual PPTX awaits A).
 - [x] Add DB/BUCKET bindings, generated migrations, and environment declarations.
 - [x] Keep tokens server-side; protect OAuth state and encrypt persisted token data.
-- [ ] Merge A's usable engine, then land the thin end-to-end integration.
+- [x] Merge A's usable engine through main and integrate the real engine/assets.
+- [ ] Land B's thin integration PR after the remaining hosted checks.
 
 ### B3 — preview and Canva (hours 8–16)
 
-- [x] Implement five thumbnails and layout/content/finished stages from the stored plan (actual engine preview pending).
+- [x] Implement five thumbnails and layout/content/finished stages from the stored plan; real-engine browser preview verified locally.
 - [x] Add speaker notes, selected-slide preview, version label, and change summary.
 - [x] Implement the MCP Apps resource/bridge (local transport verified; ChatGPT rendering pending).
-- [ ] Inject A's `assets: Asset[]` from `src/engine/assets.ts` into render/export calls.
+- [x] Inject A's `assets: Asset[]` from `src/engine/assets.ts` into render/export calls.
 - [x] Implement binary PPTX import, persisted pending jobs, and status refresh through
   get_deck. Never create duplicate imports while polling an existing job.
-- [x] Expose connection/import errors and authenticated download fallback routes (real files await A).
+- [x] Expose connection/import errors and authenticated download fallback routes; real PPTX/notes downloads verified locally.
 - [x] Label each new Canva design version and explain the lack of reverse sync.
 - [ ] Generate the real pitch through the integrated tools with A by hour 12.
 - [ ] Freeze a verified complete flow and final deck by hour 16.
@@ -99,9 +100,9 @@ secret values, and clear remaining limitations.
 - Installed dependencies with `npm install`. The first check attempt ran while
   installation was incomplete and failed to find `tsc`; after installation all seven
   original contract tests passed. Added esbuild only for bundling the local Apps UI.
-- `npm run check`: **41 tests pass**, including all original contract tests. Tests
-  use real production SQL against SQLite and a clearly labelled test engine; its
-  bytes explicitly say they are not a PowerPoint. No double is wired into routes.
+- `npm run check`: **70 tests pass**, including A's 26 engine tests and all seven
+  original contract tests. Adapter tests retain a clearly labelled engine double;
+  separate real-engine service tests and production routes use A's implementation.
 - Tests cover owner isolation for decks/files/previews; HTTP 401/404 and no-store
   downloads; shared validation; concurrent stale revisions; immutable SQL versions;
   failed validation/export; notes; stored blueprint passed to preview/export; missing
@@ -122,8 +123,7 @@ secret values, and clear remaining limitations.
 - Both SQL migrations executed successfully against Wrangler local D1 (5 table
   commands and 4 trigger commands). No hosted database changes were attempted.
 - Local homepage returns HTTP 200 and was inspected in the in-app browser. It
-  explicitly labels the engine/account verification as pending. Actual slide/widget
-  visual QA awaits the engine and ChatGPT connection.
+  explicitly labels local verification and the pending hosted account checks.
 
 ### Additional reliability checks — 2026-10-15
 
@@ -149,30 +149,63 @@ secret values, and clear remaining limitations.
 - A fresh fetch still showed A's branch at initialization, and a fresh lookup of the
   existing Site again returned `project_not_found`. Original identity preserved.
 
-### Concrete blockers
+### Real engine and manual Canva verification — 2026-10-15
 
-1. `origin/feat/slide-engine` still points to initialization commit `d0f5cdb` at the
-   latest fetch. No `src/engine/index.ts`, assets module, or native PPTX fixture is
-   available. Production provider returns `NOT_IMPLEMENTED`; no real deck, PPTX,
-   manual upload fallback, or final pitch is claimed.
-2. Existing Site ID `appgprj_6ad04f78c2188191b6c0be6c93b79ac2` is unchanged. First
+- Reviewed PR #4 and ran the combined 67-test suite/build before merging. Merged
+  through main at `b8336d0`, then merged main into this branch. No A-owned source,
+  dependencies, or shared contracts were changed by B.
+- `engine-provider.ts` now re-exports the real `engine` and `assets` exactly as A
+  specified. EngineError messages and structured issue paths remain actionable in
+  the shared ToolError.message shape; no generic catch hides overflow/target errors.
+- Real-engine service tests verify create → all preview stages → native PPTX export
+  → violet `slide3.headline` revision → export v2. Every unrelated element, v1
+  blueprint/file, and the other four slide XML files remain unchanged. Invalid target
+  and overflow failures retain useful diagnostics and create no new version.
+- Also ran the full HTTP flow against the real local Cloudflare Worker, D1, and R2
+  using the starter's **simulated local identity**. Deck
+  `b8f03b41-f1c1-4425-8b2f-5e13a2da2c2d` has v1/v2; all 15 real SVG stages and
+  PPTX/notes downloads worked. Anonymous download returned 401. Invalid-target write
+  returned 400 with the exact target explanation. A local real `get_deck` MCP call
+  returned v2 and its real finished preview. This is not a ChatGPT account call.
+- Real UI inspected in the browser: selected slide 3 shows a violet headline and
+  the exact change summary. Send-to-Canva shows connection_required and preserves
+  downloads when app credentials are absent. Local screenshot:
+  `outputs/real-service/preview-v2.png`. Real exported v1/v2 PPTX, notes, and blueprint
+  backups are under `outputs/real-service/b8f03b41-f1c1-4425-8b2f-5e13a2da2c2d/`.
+- Regenerated A's handoff artifacts with GRAPHICROUTER_ARTIFACTS=1; test passed.
+- B's actual Canva fixture import succeeded via the connected Canva plugin's
+  design_file import. Design: https://www.canva.com/design/DAHYDOWfV8s/edit .
+  The generic raw upload route rejected the fixture as Unsupported file format ZIP;
+  the dedicated design import succeeded. This is a manual connector path, not the
+  application's OAuth/binary-import client.
+- Canva readback confirmed two editable 1920×1080 pages, four separate text objects,
+  and two editable image instances. In draft transaction `30918320756505288`, B
+  changed page 1's headline and moved its image from left=1152 to left=1180 while
+  other objects stayed unchanged. Both operations returned success; the transaction
+  was cancelled to preserve the fixture. Shape/line editability and font matching
+  are still pending. Browser editor access redirected to the Canva login page.
+
+### Concrete blockers still open
+
+1. Existing Site ID `appgprj_6ad04f78c2188191b6c0be6c93b79ac2` is unchanged. First
    `get_site(include_mcp_connection: true)` failed at transport; retry returned
    `SitesConnectorError: Sites project not found`, code 404 / `project_not_found`,
    in this connected account/workspace. Cannot obtain its source credential, canonical
    plugin, or verify an actual ChatGPT call. Restore access to this same Site; do not
    register a replacement. No publication attempted.
-3. No Canva developer credentials/configuration have been supplied. OAuth HTTP tests
-   are mocked and labelled. A real editability test cannot start without A's PPTX
-   fixture and creator authorization. No Canva import-tested design link exists.
+2. No application Canva developer credentials/configuration have been supplied.
+   OAuth HTTP tests are mocked and labelled. The separate manual connector import
+   above does not establish app OAuth or backend import success.
+3. Shape/line editing and font matching need a Canva editor login; installed ChatGPT
+   tool/widget checks, final integrated pitch content, rehearsal, and recording remain.
 
 ### Handoff
 
 See `src/server/SETUP.md` for runtime key names, local migrations, the two-line engine
 handoff, official documentation, OAuth callback/scopes, honest manual fallback, and
-account verification steps. Merge A's usable engine through main; never merge an
-unfinished branch wholesale. Replace only `src/server/engine-provider.ts` with A's
-engine/assets exports. Keep the UI's pending status accurate. Re-run checks and the
-real create/revise/export path, then privately publish through the existing Sites
+account verification steps. A's engine is integrated through main and the real local
+create/revise/export path is verified. Keep the UI's status accurate and privately
+publish through the existing Sites
 source workflow and test the canonical plugin inside ChatGPT. Check imported text,
 shape, and image independently in Canva, record the actual design link and font
 substitutions, then complete the pitch/rehearsal/backup items above.

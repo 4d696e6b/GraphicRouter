@@ -31,7 +31,8 @@ export class DeckService {
     // Keep the shared ToolError shape: include engine issue paths/messages in its
     // actionable message rather than introducing a parallel or breaking contract.
     const details = error.issues.filter(issue => issue.severity === "error").map(issue => `${issue.path}: ${issue.message}`);
-    fail(error.code, details.length ? `${error.message}\n${details.join("\n")}` : error.message);
+    const includesMessage = details.some(detail => detail === error.message || detail.endsWith(`: ${error.message}`));
+    fail(error.code, details.length ? `${includesMessage ? "" : `${error.message}\n`}${details.join("\n")}` : error.message);
   }
   async call(name: ToolName, raw: unknown, owner: string | null): Promise<DeckResult> {
     if (!owner) fail("UNAUTHORIZED", "Sign in with ChatGPT to access your presentations.");
