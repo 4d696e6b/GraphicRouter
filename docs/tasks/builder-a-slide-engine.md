@@ -154,9 +154,8 @@ every PR; B handles platform/build integration.
   service input at `artifacts/builder-a/local-workflow/create-deck.json`.
 - [x] Check all five rendered previews visually: no clipping. Verify exact revision
   preservation again. `npm run check`: 39 tests pass; production build passes.
-- [ ] B should create this exact input through the real service/MCP workflow and
-  confirm the resulting deck before final presentation freeze. Generated artifacts
-  here are direct engine outputs, not evidence of that service creation.
+- [x] Create this exact input through direct local DeckService calls in an isolated
+  combined review tree. Hosted MCP creation and final stage rehearsal remain pending.
 - Remaining account blockers and browser-control testing are unchanged.
 
 ## Builder B review correction
@@ -169,3 +168,21 @@ every PR; B handles platform/build integration.
 - `GRAPHICROUTER_ARTIFACTS=1 npm run check`: 39 tests pass; generated pitch/replay
   artifacts refreshed. This fixes the test/handoff proof, not the production engine
   revision path, whose preservation checks already pass. No B files changed.
+
+## Exact pitch service acceptance
+
+- Added A-owned `tests/engine/service-pitch.test.ts`: creates the exact updated pitch
+  through B's DeckService with real engine and SQLite migrations, validates all 15
+  preview SVGs, exports original/revised PPTX, and runs the full revision proof.
+- Confirmed stale writes and anonymous downloads reject, while stored v1 and v2
+  remain intact. No B source, contracts, dependencies, or configuration changed.
+- A-only check: 39 pass, one explicitly skipped because service files are absent.
+  Combined snapshot of B `a5dc616` plus current A directories: 86 tests pass and
+  production build passes. Snapshot is ignored under artifacts; no branch merge.
+- Reusable command in combined tree:
+  `GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/service-pitch.test.ts`.
+- Service-returned PPTX/notes and prepared replay copied into
+  `artifacts/builder-a/service-pitch/`, with verification context and hashes.
+- Limits: direct service calls, local test owner, in-memory file adapter, real SQLite
+  migrations. No HTTP, real R2, hosted identity, ChatGPT account call, or Canva OAuth.
+  The recording, stage pacing, and remaining account checks still require follow-up.

@@ -98,8 +98,9 @@ the current admin policy prevented both Canva and localhost access.
 recorded evidence at `f23b071`: real-engine local service flow with simulated local
 identity and separate manual Canva text/image checks. The original engine-stage
 fixture stays available. Hosted ChatGPT, app OAuth, shape/line editing, and font
-matching remain explicitly unverified. This pitch has not been created through the
-service yet; its slides/PPTX/replay are generated directly through the engine.
+matching remain explicitly unverified. The exact updated pitch has passed direct
+local DeckService creation/export checks described below; its hosted account
+workflow remains unverified.
 
 Run `GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/local-workflow-pitch.test.ts`.
 Outputs under `artifacts/builder-a/local-workflow/` include the exact `create-deck.json`
@@ -121,8 +122,8 @@ export { assets } from "../engine/assets";
 There are no shared-contract or dependency changes to coordinate. Builder B should
 preserve the real create/revise/preview/export checks through `DeckService` and
 `EngineError` diagnostics; its latest evidence records these locally. This does not
-claim installed-account checks have run. The new pitch input still needs its own
-service creation and verification before presentation freeze.
+claim installed-account checks have run. The new pitch input still needs its hosted
+workflow and stage rehearsal before presentation freeze.
 
 Builder B's unavailable Sites access and missing Canva app credentials still block
 its production path. The successful imports below used this chat's existing Canva
@@ -169,3 +170,24 @@ node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js de
 In a second terminal, request `http://127.0.0.1:5197`. The response reports slide count,
 PPTX byte count/signature, and validation errors. This is a test-only Worker, not an
 MCP endpoint or deployed website. Stop it after verification.
+
+## Exact updated pitch through the local service
+
+`tests/engine/service-pitch.test.ts` runs once B's service and test database helper
+are present. A's standalone branch explicitly skips this one test. It was run in an
+isolated archive of B's `a5dc616` with the current A-owned directories overlaid:
+**86 tests and the combined production build pass**. No B code was edited or merged.
+The test creates the exact `localWorkflowPitch` using DeckService, real engine, and
+SQLite migrations; compares all 15 service SVG previews to engine output; exports
+both PPTX versions; verifies complete blueprint/untouched-slide preservation; and
+checks stale-edit and anonymous-download rejection.
+
+Run `GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/service-pitch.test.ts` in the
+combined tree. It writes `artifacts/builder-a/service-pitch/` with service-returned
+PPTX files, notes, revision proof, and a prepared offline replay. Review outputs have
+also been copied to that path in A's checkout with `verification-context.json`.
+The file adapter is an in-memory Map and identity is an explicit local test owner.
+Canva is deliberately unavailable. These checks do not exercise HTTP, hosted
+identity, actual R2, ChatGPT, or app OAuth; B's separately recorded local HTTP/Worker
+checks remain distinct. This is a reusable acceptance check for A's final pitch,
+not another service implementation.
