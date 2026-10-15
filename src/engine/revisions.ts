@@ -62,9 +62,9 @@ export function reviseBlueprint(current: DeckBlueprint, operations: RevisionOper
     } else {
       const slide = findSlide(operation.slideId), index = next.slides.indexOf(slide);
       const input = next.input.slides[index];
-      const baseline = composeSlide(input, index);
+      const baseline = composeSlide(input, index, next.input.artDirection);
       input.layout = operation.layout;
-      const replacement = composeSlide(input, index);
+      const replacement = composeSlide(input, index, next.input.artDirection);
       for (const old of slide.elements) {
         const original = baseline.elements.find((e) => e.id === old.id);
         const oldPaint = getPaint(old), defaultPaint = original && getPaint(original);

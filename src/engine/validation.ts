@@ -72,7 +72,7 @@ export function validateBlueprint(blueprint: DeckBlueprint): ValidationIssue[] {
       issue("SOURCE_MISMATCH", path, "Slide metadata must agree with its stored input.");
     }
     try {
-      const recipe = composeSlide(input, index);
+      const recipe = composeSlide(input, index, b.input.artDirection);
       const expectedElements = new Map(recipe.elements.map((element) => [element.id, element]));
       for (const element of slide.elements) {
         const expected = expectedElements.get(element.id);

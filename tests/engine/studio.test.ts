@@ -1,0 +1,30 @@
+import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { expect, it } from "vitest";
+import { engine, assets } from "../../src/engine";
+import { studioPitch } from "../../src/fixtures/studio-pitch";
+import { finalPitch } from "../../src/fixtures/final-pitch";
+import { buildRehearsal } from "./rehearsal";
+
+it("composes the Studio visual system, preserves classic decks, and proves native revision fidelity", async () => {
+ const classic=engine.createBlueprint(finalPitch,{deckId:"6bac9301-3cf3-4b3f-8a72-549765f465f9",version:1});
+ expect(classic.slides[0].elements.some(e=>e.id.endsWith('.surface'))).toBe(false);
+ const before=engine.createBlueprint(studioPitch,{deckId:classic.deckId,version:1});
+ expect(before.validationIssues).toEqual([]);
+ expect(before.slides.every(s=>s.elements.some(e=>e.id===`${s.id}.surface`))).toBe(true);
+ const after=engine.reviseBlueprint(before,[{type:"set_element_color",elementId:"slide3.headline",color:"#7C3AED"}]);
+ const original=await engine.compilePowerPoint(before,assets),revised=await engine.compilePowerPoint(after,assets);
+ const replay=buildRehearsal(before,after,assets,{original,revised});
+ expect(replay.proof.unchangedPptxPages).toEqual([1,2,4,5]);
+ const switched=engine.reviseBlueprint(before,[{type:"set_slide_layout",slideId:"slide2",layout:"process"}]);
+ expect(switched.slides[1].elements.some(e=>e.id==='slide2.surface')).toBe(true);
+ expect(switched.slides[0]).toEqual(before.slides[0]);
+ if(process.env.GRAPHICROUTER_ARTIFACTS!=='1')return;
+ const dir=join(process.cwd(),'artifacts','studio');await mkdir(dir,{recursive:true});
+ await writeFile(join(dir,'graphicrouter-pitch-v1.pptx'),original);
+ await writeFile(join(dir,'graphicrouter-pitch-v2-violet.pptx'),revised);
+ await writeFile(join(dir,'offline-rehearsal.html'),replay.html);
+ await writeFile(join(dir,'revision-proof.json'),JSON.stringify(replay.proof,null,2));
+ await writeFile(join(dir,'create-deck.json'),JSON.stringify(studioPitch,null,2));
+ for(const slide of before.slides)for(const stage of ['layout','content','finished'] as const)await writeFile(join(dir,`${slide.id}-${stage}.svg`),engine.renderSlideSvg(slide,before.theme,stage,assets));
+});

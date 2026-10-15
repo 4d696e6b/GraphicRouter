@@ -1,9 +1,11 @@
 import type { Paint, SlideBlueprint, SlideElement, SlideInput } from "../contracts";
 import { fail } from "./errors";
+import { composeStudioSlide, usesStudio } from "./studio-layouts";
 
 const foreground: Paint = { token: "foreground" }, accent: Paint = { token: "accent" }, muted: Paint = { token: "muted" };
 
-export function composeSlide(input: SlideInput, index: number): SlideBlueprint {
+export function composeSlide(input: SlideInput, index: number, artDirection = ""): SlideBlueprint {
+  if (usesStudio(artDirection)) return composeStudioSlide(input, index);
   const elements: SlideElement[] = [];
   const id = (part: string) => `${input.id}.${part}`;
   function text(part: string, content: string, x: number, y: number, width: number, height: number, fontSize: number, bold = false, color = foreground, align: "left" | "center" | "right" = "left") {
