@@ -18,13 +18,22 @@ export class DeckService {
     const errors = issues.filter(i => i.severity === "error");
     if (errors.length) fail("VALIDATION_FAILED", errors.map(i => `${i.path}: ${i.message}`).join("; "));
   }
+  private compose(action: () => DeckBlueprint) {
+    try { return action(); }
+    catch (error) {
+      if (error instanceof ServiceError) throw error;
+      fail("VALIDATION_FAILED", "The slide engine could not compose this request. Check element IDs and shorten content or choose a compatible layout. The previous version is unchanged.");
+    }
+  }
   async call(name: ToolName, raw: unknown, owner: string | null): Promise<DeckResult> {
     if (!owner) fail("UNAUTHORIZED", "Sign in with ChatGPT to access your presentations.");
     const schema = name === "create_deck" ? createDeckSchema : name === "revise_deck" ? reviseDeckSchema : deckVersionSchema;
     const parsed = schema.safeParse(raw);
     if (!parsed.success) fail("VALIDATION_FAILED", parsed.error.issues.map(i => `${i.path.join(".")}: ${i.message}`).join("; "));
     if (name === "create_deck") {
-      const b = this.deps.engine.createBlueprint(createDeckSchema.parse(raw), { deckId: crypto.randomUUID(), version: 1 });
+      const identity = { deckId: crypto.randomUUID(), version: 1 };
+      const b = this.compose(() => this.deps.engine.createBlueprint(createDeckSchema.parse(raw), identity));
+      if (b.deckId !== identity.deckId || b.version !== 1) fail("VALIDATION_FAILED", "Engine returned an invalid deck identity.");
       this.validate(b);
       await this.deps.store.create(owner, b);
       return this.result(b);
@@ -32,7 +41,7 @@ export class DeckService {
     if (name === "revise_deck") {
       const input = reviseDeckSchema.parse(raw);
       const current = await this.deps.store.read(owner, input.deckId, input.baseVersion);
-      const next = this.deps.engine.reviseBlueprint(structuredClone(current), input.operations);
+      const next = this.compose(() => this.deps.engine.reviseBlueprint(structuredClone(current), input.operations));
       if (next.deckId !== current.deckId || next.version !== input.baseVersion + 1) fail("VALIDATION_FAILED", "Engine returned an invalid deck version.");
       this.validate(next);
       await this.deps.store.append(owner, input.baseVersion, next);

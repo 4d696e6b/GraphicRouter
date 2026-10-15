@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "GraphicRouter — project starter",
-  description: "Shared project scaffold and tasks for GraphicRouter's two-builder hackathon prototype.",
+  title: "GraphicRouter — direct your presentation",
+  description: "Plan a five-slide story in ChatGPT, preview each composition, and hand off an editable PowerPoint to Canva.",
   icons: { icon: "/favicon.svg" },
 };
 

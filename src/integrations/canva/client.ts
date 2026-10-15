@@ -51,7 +51,7 @@ export class CanvaClient implements CanvaPort {
     if (!row) fail("CANVA_IMPORT_FAILED", "Connect Canva first.");
     const tokens = await this.cipher.decrypt<Tokens>(owner, row.encrypted);
     if (tokens.expiresAt > Date.now() + 60_000) return tokens.access_token;
-    const locked = await this.db.prepare("UPDATE canva_tokens SET refresh_lock_until = ? WHERE owner = ? AND refresh_lock_until = 0").bind(Date.now() + 30_000, owner).run();
+    const locked = await this.db.prepare("UPDATE canva_tokens SET refresh_lock_until = ? WHERE owner = ? AND refresh_lock_until = 0 AND encrypted = ?").bind(Date.now() + 30_000, owner, row.encrypted).run();
     if (!locked.meta.changes) fail("CANVA_IMPORT_FAILED", "Canva token refresh is in progress or was interrupted. Retry shortly; reconnect if it persists.");
     // Refresh tokens are single-use. On ambiguous failures leave the lock; reconnect safely.
     const refreshed = await this.exchange({ grant_type: "refresh_token", refresh_token: tokens.refresh_token });
