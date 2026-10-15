@@ -146,3 +146,29 @@ customer has completed installation or performed a Canva action.
 The remaining dependency/provider limitations above are unchanged. Public Site
 access, ChatGPT account/plugin availability and marketplace listing are separate;
 no marketplace submission or blanket public-security clearance is claimed.
+
+## Original studio website publication — 2026-10-15
+
+PR20 replaces the active reference-style website with the original GraphicRouter
+editorial studio layout. Desktop and375px browser checks cover layout, layer
+highlighting, prepared violet comparison, menu and Escape; both static HTML views
+retain four exact ChatGPT connection links and real sample downloads. Illustration
+and prepared examples do not claim a live editor/provider action.
+
+The exact hosted source passed287 tests/46 files, production build and HTML/asset/JS
+checks. Version8 succeeded: source e7cdb96ff044a668d7c089bce0a791d0ccc438cd,
+deployment appgdep_6ad0fae53f088191952a11196a31f7ed, MCP enabled, secret revision3
+unchanged. Public Site/version/plugin read-back, live HTTP checks and native Chrome
+rendering pass. Removed product motion modules and author config return404;
+protected tool calls with forged identity return401.
+
+Two saves failed internally and version history confirmed no new saved version.
+Packaging the same source via site-workflow.mjs with COPYFILE_DISABLE=1 removed
+macOS AppleDouble metadata; its clean archive saved and deployed successfully.
+The backend did not expose a definitive root cause. Keep the accepted archive
+unchanged and use this environment prefix for future macOS packaging.
+
+The owner's app remains DEVELOPMENT/dev mode. Its launch page works; a signed-out
+plugin page did not load. Cross-account installation remains unverified and is
+separate from the confirmed public Site audience. Existing dependency/Canva release
+limits remain; no marketplace submission or provider write was performed.
