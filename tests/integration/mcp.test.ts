@@ -19,7 +19,7 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
     expect(init.result.serverInfo).toMatchObject({ name: "GraphicRouter" });
     const list = await rpc("tools/list");
     const tools = list.result.tools as { name: string; inputSchema: unknown; description: string }[];
-    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "start_briefing", "plan_design", "get_design_skill", "compose_component", ...DOCUMENT_TOOL_NAMES, "append_document_requirements", "get_document_context", "review_document_requirements", "inspect_document"]);
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "plan_canva_edit", "review_canva_edit", "plan_image_input", "start_briefing", "plan_design", "get_design_skill", "compose_component", "compose_slide", ...DOCUMENT_TOOL_NAMES, "append_document_requirements", "get_document_context", "review_document_requirements", "inspect_document"]);
     expect(tools[0].description).toContain("Never invent evidence"); expect(tools[0].inputSchema).toMatchObject({ type: "object", required: expect.arrayContaining(["slides", "brief"]) });
   });
   it("exposes the briefing before creation through initialization and tool discovery", async () => {
@@ -33,7 +33,7 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
         expect(instructions).toContain(topic);
       }
     }
-    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "start_briefing", "plan_design", "get_design_skill", "compose_component", ...DOCUMENT_TOOL_NAMES, "append_document_requirements", "get_document_context", "review_document_requirements", "inspect_document"]);
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "plan_canva_edit", "review_canva_edit", "plan_image_input", "start_briefing", "plan_design", "get_design_skill", "compose_component", "compose_slide", ...DOCUMENT_TOOL_NAMES, "append_document_requirements", "get_document_context", "review_document_requirements", "inspect_document"]);
   });
   it("opens the briefing without calling the deck service and retains supplied context", async () => {
     const answers = { topic: "A supplied topic", audience: "Judges" };

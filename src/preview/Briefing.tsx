@@ -13,11 +13,12 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
   useEffect(() => { heading.current?.focus(); }, [questionId, review]);
   const activeQuestions = getQuestions(answers);
   const baseQuestion = (editing ? questions.find(item => item.id === questionId) : activeQuestions.find(item => item.id === questionId)) ?? activeQuestions[0];
-  const q = { ...baseQuestion, ...initial.prompts?.[baseQuestion.id] };
+  const editSourceQuestion = baseQuestion.id === "templateSource" && workflowMode(answers.template) === "canva_edit";
+  const q = { ...baseQuestion, ...initial.prompts?.[baseQuestion.id], ...(editSourceQuestion ? { title: "Which Canva file should we edit?", help: "Paste the full Canva editor/share link or canva.link shortlink. We keep the same file; your connected Canva account needs edit permission." } : {}) };
   const index = Math.max(0, activeQuestions.findIndex(item => item.id === q.id)), value = answers[q.id] ?? "";
   const issues = briefingIssues(answers);
-  const required = "required" in q && q.required;
-  const options: readonly string[] = "options" in q ? q.options : [];
+  const required = ("required" in q && q.required) || editSourceQuestion || q.id === "editRequest";
+  const options: readonly string[] = editSourceQuestion ? [] : "options" in q ? q.options : [];
   const questionIssue = issues.find(issue => issue.id === q.id);
   const isRoutingChoice = q.id === "complexity" || q.id === "template";
   const isCustomSize = q.id === "format" && value.startsWith("Infographic — custom");
@@ -26,6 +27,7 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
   const multi = documentFormat(answers.format ?? "");
   const isDeck = answers.format?.trim() === "Five-slide presentation";
   const route = workflowMode(answers.template);
+  const editExisting = route === "canva_edit";
   const useTemplate = route === "canva_native", createInCanva = route === "canva_create", chooseTemplate = route === "choose";
   const savedExtras = questions.filter(item => !activeQuestions.some(active => active.id === item.id) && answers[item.id]?.trim());
   const reviewQuestions = [...activeQuestions, ...savedExtras];
@@ -57,7 +59,9 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
     catch { setError("The chat handoff was not confirmed. Your answers are still here. Check the chat before retrying, or copy the brief below into the same chat with GraphicRouter selected."); }
     finally { setBusy(false); }
   }
-  const reviewDescription = createInCanva
+  const reviewDescription = editExisting
+    ? "Read and edit the same Canva file. Preserve unrelated elements, preview the draft changes, then approve saving them. No replacement design or automatic copy is created."
+    : createInCanva
     ? "Create a new draft directly in Canva from your completed brief. No Brand Template is required. It must pass native text-layer, background and visual checks before delivery. Text baked into an image is not accepted as editable. The Canva design is the source of truth."
     : useTemplate
     ? `Inspect your accessible Canva template/design and adapt a copy. ${answers.templateSource?.trim() === canvaSourceFallbackOption ? "If no source fits, you have allowed a new Canva design using the same brief." : "If a required source is unavailable, we will ask before changing that requirement."} The Canva copy is the source of truth.`
@@ -68,7 +72,7 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
       <p style={{ color: "#6d28d9", fontSize: 12, letterSpacing: ".12em", fontWeight: 700 }}>GRAPHICROUTER · DESIGN BRIEF</p>
       <p style={{ color: "#686173", fontSize: 14 }}>{review ? "Review your direction" : editing ? "Edit your saved answer" : `${q.group} · Question ${index + 1} of ${activeQuestions.length}`}</p>
       <progress aria-label="Briefing progress" value={review ? activeQuestions.length : index + 1} max={activeQuestions.length} style={{ width: "100%", accentColor: "#7C3AED", height: 6 }} />
-      <h1 id="briefing-title" ref={heading} tabIndex={-1} style={{ fontSize: "clamp(24px,4vw,34px)", lineHeight: 1.2, letterSpacing: "-.025em", outline: "none" }}>{sent ? "Your brief is back in the chat." : review ? "Ready to compose your design?" : q.title}</h1>
+      <h1 id="briefing-title" ref={heading} tabIndex={-1} style={{ fontSize: "clamp(24px,4vw,34px)", lineHeight: 1.2, letterSpacing: "-.025em", outline: "none" }}>{sent ? "Your brief is back in the chat." : review ? editExisting ? "Ready to edit your Canva file?" : "Ready to compose your design?" : q.title}</h1>
       {sent ? <p role="status" style={{ lineHeight: 1.7 }}>Your answers are back in the chat for the chosen design workflow and Canva delivery. The form alone has not created a design. Continue in the chat to follow the result.</p>
       : review ? <>
         <p style={{ lineHeight: 1.7 }}>{reviewDescription} Optional gaps use design judgment; factual gaps stay explicit. Review or edit any answer before continuing.</p>
@@ -76,7 +80,7 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
         <dl style={{ margin: "20px 0" }}>{reviewQuestions.map(item => <div key={item.id} style={{ padding: "12px 0", borderBottom: "1px solid #e8e3ed" }}><dt style={{ fontWeight: 700 }}>{initial.prompts?.[item.id]?.title ?? item.title}</dt><dd style={{ margin: "8px 0", whiteSpace: "pre-wrap", overflowWrap: "anywhere", color: "#62596e" }}>{answers[item.id]?.trim() || (item.id === "format" ? "Portrait infographic (default)" : "Choose for me / not supplied")}</dd><button type="button" disabled={busy} onClick={() => move(item.id, true)} style={button}>Edit {item.group.toLowerCase()} answer</button></div>)}</dl>
         {answers.duration && <p style={{ whiteSpace: "pre-wrap" }}>Previously supplied talk duration: {answers.duration}</p>}
         {issues.length > 0 && <p role="alert">{issues[0].message}</p>}
-        <button type="button" disabled={busy} onClick={finish} style={{ ...button, background: "#7C3AED", color: "white" }}>{busy ? "Sending your brief…" : submit ? createInCanva ? "Create a new design in Canva" : chooseTemplate ? "Compare design directions in chat" : useTemplate ? "Adapt a Canva copy in chat" : "Create in Canva with GraphicRouter" : "Prepare brief for GraphicRouter"}</button>
+        <button type="button" disabled={busy} onClick={finish} style={{ ...button, background: "#7C3AED", color: "white" }}>{busy ? "Sending your brief…" : submit ? editExisting ? "Continue editing this Canva file" : createInCanva ? "Create a new design in Canva" : chooseTemplate ? "Compare design directions in chat" : useTemplate ? "Adapt a Canva copy in chat" : "Create in Canva with GraphicRouter" : "Prepare brief for GraphicRouter"}</button>
       </> : <form onSubmit={e => { e.preventDefault(); next(); }}>
         <p id="question-help" style={{ color: "#62596e", lineHeight: 1.7 }}>{q.help}</p>
         {options.length > 0 && <div role="group" aria-label="Suggested answers" style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>{options.map(option => {
@@ -101,7 +105,7 @@ export function Briefing({ initial, submit }: { initial: BriefingData; submit?: 
       </form>}
       {error && <p role="alert" style={{ color: "#9d2945", lineHeight: 1.7 }}>{error}</p>}
       {handoff && !sent && <section style={{ marginTop: 20 }}><label htmlFor="brief-handoff">Copy this complete brief into your GraphicRouter chat if automatic handoff is unavailable.</label><textarea id="brief-handoff" readOnly value={handoff} rows={8} onFocus={e => e.currentTarget.select()} style={{ width: "100%", boxSizing: "border-box", marginTop: 10, font: "inherit" }} /></section>}
-      <p style={{ fontSize: 12, color: "#766c80", lineHeight: 1.6, marginTop: 24 }}>One question at a time. Quick: 6 core questions · Balanced: 9 · Detailed: 14. Source and page-length details appear only when relevant. Prefilled answers are reused, optional questions can be skipped, and changing direction preserves your answers. Answers stay in this open view until you submit; closing or reloading can lose unsent details.</p>
+      <p style={{ fontSize: 12, color: "#766c80", lineHeight: 1.6, marginTop: 24 }}>Attach pictures in the chat with their target and purpose. Existing-file edits need only a link and requested changes. One question at a time. Quick: 6 core questions · Balanced: 9 · Detailed: 14. Source and page-length details appear only when relevant. Prefilled answers are reused, optional questions can be skipped, and changing direction preserves your answers. Answers stay in this open view until you submit; closing or reloading can lose unsent details.</p>
     </section>
   </main>;
 }
