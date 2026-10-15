@@ -146,3 +146,18 @@ example prompt and generic editing UI are authored HTML/CSS/SVG in
 scripts/static-workflow-device.mjs and styled in brand.css; no design is analyzed,
 AI prompt generated, result transferred or Canva session opened on this website.
 Existing prepared presentation examples below the tablet are unchanged.
+
+## Hero headline proximity
+
+`hero-proximity.js` progressively enhances only `.hero h1#hero-title`. Pointer
+influence uses a 150px radius and squared falloff, up to 1.18 scale / 3px lift.
+Original text controls shaping, spaces, natural wrapping and the accessible name.
+Decorative, aria-hidden grapheme overlays preserve layout and the violet gradient.
+The entrance animation retains its own outer transform; proximity starts after it
+settles. Font/resize observers cache text positions; pointer events only record
+coordinates and request a frame. Interpolation stops when settled.
+
+Hover/fine-pointer media and motion preferences gate the effect. Reduced motion,
+unsupported Intl.Segmenter and script-free visitors retain static text. Window
+blur, pointer cancellation and hidden tabs clear transforms immediately; pointer
+exit eases to rest. No dependency, external request or other heading is involved.
