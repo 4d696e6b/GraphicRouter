@@ -407,20 +407,6 @@ html { background: #faf8ff; }
 .compactFeatures .exportIllustration > span:last-child { font-size: 10px; line-height: 1.6; margin: 12px 0 0 8px; }
 .hero .brandSummary { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px 23px; max-width: none; }
 .hero .heroDescription { text-wrap: balance; }
-.hero #hero-title [data-title] { position: relative; }
-.hero #hero-title[data-proximity=ready] .titleLine { overflow: visible; }
-.hero #hero-title[data-proximity=ready] .heroTextSource { opacity: 0; }
-.hero #hero-title .heroGlyphLayer { position: absolute; inset: 0; pointer-events: none; user-select: none; overflow: visible; }
-.hero #hero-title .heroGlyphAnchor { position: absolute; display: block; pointer-events: none; }
-.hero #hero-title .heroGlyph { display: inline-block; letter-spacing: 0; line-height: 1; white-space: pre; transform-origin: 50% 65%; }
-.hero #hero-title .heroGlyphGradient { background-clip: text; color: transparent; background-repeat: no-repeat; }
-@media (prefers-reduced-motion:reduce), (hover:none), (pointer:coarse) {
-  .hero #hero-title[data-proximity=ready] .heroTextSource { opacity: 1; }
-  .hero #hero-title .heroGlyphLayer { display: none; }
-}
-@media (forced-colors:active) {
-  .hero #hero-title .heroGlyph { background: none!important; color: CanvasText!important; }
-}
 .brandSummary > span { position: relative; white-space: nowrap; }
 .brandSummary > span + span::before { content: "·"; position: absolute; left: -13px; }
 @media(min-width:601px) and (max-width:1023px) {
