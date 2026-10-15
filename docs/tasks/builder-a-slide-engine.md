@@ -256,3 +256,25 @@ every PR; B handles platform/build integration.
   30-second demo; actual speaking pace is not yet verified.
 - No Worker B files, contracts, dependencies, or account configuration changed.
   The live account/editor/rehearsal checks remain explicitly open.
+
+## User-directed Canva-first visual redesign
+
+- User clarified the product remains a ChatGPT plugin and the main result must be
+  a beautiful editable Canva presentation, rather than stopping at PowerPoint.
+- Inspected the actual test chat and confirmed successful signed-in creation/export.
+  Fixed the output guidance and preview handoff priorities under the user's expanded
+  authorization; no second builder/chat was messaged or contracts changed.
+- Added opt-in GraphicRouter Studio art direction with dark/ivory editorial contrast,
+  stronger hierarchy, native routing illustration and illustrated process stages.
+  Historical art directions keep exact original recipes; immutable revisions preserve
+  the chosen system. All source fields remain represented, with no shrinking/discard.
+- Added a factual five-slide Studio pitch. Rendered/inspected the five-slide contact
+  sheet and imported the native PPTX into Canva as DAHYDU0fM4U. Readback: five editable
+  pages, 53 text objects, editable logo. Targeted headline formatting returned success
+  in a draft; cancelled transaction 6353972201106751147 to preserve the final deck.
+- `npm run check`: 92 tests pass; production build passes. New cases cover Studio
+  composition/classic compatibility/native revision fidelity and Canva-delivery UI
+  completion states. No new production dependencies or arbitrary freeform placement.
+- Actual Canva result: https://www.canva.com/d/P_YCbT66Mmc10ti . This used the connected
+  Canva plugin's file import; the service's own Canva client ID/secret are still absent.
+  Remaining imported shape/line/font fidelity and full stage rehearsal are unverified.
