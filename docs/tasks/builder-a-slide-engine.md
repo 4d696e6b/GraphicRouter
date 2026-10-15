@@ -141,3 +141,20 @@ every PR; B handles platform/build integration.
 - Builder B integration exports and shared contracts are unchanged. No dependency
   requests. PR #4 is merged; B can bring main into its own branch and wire the
   existing provider. The offline replay does not complete B's OAuth/Sites checks.
+
+## Updated pitch handoff after B integrated the engine
+
+- [x] Read B's latest remote task evidence at `f23b071`; provider now uses the real
+  engine/assets, and B records the actual local service and manual Canva checks.
+  No B branch was merged or B-owned file edited by A.
+- [x] Add separate `src/fixtures/local-workflow-pitch.ts`, preserving the original
+  engine-stage fixture. It states local simulated-identity evidence and manual
+  Canva text/image checks accurately, with hosted/OAuth/editor gaps explicit.
+- [x] Export core/expanded PPTX, violet revision, offline replay, notes, and exact
+  service input at `artifacts/builder-a/local-workflow/create-deck.json`.
+- [x] Check all five rendered previews visually: no clipping. Verify exact revision
+  preservation again. `npm run check`: 39 tests pass; production build passes.
+- [ ] B should create this exact input through the real service/MCP workflow and
+  confirm the resulting deck before final presentation freeze. Generated artifacts
+  here are direct engine outputs, not evidence of that service creation.
+- Remaining account blockers and browser-control testing are unchanged.

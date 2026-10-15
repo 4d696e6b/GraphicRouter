@@ -92,6 +92,23 @@ the current admin policy prevented both Canva and localhost access.
 
 ## Builder B PR #3 integration
 
+### Updated local-workflow pitch
+
+`src/fixtures/local-workflow-pitch.ts` is a separate pitch reflecting Builder B's
+recorded evidence at `f23b071`: real-engine local service flow with simulated local
+identity and separate manual Canva text/image checks. The original engine-stage
+fixture stays available. Hosted ChatGPT, app OAuth, shape/line editing, and font
+matching remain explicitly unverified. This pitch has not been created through the
+service yet; its slides/PPTX/replay are generated directly through the engine.
+
+Run `GRAPHICROUTER_ARTIFACTS=1 npm test -- tests/engine/local-workflow-pitch.test.ts`.
+Outputs under `artifacts/builder-a/local-workflow/` include the exact `create-deck.json`
+for B to submit through the service, original/violet/expanded PPTX files, notes,
+revision proof, and a self-contained offline rehearsal. All five rendered slide
+previews were visually inspected with no clipping. The fixture passes fit checks
+and the one-element revision proof. Actual speaking pace and browser controls still
+need rehearsal. This does not certify B's unmerged branch or hosted account behavior.
+
 Read the existing provider and service in draft PR #3 without merging that branch.
 Its expected exports exactly match this implementation. After this engine PR lands
 through main, Builder B can replace `src/server/engine-provider.ts` with:
