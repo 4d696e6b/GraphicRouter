@@ -430,6 +430,10 @@ html { background: #faf8ff; }
 .heroCopy { display: flex; flex-direction: column; align-items: center; gap: 0; }
 .heroCopy > .pill { margin: 0 0 var(--hero-badge-gap)!important; }
 .heroCopy > h1 { width: 100%; margin: 0!important; }
+/* Leave paint room for descenders in both the entrance mask and gradient box.
+   Negative margins compensate the padding so the hero's rhythm stays unchanged. */
+.hero #hero-title .titleLine { padding-bottom: .22em; margin-bottom: -.22em; }
+.hero #hero-title [data-title] { padding-bottom: .22em; margin-bottom: -.22em; }
 .heroCopy > .heroDescription {
   width: 100%; max-width: 480px; margin: var(--hero-description-gap) 0 0!important;
   font-size: 17px; line-height: 1.8; text-align: center; text-wrap: balance;

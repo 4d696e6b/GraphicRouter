@@ -564,3 +564,15 @@ not count as verification of the new standalone static delivery.
 - Screenshots: outputs/static-website/balanced-hero-1440.png and
   balanced-hero-390.png. Static preview refreshed. No application/backend,
   dependency, contract or fixture changes; no merge or deployment.
+
+### Hero descender clipping fix
+
+- The supplied screenshot showed clipped lower letter strokes, not missing glyphs.
+  Added .22em bottom paint space to both the gradient text span and entrance mask,
+  with compensating negative margins. No font, copy, gradient or animation change.
+- Browser screenshot confirms the complete y descender on desktop. Checked 390,
+  640, 828 and 1440 widths without horizontal overflow. Reduced-motion static
+  rendering checked; normal motion restored after capture.
+- TypeScript + 124 tests and static HTML/config/hash checks pass. Evidence:
+  outputs/static-website/headline-glyph-fix-desktop.png and
+  headline-glyph-fix-mobile.png. No application/backend changes.
