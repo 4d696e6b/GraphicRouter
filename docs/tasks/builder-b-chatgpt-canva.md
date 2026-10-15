@@ -512,3 +512,29 @@ not count as verification of the new standalone static delivery.
   workflow-generate-desktop.png, workflow-customize-desktop.png,
   workflow-1280x720.png, workflow-768x1024.png, workflow-390x844.png,
   workflow-360x800.png.
+
+### Responsive card fix and Canva-first copy
+
+- Implemented the supplied screenshot brief. Each capability card has a dedicated
+  size-contained illustration viewport; portrait sheet size derives from both
+  available width and height. Decorations/hover travel fit within that area,
+  headings stay in normal flow with a 24px gap, and grids step down to two/one
+  columns. Only the art viewport clips decorative bounds; cards do not clip copy.
+- Updated hero to Your ideas. / Ready for Canva. with the concise requested
+  description and Plugin download coming soon. Summary is separate nonbreaking
+  items: Clear stories / Focused edits / Made for Canva; mobile removes separator
+  glyphs at wrap points. No slide-count, internal ID, contract or fixture changes.
+- Updated all three card titles/descriptions as requested. Third visual now has a
+  Canva badge and Prepared handoff label. Existing manual upload / pending app
+  integration explanation remains in FAQ; no fabricated connected/success state.
+- TypeScript + 124 tests, build, static config/HTML/hash checks pass. Checked 360,
+  390, 640, 768, 1024 and 1440 widths plus breakpoint probes near 601, 900 and 1023.
+  All cards' artwork bounding boxes fit their illustration viewport; title gap
+  remains 24px; no horizontal overflow. At 640, settled first-card hover plus all
+  descendants remained within bounds. Hero has no clamping/truncation; measured
+  scrollHeight equals clientHeight. Summary contains no 5; download stays disabled.
+- Theme, scene, chapter/gesture timing, hover rules and JS controls unchanged.
+  Browser warning/error log empty. Static preview updated on port 5184.
+- Screenshots: outputs/static-website/corrected-cards-desktop.png,
+  corrected-cards-640.png, corrected-cards-mobile.png,
+  canva-hero-desktop.png and canva-hero-mobile.png.

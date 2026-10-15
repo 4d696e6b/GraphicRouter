@@ -12,8 +12,10 @@ export default {
   repositoryUrl: "https://github.com/4d696e6b/GraphicRouter",
   availabilityNote: "The official plugin download is not available yet. Release and installation details will follow.",
   releaseStrip: "Product preview · Official download coming soon. Explore prepared examples below.",
-  headline: ["Your ideas.", "Presentation-ready."],
-  description: "GraphicRouter is a presentation plugin that turns your ideas and supplied facts into a clear five-slide story, with focused edits and a PowerPoint handoff.",
+  headline: ["Your ideas.", "Ready for Canva."],
+  description: "GraphicRouter is a presentation plugin that turns your brief into a clear story for Canva.",
+  heroSummary: ["Clear stories", "Focused edits", "Made for Canva"],
+  heroAvailability: "Plugin download coming soon.",
   examplePrompt: "Create a five-slide pitch using only my verified facts. Include three-minute core notes and five-minute expanded notes. Keep missing evidence explicit.",
   revisionPrompt: "Change only the headline on slide three to violet. Keep everything else unchanged.",
   designWorkflow: [
@@ -26,9 +28,9 @@ export default {
     { title: "Installation details to follow", text: "Supported hosts and setup steps will accompany the release." },
   ],
   capabilities: [
-    { title: "Plan your story", text: "Organize supplied facts into five clear slides.", link: "Explore the story", href: "#demo", illustration: "story" },
-    { title: "Refine a detail", text: "Change one headline colour while preserving the rest.", link: "See a revision", href: "#revision", illustration: "revision" },
-    { title: "Prepare your handoff", text: "Export PowerPoint and speaker notes; manual Canva upload is a fallback.", link: "See the handoff", href: "#export-example", illustration: "export" },
+    { title: "Give your story direction.", text: "Turn your facts into a story worth presenting.", link: "Explore the story", href: "#demo", illustration: "story" },
+    { title: "Change one thing.", text: "Refine a detail. Keep the rest intact.", link: "See a revision", href: "#revision", illustration: "revision" },
+    { title: "Make it yours in Canva.", text: "Continue shaping your presentation in Canva.", link: "See the handoff", href: "#export-example", illustration: "export" },
   ],
   showcase: [
     { label: "Story", title: "Five roles. One story.", text: "Problem, answer, workflow, proof and next step — shown in our own prepared pitch.", chips: ["Five slide roles", "Three preview stages", "180 / 300-second notes"] },
