@@ -17,7 +17,7 @@ function render(result: { _meta?: Record<string, unknown>; isError?: boolean; st
     if (!current && !currentCanvas) root.render(<main role="alert" style={{ fontFamily: "Arial, sans-serif", padding: 24 }}>{toolErrorMessage(result)}</main>);
     return;
   }
-  const brief = result._meta?.briefing ?? (result.structuredContent?.kind === "briefing" ? { context: result.structuredContent.context, answers: result.structuredContent.answers } : undefined);
+  const brief = result._meta?.briefing ?? (result.structuredContent?.kind === "briefing" ? { context: result.structuredContent.context, answers: result.structuredContent.answers, prompts: result.structuredContent.prompts } : undefined);
   if (brief) {
     const parsed = briefingSchema.safeParse(brief);
     if (!parsed.success) return;
