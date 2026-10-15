@@ -22,6 +22,19 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
     expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES]);
     expect(tools[0].description).toContain("Never invent evidence"); expect(tools[0].inputSchema).toMatchObject({ type: "object", required: expect.arrayContaining(["slides", "brief"]) });
   });
+  it("exposes the briefing before creation through initialization and tool discovery", async () => {
+    const init = await rpc("initialize", { protocolVersion: "2025-03-26", capabilities: {}, clientInfo: { name: "test", version: "1" } });
+    const list = await rpc("tools/list");
+    const tools = list.result.tools as { name: string; description: string }[];
+    // Hosts may surface server instructions or rely on tool descriptions.
+    for (const instructions of [init.result.instructions, tools.find(t => t.name === "create_deck")?.description]) {
+      expect(instructions).toEqual(expect.any(String));
+      for (const topic of ["Before calling create_deck", "at most three focused questions", "Audience and outcome", "Story and evidence", "Presentation setting", "Visual direction", "Visual material", "never ask again", "quick draft", "brief.unknowns", "without another confirmation", "current Studio system", "do not restart the interview"]) {
+        expect(instructions).toContain(topic);
+      }
+    }
+    expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES]);
+  });
   it("returns a structured, clearly labelled unavailable result", async () => {
     const call = await rpc("tools/call", { name: "get_deck", arguments: { deckId: crypto.randomUUID(), version: 1 } }, "owner");
     expect(call.result).toMatchObject({ isError: true, structuredContent: { error: { code: "NOT_IMPLEMENTED" } } });
