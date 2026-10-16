@@ -910,3 +910,14 @@ or marketplace submission were changed.
   or automatic physical deletion guarantee is claimed.
 - [ ] Confirm supported submission path for canonical Sites App; no duplicate ZIP
   wrapper. Actual reviewer recording/access and host/provider cases remain gates.
+
+
+## Public website availability labels — 2026-10-16
+
+- [x] User requested Coming soon labels before the hackathon deadline. Removed
+  private-account install/setup calls to action; public availability copy describes
+  a working prototype and unconfirmed public release date. Samples remain usable.
+- [x] Regenerated both HTML views; static consistency, sample asset hashes and
+  static Vercel build pass. TypeScript and all296 tests/47 files pass.
+- [ ] Verify the public production deployment after merge; original Sites copy
+  is a separate deployment and is not implied by a Vercel update.

@@ -7,11 +7,11 @@ export default {
   downloadFileName: null,
   fileSizeLabel: null,
   supportedHostLabel: "ChatGPT · hosted plugin",
-  connectionUrl: "https://chatgpt.com/plugins/plugin_asdk_app_sites_801c42220f4c8191bc43e3442008fd98",
-  setupUrl: "https://graphicrouter.blue-hare-8389.chatgpt.site/install",
+  connectionUrl: null, // Enable only after public installation is verified.
+  setupUrl: null,
   documentationUrl: "https://github.com/4d696e6b/GraphicRouter/blob/main/docs/CLIENT-SETUP.md",
   repositoryUrl: "https://github.com/4d696e6b/GraphicRouter",
-  availabilityNote: "Public ChatGPT installation is pending review. The current development plugin requires account access; this website alone does not grant it. Existing authorized users can open the plugin below. No ZIP installer is needed.",
+  availabilityNote: "Coming soon to ChatGPT. GraphicRouter is a working prototype; public installation is not available yet. Explore the examples and download the sample presentation while we prepare the public release.",
   releaseStrip: "ChatGPT plugin · Public release in preparation. Prepared examples are demonstrations.",
   headline: ["Good ideas deserve", "good design."],
   description: "Create editable infographics and presentations with a designer’s workflow, right inside ChatGPT.",
@@ -24,9 +24,9 @@ export default {
     { title: "Customize in Canva", text: "Open the result in Canva and make it your own." },
   ],
   installationSteps: [
-    { title: "Open GraphicRouter in ChatGPT", text: "Use the button to open GraphicRouter’s plugin page. Sign in with the ChatGPT account that has access." },
-    { title: "Select GraphicRouter", text: "Open the plugin in ChatGPT and choose Install or Connect when offered. ChatGPT handles plugin access and installation." },
-    { title: "Bring your brief", text: "Start a chat with GraphicRouter selected. Add your facts, references or pictures. Connect Canva when you want a Canva handoff." },
+    { title: "Explore the prototype", text: "See how GraphicRouter plans a story, composes editable elements and makes a focused revision in the examples above." },
+    { title: "Try a sample", text: "Download the prepared PowerPoint and speaker notes. These example files are available now; they are not a plugin installer." },
+    { title: "Public installation is next", text: "Once the public release is available, this page will link to the ChatGPT listing. No release date is confirmed yet." },
   ],
   capabilities: [
     { title: "Give your story direction.", text: "Turn your facts into a story worth presenting.", link: "Explore the story", href: "#demo", illustration: "story" },
@@ -39,7 +39,7 @@ export default {
     { label: "Export", title: "Take a sample with you.", text: "Download the prepared PowerPoint and notes. These are sample files, separate from the plugin.", chips: ["PowerPoint", "Speaker notes", "Manual Canva upload"] },
   ],
   faq: [
-    { title: "Where can I use GraphicRouter?", text: "GraphicRouter runs as a hosted ChatGPT plugin. Use the button above to open its ChatGPT plugin page. ChatGPT may require sign-in or workspace approval. Opening this website does not install it." },
+    { title: "Where can I use GraphicRouter?", text: "GraphicRouter currently works as a development plugin in authorized ChatGPT accounts. Public installation is coming soon. You can explore the examples and download sample files here today." },
     { title: "Do I need Canva?", text: "Connect Canva in ChatGPT to read or edit an accessible Canva design. Native GraphicRouter designs can also export to PowerPoint with separate text and shapes. Review the actual imported result; Canva edits do not sync back." },
     { title: "What can the current version create?", text: "Editable infographics, presentations of up to 40 pages, tall graphics and carousels. It can plan precise edits to an existing Canva link through the connected Canva tools. The five-slide samples above illustrate one workflow, not a page-count restriction. Images, Canva layers and final appearance still need review." },
   ],
