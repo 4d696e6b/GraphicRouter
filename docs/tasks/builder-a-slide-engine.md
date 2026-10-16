@@ -921,3 +921,12 @@ or marketplace submission were changed.
   static Vercel build pass. TypeScript and all296 tests/47 files pass.
 - [ ] Verify the public production deployment after merge; original Sites copy
   is a separate deployment and is not implied by a Vercel update.
+
+
+## Website source setup — 2026-10-16
+
+- [x] User requested a public Run from source section. Added clone/check/start
+  commands, Node24 prerequisite, local website/briefing addresses, and a full
+  setup link. Explicitly distinguishes local preview from ChatGPT installation
+  and describes additional storage, hosting/authentication and Canva setup.
+- [x] Fixed linked developer instructions to include the third retention migration.
