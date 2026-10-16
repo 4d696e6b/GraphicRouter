@@ -55,7 +55,8 @@ requires an authorized read before treating 401/403 as a website failure.
 
 Prepared locally. The connected Vercel integration returns no accessible teams
 and 403 for the user-selected `mink2551s-projects` scope. Publication awaits
-authorized team access and an actual linked project/deployment result. No Vercel
+authorized team access and an actual linked project/deployment result. A fresh
+check after the user confirmed reconnection returned the same 403. No Vercel
 URL has been verified yet.
 
 Configuration fields were checked against Vercel’s

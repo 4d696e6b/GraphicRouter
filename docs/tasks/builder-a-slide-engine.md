@@ -875,6 +875,9 @@ or marketplace submission were changed.
 - [x] Added dependency-free static Vercel build/config using the existing public
   asset allowlist. Full 288 tests/46 files and TypeScript pass; production build,
   relative documentation links, template YAML and static HTML/assets pass.
+- [x] Updated GitHub description/homepage/topics and opened PR24 with the tested
+  documentation and static build. No branch was deleted or force-pushed.
 - [ ] Publish website to Vercel: integration connected, but team context/list
   returns empty and selected mink2551s-projects returns 403. No local Vercel CLI
-  is installed. Await authorized team access; no deployment or URL claimed.
+  is installed. User confirmed reconnection; one fresh context/known-team check
+  still returns empty/403. Await authorized team access; no deployment or URL claimed.
