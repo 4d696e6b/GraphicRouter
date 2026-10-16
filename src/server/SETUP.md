@@ -33,11 +33,12 @@ A build produces the Worker configuration at `dist/server/wrangler.json`; it doe
 not publish. Sites provisions hosted D1/R2 bindings during supported publication.
 Local and hosted databases are separate.
 
-For a fresh local database, apply the two existing migrations once:
+For a fresh local database, apply all three existing migrations once, in order:
 
 ```sh
 node node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_exotic_human_fly.sql
 node node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_version-guards.sql
+node node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0002_retention.sql
 ```
 
 Do not reapply or edit an already applied migration. `0001_version-guards.sql`
