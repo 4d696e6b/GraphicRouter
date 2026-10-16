@@ -863,3 +863,21 @@ or marketplace submission were changed.
   read-back is unverified. Published screenshot confirms the new typography. ChatGPT catalog-thumbnail update remains
   unverified: the connected Site tools expose no catalog artwork editor, and
   the available ChatGPT browser session is signed out.
+
+## GitHub organization and Vercel preparation — 2026-10-16
+
+- [x] Fast-forwarded Builder A to current integrated origin/main without rewriting
+  history. Reworked README with brand, workflow, prepared native example, customer
+  connection, current features/limits, quick start and documentation map.
+- [x] Added CONTRIBUTING, architecture, security reporting guidance and issue forms;
+  refreshed PR guidance and replaced stale developer setup with current commands.
+  No project-wide license was invented. Both builder branches are preserved.
+- [x] Added dependency-free static Vercel build/config using the existing public
+  asset allowlist. Full 288 tests/46 files and TypeScript pass; production build,
+  relative documentation links, template YAML and static HTML/assets pass.
+- [x] Updated GitHub description/homepage/topics and opened PR24 with the tested
+  documentation and static build. No branch was deleted or force-pushed.
+- [ ] Publish website to Vercel: integration connected, but team context/list
+  returns empty and selected mink2551s-projects returns 403. No local Vercel CLI
+  is installed. User confirmed reconnection; one fresh context/known-team check
+  still returns empty/403. Await authorized team access; no deployment or URL claimed.

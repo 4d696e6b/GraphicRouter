@@ -1,0 +1,45 @@
+name: Bug report
+description: Report a reproducible problem with GraphicRouter.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Please remove secrets and private content. For vulnerabilities, read SECURITY.md instead of posting details here."
+  - type: dropdown
+    id: workflow
+    attributes:
+      label: Where did it happen?
+      options:
+        - ChatGPT briefing or plugin tools
+        - Native canvas or presentation
+        - Existing Canva editing or pictures
+        - Canva OAuth or import
+        - Product website
+        - Local development or build
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include a minimal example using non-private test content.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: Include the visible error and redacted screenshots or logs if useful.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment or revision
+      description: Local or hosted URL, Git commit, browser, Node version, and relevant connected provider.

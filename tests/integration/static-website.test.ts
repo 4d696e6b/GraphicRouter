@@ -1,4 +1,5 @@
 import { readFile, access } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
 import { resolve, sep } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import config from "../../website/site.config.js";
@@ -14,6 +15,18 @@ const basic = await readFile(resolve(directory, "basic.html"), "utf8");
 const data = JSON.parse(await readFile(resolve(directory, "assets/example-data.json"), "utf8"));
 
 describe("standalone distribution surface", () => {
+  it("builds a Vercel website with samples/fonts and excludes backend and authoring files", async () => {
+    const vercel = JSON.parse(await readFile("vercel.json", "utf8"));
+    expect(vercel.framework).toBeNull();
+    expect(vercel.installCommand).toBe("");
+    execFileSync(process.execPath, ["scripts/build-product-website.mjs"], { stdio: "pipe" });
+    const output = resolve(vercel.outputDirectory);
+    expect(await readFile(resolve(output, "index.html"), "utf8")).toBe(html);
+    for (const file of ["basic.html", "assets/mark.svg", "assets/sample-presentation.pptx", "assets/sample-speaker-notes.txt", "fonts/manrope-latin.woff2", "fonts/instrument-serif-italic-latin.woff2"])
+      await access(resolve(output, file));
+    for (const file of ["site.config.js", "README.md", ".env.example", ".openai/hosting.json", "src/server/service.ts", "assets/tablet-hand.png", "homepage-motion.js"])
+      await expect(access(resolve(output, file))).rejects.toThrow();
+  });
   it("keeps release config and authored HTML in sync without runtime initialization", () => {
     expect(renderWebsite(config, data)).toBe(html);
     expect(config.downloadUrl).toBeNull();

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Customer setup
+    url: https://github.com/4d696e6b/GraphicRouter/blob/main/docs/CLIENT-SETUP.md
+    about: How to open GraphicRouter in ChatGPT and connect your accounts.
+  - name: Security policy
+    url: https://github.com/4d696e6b/GraphicRouter/security/policy
+    about: Read reporting guidance before sharing vulnerability details.
