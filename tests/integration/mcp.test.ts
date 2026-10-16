@@ -16,7 +16,7 @@ async function rpc(method: string, params: unknown = {}, owner: string | null = 
 describe("local MCP transport; does not establish ChatGPT account connection", () => {
   it("discovers the five stable deck tools plus the design briefing", async () => {
     const init = await rpc("initialize", { protocolVersion: "2025-03-26", capabilities: {}, clientInfo: { name: "test", version: "1" } });
-    expect(init.result.serverInfo).toMatchObject({ name: "GraphicRouter" });
+    expect(init.result.serverInfo).toMatchObject({ name: "GraphicRouter", icons: [{ src: "https://example.test/graphicrouter-logo.png", mimeType: "image/png", sizes: ["512x512"] }] });
     const list = await rpc("tools/list");
     const tools = list.result.tools as { name: string; inputSchema: unknown; description: string }[];
     expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "plan_canva_edit", "review_canva_edit", "plan_image_input", "start_briefing", "plan_design", "get_design_skill", "compose_component", "compose_slide", ...DOCUMENT_TOOL_NAMES, "append_document_requirements", "get_document_context", "review_document_requirements", "inspect_document"]);

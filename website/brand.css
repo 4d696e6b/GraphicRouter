@@ -1,5 +1,21 @@
+@font-face {
+  font-family: "Manrope";
+  src: url("fonts/manrope-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("fonts/instrument-serif-italic-latin.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
 /* GraphicRouter's own editorial studio direction: paper, ink, violet, citrus. */
 :root {
+  --font-sans: "Manrope", Arial, sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
   --paper:#F8F6F0;
   --ink:#25212C;
   --muted:#766F7D;
@@ -10,7 +26,7 @@
   color-scheme:light;
   background:var(--paper);
   color:var(--ink);
-  font-family:Arial,"Helvetica Neue",sans-serif;
+  font-family:var(--font-sans);
   -webkit-font-smoothing:antialiased
 }
 .site {
@@ -25,7 +41,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visi
   outline-offset:5px
 }
 em {
-  font-family:Georgia,"Times New Roman",serif;
+  font-family:var(--font-display);
   font-weight:400
 }
 .heroCopy h1 em,.sectionIntro h2 em,.formatHeader h2 em,.startHeading h2 em,.faqSection h2 em {

@@ -167,3 +167,12 @@ authenticated tools/data, sample exports and setup/briefing routes. No reference
 artwork, camera motion or pointer glow is loaded by the new page. Historical source
 and MIT notices may remain for provenance. Publication uses the existing public
 Site's normal save/deploy flow, not owner-private publication or a new Site.
+
+## Website typography and shared logo — 2026-10-16
+
+User requested improved website typography and the same plugin/website logo. This
+owning chat bundles licensed Manrope and Instrument Serif fonts for the product
+and setup pages, and supplies the existing website mark through the app favicon
+and standard MCP server icon metadata. No generated-document font contracts or
+account permissions change. ChatGPT catalog artwork is host-controlled; MCP icon
+metadata alone does not prove the catalog thumbnail changed.

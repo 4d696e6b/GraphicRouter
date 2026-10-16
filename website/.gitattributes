@@ -2,3 +2,4 @@
 * text eol=lf
 *.png -text
 *.pptx -text
+*.woff2 binary
