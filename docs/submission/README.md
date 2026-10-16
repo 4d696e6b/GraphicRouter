@@ -64,3 +64,15 @@ Source/test work can continue while these dependencies are resolved.
 - [Current release evidence](../RELEASE-QUALITY.md)
 - [Data handling inventory](data-handling.md)
 - [Demo walkthrough](demo-walkthrough.md)
+
+
+## Canonical package inspection
+
+The owner’s ChatGPT “Download plugin ZIP” action produced the existing canonical
+package. It contains a root .app.json and an apps binding in .codex-plugin/plugin.json
+pointing to the existing asdk_app_sites_801c42220f4c8191bc43e3442008fd98.
+This private account package is not a public portable submission ZIP. Public-upload
+rules reject those author-supplied app bindings, while wrapping the Site as a new
+MCP plugin would duplicate its canonical ownership. No binding was stripped and
+no duplicate created. A supported canonical Sites submission/migration path must
+be confirmed before upload. The downloaded private archive is not committed.
