@@ -25,9 +25,11 @@ only the active HTML, CSS, JavaScript, licensed fonts, logo, prepared slides,
 PowerPoint/notes and required notices. Authoring config, repository docs, secrets,
 legacy artwork and backend source are excluded.
 
-All plugin buttons retain the existing exact ChatGPT link. Setup help points
-to the existing hosted `/install`; sample downloads use local relative paths.
-Public website availability does not change ChatGPT account eligibility.
+Until public installation is verified, all primary actions say “Coming soon”.
+Navigation actions lead to the release-status section; its install button is
+disabled. The private plugin and setup links are not offered as public installation.
+Sample downloads remain available using local relative paths. Public website
+availability does not change ChatGPT account eligibility.
 
 ## Check before deploying
 

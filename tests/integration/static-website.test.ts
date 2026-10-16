@@ -29,7 +29,7 @@ describe("standalone distribution surface", () => {
   });
   it("publishes contact/policy pages and accurately labels pending public access", async () => {
     expect(html).toContain("Published by Pacharapol Pimpa");
-    expect(html).toContain("Public ChatGPT installation is pending review");
+    expect(html).toContain("Coming soon to ChatGPT");
     for (const name of ["support", "privacy", "terms"]) {
       const page = await readFile(resolve(directory, `${name}.html`), "utf8");
       expect(html).toContain(`href="${name}.html"`);
@@ -44,11 +44,11 @@ describe("standalone distribution surface", () => {
   it("keeps release config and authored HTML in sync without runtime initialization", () => {
     expect(renderWebsite(config, data)).toBe(html);
     expect(config.downloadUrl).toBeNull();
-    expect(config.connectionUrl).toBe("https://chatgpt.com/plugins/plugin_asdk_app_sites_801c42220f4c8191bc43e3442008fd98");
+    expect(config.connectionUrl).toBeNull();
     expect(html).not.toContain("data-plugin-download");
-    expect(html).not.toContain("Download coming soon");
-    expect(html.match(/data-plugin-connect href=/g)).toHaveLength(4);
-    expect(html).toContain('href="https://graphicrouter.blue-hare-8389.chatgpt.site/install"');
+    expect(html).toContain("Coming soon");
+    expect(html).not.toContain("data-plugin-connect");
+    expect(html).not.toContain('href="https://graphicrouter.blue-hare-8389.chatgpt.site/install"');
     expect(html).toContain("Sample files only — not the plugin installer.");
   });
   it("authors every configured official download into HTML and omits cross-origin download attributes", () => {
@@ -63,7 +63,7 @@ describe("standalone distribution surface", () => {
   });
   it("retains an honest unavailable state when neither connection nor installer is configured", () => {
     const rendered = renderWebsite({ ...config, connectionUrl: null, setupUrl: null }, data);
-    expect(rendered).toContain('disabled aria-describedby="download-status">Download coming soon');
+    expect(rendered).toContain('disabled aria-describedby="download-status">Coming soon');
     expect(rendered).not.toContain("data-plugin-connect");
   });
   it.each(["javascript:alert(1)", "//example.test/plugin", "https://example.test/\nplugin"])("rejects unsafe connection links: %s", connectionUrl => {
@@ -89,7 +89,7 @@ describe("standalone distribution surface", () => {
     expect(basic).not.toContain("tabletDevice");
     expect(basic).not.toContain("homepage-motion.js");
     expect(basic).toContain('class="mobileMenu"'); expect(basic).toContain("Hosted ChatGPT plugin");
-    expect(basic.match(/data-plugin-connect href=/g)).toHaveLength(4);
+    expect(basic).not.toContain("data-plugin-connect");
     expect(basic).toContain("A designer’s process.");
     expect(basic).toContain(".showcasePanel[hidden]{display:grid!important}");
     expect(basic).toContain("Prepared after example:");

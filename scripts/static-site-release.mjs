@@ -18,6 +18,6 @@ export function downloadAction(config, { section = false, compact = false } = {}
     return `<a class="primary" data-plugin-download href="${escapeHtml(config.downloadUrl)}"${attribute}>Download ${escapeHtml(config.productName)} ↗</a>`;
   }
   if (config.connectionUrl) return `<a class="primary" data-plugin-connect href="${escapeHtml(config.connectionUrl)}">Use in ChatGPT ↗</a>`;
-  if (section) return `<button class="primary unavailable" type="button" disabled aria-describedby="download-status">Download coming soon</button>`;
-  return `<a class="primary" data-download-status href="#download">${compact ? "Download" : "Download coming soon"} <span aria-hidden="true">↓</span></a>`;
+  if (section) return `<button class="primary unavailable" type="button" disabled aria-describedby="download-status">Coming soon</button>`;
+  return `<a class="primary" data-download-status href="#download">Coming soon <span aria-hidden="true">↓</span></a>`;
 }
