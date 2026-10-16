@@ -854,7 +854,11 @@ or marketplace submission were changed.
 - [x] Match the app favicon to website/assets/mark.svg; render a512px PNG from
   that exact mark and advertise it with standard MCP serverInfo.icons metadata.
   MCP handshake test confirms same-origin icon discovery. No new dependencies.
-- [ ] Package final source and publish to the existing public Site; verify live
-  font assets and icon metadata. ChatGPT catalog-thumbnail update remains
+- [x] Published original public Site version9, source
+  0a6228e457c1509d0fbc795178c693a1dd6953a0, deployment
+  appgdep_6ad18d4729fc8191b8faa1a19bb5e02d (succeeded; MCP enabled;
+  secret revision3 retained). Both font files, favicon and512px PNG return200
+  and match local bytes. Live MCP initialize advertises the matching logo.
+  Published browser screenshot confirms the new typography. ChatGPT catalog-thumbnail update remains
   unverified: the connected Site tools expose no catalog artwork editor, and
   the available ChatGPT browser session is signed out.
