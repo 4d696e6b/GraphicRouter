@@ -1,0 +1,23 @@
+name: Feature request
+description: Suggest an improvement to the design workflow.
+title: "[Feature] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to achieve?
+      description: Describe the audience, task and current obstacle.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Give a concrete before-and-after example and what should stay editable.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Public references or alternative approaches; no credentials or private designs.
