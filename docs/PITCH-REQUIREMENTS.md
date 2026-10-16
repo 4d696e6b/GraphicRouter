@@ -159,7 +159,10 @@ Keep these outside the timed core:
 | Real-user value | Product rationale exists; no validated time-saving or traction evidence established by this review | Use an actual observation or an explicitly labelled hypothesis |
 | Full rehearsal | Current release gates still require complete intended-account rehearsal | Time the real talk, transitions and edit; record a labelled backup |
 
-This is a source review, not new account verification or a fresh test/build run.
+This is a source review, not new account verification or a fresh production build.
+After dependency synchronization, TypeScript passed. The test runner initially
+stopped before running tests because the Windows Rolldown optional binding was
+missing; the README's 288-test result remains recorded evidence until a fresh run completes.
 Current README, PRODUCT and later dated deployment records supersede the old
 local-workflow fixture's claims that Site access is still universally blocked.
 The old fixture must be reviewed before reuse; do not rewrite A-owned fixtures

@@ -668,5 +668,9 @@ not count as verification of the new standalone static delivery.
   from a suggested five-slide/three-minute story, evidence matrix and rehearsal list.
   Flags U-Bot/partner gaps, public demo vs landing page, development-app customer
   eligibility, legacy fixture drift, and pending real Canva/final rehearsal checks.
-- Documentation only; no fresh dependency installation/test/build/account verification
-  claimed. The recorded 288 tests are the latest README evidence, not a new run here.
+- Documentation only. npm ci synchronized the newer lockfile (stale local Resvg
+  2.4.0 versus locked 2.6.2 caused the first typecheck failure). TypeScript then
+  passed; Vitest startup found a missing Windows Rolldown optional binding before
+  executing tests. A local-only binding installation stalled and was stopped; package/lock files
+  remain unchanged. The missing Windows test-runner binding remains unresolved.
+  The README records 288 tests; no new account/build verification is claimed.
