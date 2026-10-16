@@ -176,3 +176,13 @@ and setup pages, and supplies the existing website mark through the app favicon
 and standard MCP server icon metadata. No generated-document font contracts or
 account permissions change. ChatGPT catalog artwork is host-controlled; MCP icon
 metadata alone does not prove the catalog thumbnail changed.
+
+## GitHub organization and Vercel website — 2026-10-16
+
+User authorized repository/branch cleanup, a clearer README and supporting docs,
+then requested Vercel website hosting. This owning chat may update documentation,
+issue/PR templates, repository description/homepage/topics and a static-only Vercel
+build. Preserve both builder branches/history and source/hosting identities.
+The existing product-file allowlist is reused; no Canva secrets or backend are
+moved to Vercel. Actual deployment requires a connected Vercel integration and
+returned project/deployment evidence. This is separate from Sites publication.
