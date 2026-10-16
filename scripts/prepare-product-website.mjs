@@ -6,7 +6,7 @@ export const productFiles = ["index.html", "basic.html", "styles.css", "brand.cs
   "main.js", "interactions.js", "assets/mark.svg", "assets/example-data.json",
   "assets/sample-presentation.pptx", "assets/sample-speaker-notes.txt",
   ...Array.from({ length: 5 }, (_, i) => `assets/slide-${i + 1}.svg`),
-  "assets/slide-3-violet.svg", "notices"];
+  "assets/slide-3-violet.svg", "fonts", "notices"];
 export async function prepareProductWebsite() {
   const source = new URL("../website/", import.meta.url);
   const destination = new URL("../public/product/", import.meta.url);

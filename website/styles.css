@@ -339,7 +339,7 @@ a,button,summary {
   text-shadow:0 1px white
 }
 .canvasCursor b {
-  font:8px/1.3 Arial,sans-serif;
+  font:8px/1.3 var(--font-sans);
   background:var(--accent);
   color:white;
   border-radius:3px;
@@ -376,7 +376,7 @@ a,button,summary {
   gap:6px
 }
 .layerIcon {
-  font:12px Georgia,serif
+  font:italic 12px var(--font-display)
 }
 .studyCaption {
   font-size:9px;
@@ -583,7 +583,7 @@ a,button,summary {
   height:82px;
   padding:12px 8px;
   background:#FFE0D5;
-  font:12px Georgia,serif;
+  font:italic 12px var(--font-display);
   box-shadow:4px 5px 0 #4928200a;
   border:1px solid #e9b9aa;
   transform:rotate(8deg)
@@ -698,7 +698,7 @@ a,button,summary {
   line-height:1.6
 }
 .exampleCopy blockquote {
-  font:italic 21px/1.5 Georgia,serif;
+  font:italic 21px/1.5 var(--font-display);
   border-left:2px solid #bb9af3;
   padding-left:19px;
   margin:24px 0
@@ -762,7 +762,8 @@ a,button,summary {
   font-weight:400;
   letter-spacing:-1px;
   margin:30px 0;
-  font-family:Georgia,serif
+  font-family:var(--font-display);
+  font-style:italic
 }
 .notesVisual>p {
   font-size:11px;

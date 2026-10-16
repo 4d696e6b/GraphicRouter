@@ -13,7 +13,10 @@ violet type accents, an original HTML/CSS composition study, selectable layer
 highlights, a four-step human design process, format studies, prepared product
 examples, customer setup and FAQ. No tablet/hand artwork, camera scene, intro
 interstitial or pointer-following glow is loaded. There is no scroll interception
-or required animation. Local system/Georgia typography needs no font download.
+or required animation. Self-hosted Manrope variable and Instrument Serif italic give the site its type
+identity. Latin WOFF2 subsets are bundled in `fonts/`, preloaded on the product
+page, and use swap/system fallbacks. Both SIL Open Font Licenses ship beside the
+fonts. Visitors make no Google Fonts request.
 
 The composition study is explicitly a workflow illustration, not an editor.
 Its layer buttons highlight authored native HTML elements. The engine sample

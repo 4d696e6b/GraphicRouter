@@ -842,3 +842,18 @@ No public plugin-release control is exposed through the connected tools. Site
 access is public; cross-account ChatGPT installation remains a distinct unverified
 platform step, not something the website can silently grant. No account permissions
 or marketplace submission were changed.
+
+## Website typography and shared branding — 2026-10-16
+
+- [x] Self-host Manrope (variable) and Instrument Serif italic with original SIL
+  Open Font Licenses; preload both on product pages and include fonts in the
+  explicit public asset allowlist. Match customer setup typography.
+- [x] Desktop1280px and narrow319px browser checks show the selected font families
+  and no horizontal overflow. Full TypeScript/287 tests/46 files pass.
+- [x] Match the app favicon to website/assets/mark.svg; render a512px PNG from
+  that exact mark and advertise it with standard MCP serverInfo.icons metadata.
+  MCP handshake test confirms same-origin icon discovery. No new dependencies.
+- [ ] Package final source and publish to the existing public Site; verify live
+  font assets and icon metadata. ChatGPT catalog-thumbnail update remains
+  unverified: the connected Site tools expose no catalog artwork editor, and
+  the available ChatGPT browser session is signed out.
