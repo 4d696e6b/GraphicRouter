@@ -847,7 +847,8 @@ or marketplace submission were changed.
 
 - [x] Self-host Manrope (variable) and Instrument Serif italic with original SIL
   Open Font Licenses; preload both on product pages and include fonts in the
-  explicit public asset allowlist. Match customer setup typography.
+  explicit public asset allowlist. Match customer setup typography. Mark WOFF2
+  as binary in Git to preserve exact bytes across checkouts.
 - [x] Desktop1280px and narrow319px browser checks show the selected font families
   and no horizontal overflow. Full TypeScript/287 tests/46 files pass.
 - [x] Match the app favicon to website/assets/mark.svg; render a512px PNG from
