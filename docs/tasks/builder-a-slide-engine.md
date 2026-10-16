@@ -877,7 +877,13 @@ or marketplace submission were changed.
   relative documentation links, template YAML and static HTML/assets pass.
 - [x] Updated GitHub description/homepage/topics and opened PR24 with the tested
   documentation and static build. No branch was deleted or force-pushed.
-- [ ] Publish website to Vercel: integration connected, but team context/list
-  returns empty and selected mink2551s-projects returns 403. No local Vercel CLI
-  is installed. User confirmed reconnection; one fresh context/known-team check
-  still returns empty/403. Await authorized team access; no deployment or URL claimed.
+- [x] Published the static website through the authorized user-selected Vercel
+  browser session after repeated MCP scope403. Existing GitHub import required
+  no added repository permission. Project graphicrouter in mink2551s-projects,
+  initial deployment Gbj3RJ3yM9Y8urAbPvTxd2k8Mxv1, main a4fe7d0,
+  Production/Ready. Public URL https://graphicrouter.vercel.app/.
+- [x] Live HTML, CSS/JS, logo/fonts, sample PPTX and notes return200 and match
+  source bytes; excluded authoring/backend/reference files return404. Desktop
+  and375px phone QA show no overflow and retain all four exact plugin links.
+  Browser proof is ignored artifacts/vercel-live-website.png. Native application,
+  OAuth callback, Site identities, secrets and audience remain on Sites.
