@@ -1,6 +1,6 @@
 import { getChatGPTUser } from "@/app/chatgpt-auth";
 import { handleMcp } from "@/src/mcp/server";
-import { service, canvasService, documentService } from "@/src/server/runtime";
+import { service, canvasService, documentService, retentionMaintenance } from "@/src/server/runtime";
 import { errorResponse, privateHeaders } from "@/src/server/http";
 import { fail } from "@/src/server/errors";
 import { readJsonBody } from "@/src/server/json-body";
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const body = value as { method?: unknown } | null;
     if (body?.method === "tools/call" && !user) fail("UNAUTHORIZED", "Sign in with ChatGPT to use presentation tools.");
     const boundedRequest = new Request(request.url, { method: request.method, headers: request.headers, body: text, signal: request.signal });
-    const response = await handleMcp(boundedRequest, user?.userId ?? null, service, canvasService, documentService);
+    const response = await handleMcp(boundedRequest, user?.userId ?? null, service, canvasService, documentService, retentionMaintenance(user));
     Object.entries(privateHeaders).forEach(([key, value]) => response.headers.set(key, value));
     return response;
   } catch (error) { return errorResponse(error); }

@@ -1,5 +1,6 @@
 import type { CanvaImport, DeckBlueprint } from "../contracts";
 import { fail } from "./errors";
+import { RETENTION_MS } from "./retention";
 
 export interface VersionedDocument { deckId: string; version: number }
 export interface DeckStore<T extends VersionedDocument = DeckBlueprint> {
@@ -25,17 +26,17 @@ export class D1DeckStore<T extends VersionedDocument = DeckBlueprint> implements
     return this.db.prepare("INSERT INTO deck_versions (deck_id, version, blueprint, created_at) VALUES (?, ?, ?, ?)").bind(b.deckId, b.version, JSON.stringify(b), Date.now());
   }
   async read(owner: string, id: string, version: number) {
-    const row = await this.db.prepare("SELECT v.blueprint FROM deck_versions v JOIN decks d ON d.id = v.deck_id WHERE d.owner = ? AND d.id = ? AND v.version = ?").bind(owner, id, version).first<{ blueprint: string }>();
+    const row = await this.db.prepare("SELECT v.blueprint FROM deck_versions v JOIN decks d ON d.id = v.deck_id WHERE d.owner = ? AND d.id = ? AND v.version = ? AND d.created_at > ?").bind(owner, id, version, Date.now() - RETENTION_MS).first<{ blueprint: string }>();
     if (!row) fail("NOT_FOUND", "Deck version not found for this user.");
     return JSON.parse(row.blueprint) as T;
   }
   async append(owner: string, baseVersion: number, b: T) {
-    const current = await this.db.prepare("SELECT latest_version FROM decks WHERE id = ? AND owner = ?").bind(b.deckId, owner).first<{ latest_version: number }>();
+    const current = await this.db.prepare("SELECT latest_version FROM decks WHERE id = ? AND owner = ? AND created_at > ?").bind(b.deckId, owner, Date.now() - RETENTION_MS).first<{ latest_version: number }>();
     if (!current) fail("NOT_FOUND", "Deck not found for this user.");
     if (current.latest_version !== baseVersion) fail("VERSION_CONFLICT", "Read the current version before revising.", current.latest_version);
     try { await this.insert(b).run(); }
     catch (error) {
-      const latest = await this.db.prepare("SELECT latest_version FROM decks WHERE id = ? AND owner = ?").bind(b.deckId, owner).first<{ latest_version: number }>();
+      const latest = await this.db.prepare("SELECT latest_version FROM decks WHERE id = ? AND owner = ? AND created_at > ?").bind(b.deckId, owner, Date.now() - RETENTION_MS).first<{ latest_version: number }>();
       if (latest && latest.latest_version !== baseVersion) fail("VERSION_CONFLICT", "Another revision won. Read the current version before revising.", latest.latest_version);
       throw error;
     }

@@ -1,0 +1,48 @@
+{
+  "positive": [
+    {
+      "description": "Purpose: adaptive intake. Setup: fresh authorized ChatGPT chat with the existing GraphicRouter plugin selected; no supplied prior brief. Do not use a production customer design.",
+      "prompt": "I want a beautiful infographic. Help me work out what information you need first.",
+      "tools_triggered": "start_briefing",
+      "expected_behavior": "The first GraphicRouter tool is start_briefing. Return the actual briefing widget or supported fallback, ask complexity and starting route first, reuse any supplied answers and collect one relevant question at a time. Do not claim a saved graphic or Canva design exists before creation."
+    },
+    {
+      "description": "Purpose: complete native creation and export. Setup: dedicated review account; use only this synthetic workshop example. Complete any missing optional intake without changing the requested native route.",
+      "prompt": "Create a portrait editable infographic from a blank canvas for volunteer workshop participants. Title: Workshop day. Use exactly these three steps: Arrive, Learn, Reflect. Use a violet accent on an off-white background. The steps are illustrative sample content, not research claims. Keep each heading and label independently editable, inspect the finished composition and give me a PowerPoint download. Do not send it to Canva yet.",
+      "tools_triggered": "plan_design, get_design_skill, create_canvas, edit_canvas, inspect_canvas, export_canvas",
+      "expected_behavior": "Create an owner-scoped native canvas with separate text and shape objects, using only supplied content. Inspect the actual saved output and export its exact version. The result includes a saved identity/version, preview and authenticated PPTX download. No Canva import starts. Keep returned deckId/version for the next case."
+    },
+    {
+      "description": "Purpose: precise immutable revision. Setup: continue the preceding native example in the same dedicated review chat. Capture the current complete blueprint and locate the actual top headline element ID before editing.",
+      "prompt": "Change only the top headline to teal #0F766E. Keep all wording, positions, sizes, other colours and every other object unchanged. Show the change summary and revised preview.",
+      "tools_triggered": "get_canvas, edit_canvas, inspect_canvas",
+      "expected_behavior": "Read the current owner-scoped version and edit only the identified headline colour using its current baseVersion. Return a new version and summary. Compare all element properties with the captured original: every unrelated element and the prior blueprint remain unchanged. The inspected image must show the requested teal headline. No Canva import starts."
+    },
+    {
+      "description": "Purpose: a 20-page presentation with preserved detailed requirements. Setup: fresh dedicated review document; all scenario content is illustrative. Use twenty supplied chapter labels as the complete storyboard input. The final exact sentence is a registered mandatory visible requirement.",
+      "prompt": "Create a 20-slide editable presentation for an illustrative volunteer workshop using these slide topics in order: Welcome; Purpose; Audience; Preparation; Materials; Roles; Arrival; Introductions; Safety; Demonstration; Practice; Discussion; Break; Review; Team exercise; Sharing; Feedback; Reflection; Next session; Closing. These are sample plans, not completed events or measured outcomes. Put the exact sentence \"Thank you for contributing.\" visibly on slide 20. Give every slide one clear message and speaker notes. Preserve my original instructions and mandatory wording, compose in chapters, inspect the pages and export the final PowerPoint. Do not send to Canva yet.",
+      "tools_triggered": "plan_design, get_design_skill, create_document, append_document_requirements, get_document_context, edit_document, inspect_document, review_document_requirements, export_document",
+      "expected_behavior": "Create exactly 20 ordered pages. Persist source instructions and requirement bindings, work with bounded page context, compose separate native objects and notes, and inspect final pages. The mandatory sentence remains exact and visible on the final page. Resolve registered mandatory checks before export. Return the actual PPTX and notes download URLs; do not invent outcomes or start Canva import."
+    },
+    {
+      "description": "Purpose: actual editable Canva handoff. Setup: use the saved native sample from positive case 2/3 with a dedicated Canva review account. Application OAuth is required; configure reviewer access securely. Inspect layers in the actual imported design as a separate provider check.",
+      "prompt": "Send this saved infographic version to my connected Canva account. Reuse any existing import for this version. Give me the actual editor link when ready and identify whether the imported text, shapes and image layers have really been checked.",
+      "tools_triggered": "send_canvas_to_canva, get_canvas",
+      "expected_behavior": "Start at most one import for the selected saved version. Poll its existing job with get_canvas and return the actual successful editor URL, or an actionable connection/failure/uncertain-outcome response without fabricated success or automatic duplicate import. Review the actual Canva preview and native layers before claiming editable fidelity. State unverified layers explicitly."
+    }
+  ],
+  "negative": [
+    {
+      "description": "Unsupported output type. Explain that GraphicRouter does not create animated video or voiceovers. Do not invoke GraphicRouter design tools or claim an MP4 export.",
+      "prompt": "Make a narrated animated MP4 of this infographic, with moving characters and music."
+    },
+    {
+      "description": "Unsupported recovery capability. Explain that GraphicRouter does not restore deleted Canva files or inspect account backups. Do not call GraphicRouter tools or pretend a file was recovered.",
+      "prompt": "Recover my permanently deleted Canva infographic from last year, including its original edit history."
+    },
+    {
+      "description": "Unsupported publishing destination. Explain that GraphicRouter does not schedule or publish Instagram campaigns. Do not call GraphicRouter tools, request a social-media password or claim a post was scheduled.",
+      "prompt": "Publish my finished infographic to Instagram every Monday and manage its ad campaign."
+    }
+  ]
+}

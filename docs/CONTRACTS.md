@@ -297,3 +297,29 @@ copy only. It validates measured text fit, never truncates or silently shrinks.
 Metrics require caller-supplied values. ChatGPT applies it to an intended blank
 document page, varies visual structure by meaning and inspects actual output.
 It never overwrites existing pages or mutates Canva; there is no aesthetic promise.
+
+
+## Saved-design retention and owner maintenance — 2026-10-16
+
+All three blueprint formats expire30 days after original decks.created_at; reads,
+revision heads and exports reject expired designs without revealing another user’s
+record. New versions cannot extend the original creation timestamp. Existing
+normal version update/delete guards remain. Migration0002 permits only queued,
+expired version deletion and rejects expired version inserts atomically.
+
+run_retention_cleanup is an administrative capability, not a customer design
+operation. It is only registered for a signed-in Sites user whose trusted email
+matches RETENTION_ADMIN_EMAIL. It accepts a strict empty object; no arbitrary
+owner, cutoff or bucket prefix can be supplied. Its result contains queued,
+processed, deletedFiles, failures, remainingDue counts only. Metadata explicitly
+marks this operation destructive and not open-world. Ordinary customer discovery
+retains its tool inventory. An unavailable/unconfigured owner or storage fails
+closed. A service bypass token supplies no user identity.
+
+Cleanup removes expired database content transactionally and deletes only that
+server-generated UUID’s decks/canvases/documents bucket prefixes. Minimal durable
+ID/scan-time tombstones survive for retry, including late files. Each call handles
+at most100 new database designs and20 file prefixes sets; repeat bounded calls for
+backlog. Active records and per-account Canva tokens are outside this cleanup.
+Customer Canva copies are never deleted. The scheduled writer must be verified
+through the actual owner connection before calling unattended purging operational.

@@ -194,3 +194,24 @@ mink2551s-projects. Dashboard confirms Production/Ready and the exact main commi
 public URL is https://graphicrouter.vercel.app/. No account permissions or credentials
 were changed. Keep MCP access limitations distinct from the successful website
 deployment; docs/VERCEL.md contains actual evidence.
+
+## Public plugin preparation — 2026-10-16
+
+User explicitly requested completing the public distribution step. Prepare listing,
+review cases, actual branding and evidence while collecting publisher decisions.
+Preserve the existing Site/App/plugin identities; do not wrap the Site in a second
+standalone plugin. No public ZIP/upload is eligible until the canonical App has a
+supported public submission path. The authorized developer must complete legal
+attestations. Tool-review metadata is in scope: get_document can poll an external
+Canva job and therefore must advertise openWorldHint=true, like get_deck/get_canvas.
+No account permissions, customer data, retention or credential changes are implied.
+
+The user subsequently chose automatic deletion after30 days and authorized its
+implementation/publication. Add a30-day creation-based access cutoff, a bounded
+D1/R2 cleanup queue, and an owner-only maintenance MCP capability using the
+Sites-authenticated email and an explicit server configuration. The Sites owner
+email was confirmed by get_site; do not use a caller-supplied identity or a bypass
+token as authorization. Normal version immutability remains enforced; deletion
+is allowed only for expired versions queued for retention cleanup. A linked cloud
+schedule and actual authenticated run must be verified before promising automated
+purging in public policy. Canva-owned copies are outside this cleanup scope.

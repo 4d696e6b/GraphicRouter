@@ -1,3 +1,5 @@
+import { z } from "zod";
+import type { RetentionReport } from "../server/retention";
 import { registerCanvaEditTools } from "./canva-edit-tools";
 import { canvaEditRouting } from "../briefing/canva-edit-workflow";
 import { imageInputRouting } from "../briefing/image-workflow";
@@ -31,7 +33,7 @@ Create exactly five slides from the completed brief using supplied facts only. S
   export_deck: "Export the exact stored blueprint to native PowerPoint and both note durations. Export alone does not complete a requested Canva presentation: call send_to_canva, then get_deck while its existing job is pending, and return the actual Canva editUrl on success. Return authenticated download links. If Canva is unavailable, download PPTX and manually upload to Canva; verify text, shapes, image remain independently editable.",
   send_to_canva: "Import this deck version's binary PowerPoint into Canva. Requires Canva authorization. Reuses an existing job for this version. Each version creates a new Canva design; edits made there never sync back. Pending import must not block presenting the saved deck.",
 };
-export function createMcpServer(owner: string | null, getService: () => DeckService, origin = "", getCanvasService?: () => CanvasService, getDocumentService?: () => DocumentService) {
+export function createMcpServer(owner: string | null, getService: () => DeckService, origin = "", getCanvasService?: () => CanvasService, getDocumentService?: () => DocumentService, maintenance?: () => Promise<RetentionReport>) {
   const server = new McpServer({
     name: "GraphicRouter", version: "0.10.1",
     ...(origin ? { icons: [{ src: new URL("/graphicrouter-logo.png", origin).href, mimeType: "image/png", sizes: ["512x512"] }] } : {}),
@@ -148,10 +150,19 @@ export function createMcpServer(owner: string | null, getService: () => DeckServ
     }
   });
   registerDesignTools(server, owner, uri, getDocumentService);
+  if (owner && maintenance) server.registerTool("run_retention_cleanup", {
+    title: "Owner retention maintenance",
+    description: "Site-owner maintenance only. Delete expired GraphicRouter saved designs and exports after the fixed 30-day period from original creation. Returns aggregate counts only. Never use for a customer design request. Does not delete Canva copies or change the retention window. If remainingDue is positive, repeat at most10 times; report failures to the owner.",
+    inputSchema: z.object({}).strict(),
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: false },
+  }, async () => {
+    try { const report = await maintenance(); return { content: [{ type: "text" as const, text: JSON.stringify(report) }], structuredContent: { ...report } }; }
+    catch (error) { const detail = safeError(error); return { isError: true, content: [{ type: "text" as const, text: JSON.stringify(detail) }] }; }
+  });
   return server;
 }
-export async function handleMcp(request: Request, owner: string | null, getService: () => DeckService, getCanvasService?: () => CanvasService, getDocumentService?: () => DocumentService) {
-  const server = createMcpServer(owner, getService, new URL(request.url).origin, getCanvasService, getDocumentService);
+export async function handleMcp(request: Request, owner: string | null, getService: () => DeckService, getCanvasService?: () => CanvasService, getDocumentService?: () => DocumentService, maintenance?: () => Promise<RetentionReport>) {
+  const server = createMcpServer(owner, getService, new URL(request.url).origin, getCanvasService, getDocumentService, maintenance);
   const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined, enableJsonResponse: true });
   await server.connect(transport);
   try { return await transport.handleRequest(request); }
