@@ -22,10 +22,24 @@ describe("standalone distribution surface", () => {
     execFileSync(process.execPath, ["scripts/build-product-website.mjs"], { stdio: "pipe" });
     const output = resolve(vercel.outputDirectory);
     expect(await readFile(resolve(output, "index.html"), "utf8")).toBe(html);
-    for (const file of ["basic.html", "assets/mark.svg", "assets/sample-presentation.pptx", "assets/sample-speaker-notes.txt", "fonts/manrope-latin.woff2", "fonts/instrument-serif-italic-latin.woff2"])
+    for (const file of ["basic.html", "support.html", "privacy.html", "terms.html", "assets/mark.svg", "assets/sample-presentation.pptx", "assets/sample-speaker-notes.txt", "fonts/manrope-latin.woff2", "fonts/instrument-serif-italic-latin.woff2"])
       await access(resolve(output, file));
     for (const file of ["site.config.js", "README.md", ".env.example", ".openai/hosting.json", "src/server/service.ts", "assets/tablet-hand.png", "homepage-motion.js"])
       await expect(access(resolve(output, file))).rejects.toThrow();
+  });
+  it("publishes contact/policy pages and accurately labels pending public access", async () => {
+    expect(html).toContain("Published by Pacharapol Pimpa");
+    expect(html).toContain("Public ChatGPT installation is pending review");
+    for (const name of ["support", "privacy", "terms"]) {
+      const page = await readFile(resolve(directory, `${name}.html`), "utf8");
+      expect(html).toContain(`href="${name}.html"`);
+      expect(page).toContain("Pacharapol Pimpa");
+      expect(page).toContain("mailto:pacharapol.p5108@gmail.com");
+      expect(page).not.toContain("<script");
+    }
+    const privacy = await readFile(resolve(directory,"privacy.html"),"utf8");
+    expect(privacy).toContain("30 days after their original creation");
+    expect(privacy).toContain("unattended schedule is not yet verified");
   });
   it("keeps release config and authored HTML in sync without runtime initialization", () => {
     expect(renderWebsite(config, data)).toBe(html);

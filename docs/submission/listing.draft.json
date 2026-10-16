@@ -1,0 +1,43 @@
+{
+  "status": "draft-not-uploaded",
+  "canonicalPluginId": "plugin_asdk_app_sites_801c42220f4c8191bc43e3442008fd98",
+  "canonicalAppId": "asdk_app_sites_801c42220f4c8191bc43e3442008fd98",
+  "siteProjectId": "appgprj_6ad04f78c2188191b6c0be6c93b79ac2",
+  "publisher": {
+    "name": "Pacharapol Pimpa",
+    "type": "individual",
+    "portalVerification": "required-not-complete"
+  },
+  "audience": {
+    "choice": "all-supported-countries",
+    "commerce": false,
+    "pricingStatement": "Currently free; external provider accounts and their limits apply."
+  },
+  "interface": {
+    "displayName": "GraphicRouter",
+    "shortDescription": "Editable visual storytelling",
+    "longDescription": "GraphicRouter helps you plan a visual story, compose individual editable elements and direct precise revisions from ChatGPT. Create native infographics, presentations of up to 40 pages, tall graphics and carousels from your supplied facts. An adaptive brief reuses information you already provided. Specialist guidance supports layout, story, imagery, charts and quality review.\n\nInspect previews, revise saved versions and export native PowerPoint with notes for a Canva handoff. Headlines, labels and source copy are separate native text objects in the GraphicRouter pipeline. Actual Canva appearance and imported layers require inspection. Each native import creates a new Canva design; manual Canva edits do not synchronize back.\n\nExisting Canva links and supplied pictures can be planned through GraphicRouter and carried out with separately connected Canva tools. Those helpers do not themselves upload pictures, edit provider files or certify the result. Native composition uses measured English Arial, simple shapes, lines and registered images. Facts are supplied or independently verified; the plugin does not invent evidence or guarantee visual quality.",
+    "developerName": "Pacharapol Pimpa",
+    "defaultPrompt": [
+      "Create an editable infographic from my facts, with separate text and visual layers.",
+      "Plan a 20-slide presentation from my detailed brief, preserving required wording and speaker notes.",
+      "Change only the headline colour in my GraphicRouter design and preserve everything else."
+    ],
+    "websiteURL": "https://graphicrouter.vercel.app/",
+    "logoSource": "public/graphicrouter-logo.png",
+    "composerIconSource": "public/graphicrouter-logo.png",
+    "brandColor": "#7C3AED"
+  },
+  "releaseNotes": "Initial public-release candidate: adaptive briefing, native editable graphics and presentations, immutable focused revisions, long-brief requirements, preview inspection and Canva handoff. Public review has not started.",
+  "missing": [
+    "Verified publisher identity in the intended organization.",
+    "Supported public submission path retaining the existing Sites-owned App/plugin identity.",
+    "Portal-supported category selection.",
+    "Publisher identification on the public website and verified support/privacy/terms pages.",
+    "User-approved privacy, retention/deletion and terms decisions matched to implemented behavior.",
+    "Actual recorded demo with reviewer-accessible playback URL.",
+    "Dedicated reviewer account and secure login instructions.",
+    "Five positive and three negative review cases run in the intended host and exact saved version.",
+    "Required scans, legal/policy attestations and approval before publication."
+  ]
+}

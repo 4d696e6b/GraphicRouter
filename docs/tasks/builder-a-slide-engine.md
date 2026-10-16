@@ -887,3 +887,23 @@ or marketplace submission were changed.
   and375px phone QA show no overflow and retain all four exact plugin links.
   Browser proof is ignored artifacts/vercel-live-website.png. Native application,
   OAuth callback, Site identities, secrets and audience remain on Sites.
+
+
+## Public-submission preparation and retention — 2026-10-16
+
+- [x] Publisher verified in OpenAI dashboard; owner email independently confirmed
+  through Sites. No API payment or duplicate plugin created.
+- [x] Implemented creation-based30-day read/revision/export cutoff, indexed queued
+  D1/R2 deletion with retry, late-file cleanup and in-flight export checks. Normal
+  immutable-version guards remain. Owner-only MCP maintenance accepts no IDs or
+  caller-selected cutoff and exposes aggregate counts only.
+- [x] Added regression coverage, schema-only append migration and matching schema/
+  metadata. npm run db:generate confirms no unrecorded schema differences.
+- [x] TypeScript and296 tests/47 files pass; production build passes. Native/live
+  worker checks are tracked separately; mocked bucket tests are not provider proof.
+- [x] Added factual publisher/support/privacy/usage pages and honest pending public
+  installation copy, preserving website branding and exact canonical plugin link.
+- [ ] Verify exact hosted source/deployment/migration, owner-only unattended cleanup
+  and linked schedule. Do not promise operational automatic physical purge yet.
+- [ ] Confirm supported submission path for canonical Sites App; no duplicate ZIP
+  wrapper. Actual reviewer recording/access and host/provider cases remain gates.
