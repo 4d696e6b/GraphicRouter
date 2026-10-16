@@ -17,7 +17,8 @@
 </p>
 
 <p align="center">
-  <a href="https://graphicrouter.blue-hare-8389.chatgpt.site/product/">Website</a> ·
+  <a href="https://graphicrouter.vercel.app/">Website</a> ·
+  <a href="https://graphicrouter.blue-hare-8389.chatgpt.site/product/">Sites mirror</a> ·
   <a href="https://chatgpt.com/plugins/plugin_asdk_app_sites_801c42220f4c8191bc43e3442008fd98">Open in ChatGPT</a> ·
   <a href="docs/CLIENT-SETUP.md">Customer setup</a> ·
   <a href="CONTRIBUTING.md">Contribute</a>

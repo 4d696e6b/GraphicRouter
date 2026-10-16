@@ -186,3 +186,11 @@ build. Preserve both builder branches/history and source/hosting identities.
 The existing product-file allowlist is reused; no Canva secrets or backend are
 moved to Vercel. Actual deployment requires a connected Vercel integration and
 returned project/deployment evidence. This is separate from Sites publication.
+
+Vercel MCP remained403 after reconnection, while the user-selected authenticated
+browser had access. This authorized browser session imported the existing GitHub
+repository and deployed the static-only configuration to graphicrouter under
+mink2551s-projects. Dashboard confirms Production/Ready and the exact main commit;
+public URL is https://graphicrouter.vercel.app/. No account permissions or credentials
+were changed. Keep MCP access limitations distinct from the successful website
+deployment; docs/VERCEL.md contains actual evidence.
