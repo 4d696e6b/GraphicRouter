@@ -903,7 +903,10 @@ or marketplace submission were changed.
   worker checks are tracked separately; mocked bucket tests are not provider proof.
 - [x] Added factual publisher/support/privacy/usage pages and honest pending public
   installation copy, preserving website branding and exact canonical plugin link.
-- [ ] Verify exact hosted source/deployment/migration, owner-only unattended cleanup
-  and linked schedule. Do not promise operational automatic physical purge yet.
+- [x] Exact hosted source passes296 tests/build; version10 deploys successfully,
+  environment revision4; live migration and public policy content verified.
+- [ ] Owner-only unattended cleanup and linked schedule remain unverified. Anonymous
+  and forged header calls return401. Browser access stopped; no production purge
+  or automatic physical deletion guarantee is claimed.
 - [ ] Confirm supported submission path for canonical Sites App; no duplicate ZIP
   wrapper. Actual reviewer recording/access and host/provider cases remain gates.

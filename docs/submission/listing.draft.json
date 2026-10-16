@@ -6,7 +6,9 @@
   "publisher": {
     "name": "Pacharapol Pimpa",
     "type": "individual",
-    "portalVerification": "required-not-complete"
+    "portalVerification": "verified-dashboard-2026-10-16",
+    "verifiedDisplayName": "PACHARAPOL PIMPA",
+    "contactEmail": "pacharapol.p5108@gmail.com"
   },
   "audience": {
     "choice": "all-supported-countries",
@@ -26,15 +28,16 @@
     "websiteURL": "https://graphicrouter.vercel.app/",
     "logoSource": "public/graphicrouter-logo.png",
     "composerIconSource": "public/graphicrouter-logo.png",
-    "brandColor": "#7C3AED"
+    "brandColor": "#7C3AED",
+    "supportURL": "https://graphicrouter.blue-hare-8389.chatgpt.site/product/support",
+    "privacyPolicyURL": "https://graphicrouter.blue-hare-8389.chatgpt.site/product/privacy",
+    "termsOfServiceURL": "https://graphicrouter.blue-hare-8389.chatgpt.site/product/terms"
   },
   "releaseNotes": "Initial public-release candidate: adaptive briefing, native editable graphics and presentations, immutable focused revisions, long-brief requirements, preview inspection and Canva handoff. Public review has not started.",
   "missing": [
-    "Verified publisher identity in the intended organization.",
     "Supported public submission path retaining the existing Sites-owned App/plugin identity.",
     "Portal-supported category selection.",
-    "Publisher identification on the public website and verified support/privacy/terms pages.",
-    "User-approved privacy, retention/deletion and terms decisions matched to implemented behavior.",
+    "Hosted owner-only unattended cleanup verification; public privacy currently discloses that activation is incomplete.",
     "Actual recorded demo with reviewer-accessible playback URL.",
     "Dedicated reviewer account and secure login instructions.",
     "Five positive and three negative review cases run in the intended host and exact saved version.",
