@@ -1,3 +1,4 @@
+import { cleanupExpiredDesigns, exportStillActive, requireRetentionAdministrator, retentionAdministrator } from "./retention";
 import { DocumentService } from "./document-service";
 import type { DocumentBlueprint } from "../contracts";
 import { env } from "cloudflare:workers";
@@ -33,19 +34,33 @@ export function service() {
   const bucket = env.BUCKET, db = database();
   return new DeckService({ store: new D1DeckStore(db), engine, assets, origin: new URL(env.SITE_ORIGIN).origin,
     canva: canvaClient(db) ?? disconnected,
-    files: new R2FileStore(bucket),
+    files: retainedFiles(db, bucket),
   });
 }
 export function canvasService() {
   if (!env.SITE_ORIGIN || !env.BUCKET) fail("NOT_IMPLEMENTED", "Canvas storage/origin configuration is unavailable.");
   const db = database();
-  return new CanvasService({ store: new D1DeckStore<CanvasBlueprint>(db), files: new R2FileStore(env.BUCKET), engine: canvasEngine, assets,
+  return new CanvasService({ store: new D1DeckStore<CanvasBlueprint>(db), files: retainedFiles(db, env.BUCKET), engine: canvasEngine, assets,
     origin: new URL(env.SITE_ORIGIN).origin, canva: canvaClient(db) ?? disconnected, raster: renderInspectionPng });
 }
 
 export function documentService() {
   if (!env.SITE_ORIGIN || !env.BUCKET) fail("NOT_IMPLEMENTED", "Document storage/origin configuration is unavailable.");
   const db = database();
-  return new DocumentService({store:new D1DeckStore<DocumentBlueprint>(db),files:new R2FileStore(env.BUCKET),assets,
+  return new DocumentService({store:new D1DeckStore<DocumentBlueprint>(db),files:retainedFiles(db, env.BUCKET),assets,
     origin:new URL(env.SITE_ORIGIN).origin,canva:canvaClient(db)??disconnected,raster:renderInspectionPng});
+}
+
+function retainedFiles(db: D1DatabaseSession, bucket: R2Bucket) {
+  return new R2FileStore(bucket, { active: key => exportStillActive(db, key), remove: async key => { await bucket.delete(key); } });
+}
+
+/** Return no capability at all for ordinary customers or an unconfigured host. */
+export function retentionMaintenance(user: { userId: string; email: string } | null) {
+  if (!user || !retentionAdministrator(user.email, env.RETENTION_ADMIN_EMAIL)) return undefined;
+  return async () => {
+    requireRetentionAdministrator(user.email, env.RETENTION_ADMIN_EMAIL);
+    if (!env.BUCKET) fail("NOT_IMPLEMENTED", "Retention file storage is unavailable.");
+    return cleanupExpiredDesigns(database(), env.BUCKET);
+  };
 }

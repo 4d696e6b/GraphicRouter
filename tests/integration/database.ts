@@ -5,11 +5,12 @@ import { readFileSync } from "node:fs";
 export function testDatabase() {
   const sql = new DatabaseSync(":memory:");
   sql.exec("PRAGMA foreign_keys=ON");
-  for (const file of ["0000_exotic_human_fly.sql", "0001_version-guards.sql"]) sql.exec(readFileSync(new URL(`../../drizzle/${file}`, import.meta.url), "utf8"));
+  for (const file of ["0000_exotic_human_fly.sql", "0001_version-guards.sql", "0002_retention.sql"]) sql.exec(readFileSync(new URL(`../../drizzle/${file}`, import.meta.url), "utf8"));
   class Statement {
     values: (string | number | null)[] = [];
     constructor(readonly query: string) {}
     bind(...values: (string | number | null)[]) { this.values = values; return this; }
+    async all() { return { success: true, results: sql.prepare(this.query).all(...this.values), meta: {} }; }
     async first() { return sql.prepare(this.query).get(...this.values) ?? null; }
     async run() { return { success: true, meta: { changes: Number(sql.prepare(this.query).run(...this.values).changes) } }; }
   }

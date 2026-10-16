@@ -22,6 +22,16 @@ describe("local MCP transport; does not establish ChatGPT account connection", (
     expect(tools.map(t => t.name)).toEqual([...TOOL_NAMES, ...CANVAS_TOOL_NAMES, "inspect_canvas", "review_canva_design", "plan_canva_edit", "review_canva_edit", "plan_image_input", "start_briefing", "plan_design", "get_design_skill", "compose_component", "compose_slide", ...DOCUMENT_TOOL_NAMES, "append_document_requirements", "get_document_context", "review_document_requirements", "inspect_document"]);
     expect(tools[0].description).toContain("Never invent evidence"); expect(tools[0].inputSchema).toMatchObject({ type: "object", required: expect.arrayContaining(["slides", "brief"]) });
   });
+  it("declares boolean review annotations and marks every import-status reader as external", async () => {
+    const list = await rpc("tools/list");
+    const tools = list.result.tools as { name: string; annotations: Record<string, unknown> }[];
+    for (const tool of tools) {
+      for (const key of ["readOnlyHint", "destructiveHint", "openWorldHint"])
+        expect(typeof tool.annotations[key], `${tool.name}.${key}`).toBe("boolean");
+    }
+    for (const name of ["get_deck", "get_canvas", "get_document"])
+      expect(tools.find(tool => tool.name === name)?.annotations).toMatchObject({ readOnlyHint: true, openWorldHint: true, destructiveHint: false });
+  });
   it("exposes the briefing before creation through initialization and tool discovery", async () => {
     const init = await rpc("initialize", { protocolVersion: "2025-03-26", capabilities: {}, clientInfo: { name: "test", version: "1" } });
     const list = await rpc("tools/list");
