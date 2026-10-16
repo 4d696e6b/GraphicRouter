@@ -858,7 +858,8 @@ or marketplace submission were changed.
   0a6228e457c1509d0fbc795178c693a1dd6953a0, deployment
   appgdep_6ad18d4729fc8191b8faa1a19bb5e02d (succeeded; MCP enabled;
   secret revision3 retained). Both font files, favicon and512px PNG return200
-  and match local bytes. Live MCP initialize advertises the matching logo.
-  Published browser screenshot confirms the new typography. ChatGPT catalog-thumbnail update remains
+  and match local bytes. Local MCP initialize test verifies matching icon
+  metadata; anonymous live initialize is protected (401), so live metadata
+  read-back is unverified. Published screenshot confirms the new typography. ChatGPT catalog-thumbnail update remains
   unverified: the connected Site tools expose no catalog artwork editor, and
   the available ChatGPT browser session is signed out.
