@@ -657,3 +657,16 @@ not count as verification of the new standalone static delivery.
 
 - Increased pointer glow intensity another 50% relative: 10.89% to 16.335% alpha.
   Radius and spring motion unchanged. Static consistency check passes.
+
+### Hackathon pitch requirements review — 2026-10-16
+
+- Fetched all origin branches and fast-forwarded this clean branch to integrated
+  main 7ab3bda (63 commits), preserving published history and A-owned files.
+- Reviewed current product/architecture/contracts, tool/service/engine entry points,
+  tests and dated release/deployment evidence, plus the official event opening deck.
+- Added docs/PITCH-REQUIREMENTS.md: official rubric/submission requirements separated
+  from a suggested five-slide/three-minute story, evidence matrix and rehearsal list.
+  Flags U-Bot/partner gaps, public demo vs landing page, development-app customer
+  eligibility, legacy fixture drift, and pending real Canva/final rehearsal checks.
+- Documentation only; no fresh dependency installation/test/build/account verification
+  claimed. The recorded 288 tests are the latest README evidence, not a new run here.
